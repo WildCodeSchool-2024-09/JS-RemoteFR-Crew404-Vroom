@@ -1,11 +1,21 @@
-#Attention, pour lancer cette commande il faudra : 
+# Cette commande permet de lancer la vérification Biome
+# et de faire toutes les modifications automatiques de Biome
+# Crée un agent pour le mot de passe SSH
+# Ajoute tous les fichiers modifiés au commit
+# Pousse sur la branche actuelle automatiquement
 
-#Lancer la commande suivante dans le terminal git :
-# chmod +x git-commit.sh
-#Copier coller cette ligne dans package.json dans script :
-# "commit": "bash ./git-commit.sh"
-#Exécution de cette commande avec :
+
+# Attention, pour lancer cette commande il faudra : 
+
+# Lancer la commande suivante dans le terminal git :
+# chmod +x npm-run-commit-biome.sh
+# Copier coller cette ligne dans package.json dans script :
+# "force commit": "bash ./npm-run-force-commit-biome.sh"
+# Exécution de cette commande avec :
 # npm run commit
+
+#Pour forcer le passage du Husky :
+# HUSKY=0 git commit -m ""
 
 #!/bin/bash
 
