@@ -1,7 +1,10 @@
+import "./App.css";
+import Dashboard from "./pages/Dashboard/DashBoard";
+
 function App() {
   return (
     <>
-      <h1>Vroom</h1>
+      <Dashboard />
     </>
   );
 }
