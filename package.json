@@ -22,7 +22,9 @@
     "dev:server": "npm run dev --workspace=server",
     "prepare": "husky || true",
     "start": "npm run start --workspace=server",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "commit": "bash ./npm-run-commit-biome.sh",
+    "commit-force": "bash ./npm-run-commit-force-biome-husky.sh"
   },
   "keywords": [],
   "author": "wcs",
