@@ -1,15 +1,15 @@
 #Attention, pour lancer cette commande il faudra : 
 
 #Lancer la commande suivante dans le terminal git :
-# chmod +x -commit.sh
+# chmod +x git-commit.sh
 #Copier coller cette ligne dans package.json dans script :
-# "commit": "bash ./npm-run-commit.sh"
+# "commit": "bash ./git-commit.sh"
 #Exécution de cette commande avec :
 # npm run commit
 
 #!/bin/bash
 
-# Emplacement du fichier pour stocker les informations de l'agent SSH
+# Emplacement du fichier pour stocker les informations de l'agent
 SSH_ENV="$HOME/.ssh-agent.env"
 
 # Fonction pour démarrer un nouvel agent SSH
@@ -36,38 +36,47 @@ else
     start_agent
 fi
 
-# Vérification avec Biome
-echo "🛠️  Exécusion de la commande de biome"
+# Étape 1 : Vérification avec Biome pour corriger les fichiers
+echo "🚀 Exécution de Biome..."
+echo "🛠️ Modification des fichiers nécessaires"
 npx @biomejs/biome check --fix --unsafe ./client
+echo "✅ Exécution de Biome terminée"
 
-
-# Vérification de l'état actuel du dépôt
+# Étape 2 : Affiche l'état actuel du dépôt
 echo "📄 Vérification de l'état actuel du dépôt..."
 git status
 
-# Vérifie s'il y a des fichiers modifiés ou nouveaux
+# Étape 3 : Demande le message de commit
+read -p "Entrez votre message de commit : " msg
+
+# Étape 4 : Récupère les fichiers modifiés, nouveaux et supprimés
 files=$(git ls-files --modified --deleted --others --exclude-standard)
+
+# Étape 5 : Vérifie s'il y a des fichiers à ajouter
 if [ -z "$files" ]; then
     echo "❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter. Commit annulé."
     exit 1
 fi
 
-# Ajout de tous les fichiers restants
+# Étape 6 : Ajoute les fichiers modifiés, nouveaux et supprimés
 echo "📄 Ajout des fichiers au staging..."
 git add -A
 
-# Demande le message de commit
-read -p "Entrez votre message de commit : " msg
+# Étape 7 : Crée un fichier temporaire pour le message de commit
+echo "$msg" > .gitmessage.txt
 
-# Création du commit
+# Étape 8 : Effectue le commit
 echo "📝 Création du commit..."
-HUSKY=0 git commit -m "$msg" || { echo "❌ Commit échoué. Vérifiez Husky ou les erreurs."; exit 1; }
+git commit -F .gitmessage.txt
 
-# Récupère le nom de la branche actuelle
+# Étape 9 : Supprime le fichier temporaire
+rm .gitmessage.txt
+
+# Étape 10 : Récupère le nom de la branche actuelle
+echo "🌿 Récupération du nom de la branche actuelle"
 branch=$(git rev-parse --abbrev-ref HEAD)
 
-# Pousse les modifications sur la branche courante
+# Étape 11 : Pousse sur la branche courante
 echo "🚀 Pousse sur la branche '$branch'..."
-git push origin "$branch" || { echo "❌ Push échoué."; exit 1; }
-
+git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo "✅ Commit réussi, envoi sur la branche '$branch'..."
