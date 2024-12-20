@@ -1,9 +1,9 @@
-import "./NotFound.css";
+import "NotFound.module.css";
 
 function NotFound() {
   return (
     <div>
-      <h1>NotFound</h1>
+      <h1>Error404. Sortie de route !</h1>
     </div>
   );
 }
