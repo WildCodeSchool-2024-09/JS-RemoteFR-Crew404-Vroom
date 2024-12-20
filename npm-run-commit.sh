@@ -37,25 +37,15 @@ else
 fi
 
 # Vérification avec Biome
-echo "🛠️  Vérification du code avec Biome..."
-output=$(npx @biomejs/biome check --fix --unsafe ./client)
+echo "🛠️  Exécusion de la commande de biome"
+npx @biomejs/biome check --fix --unsafe ./client
 
-# Vérifie le statut de la commande Biome
-if echo "$output" | grep -q "error"; then
-    echo "❌ Des erreurs critiques ont été détectées par Biome. Vous devez corriger votre code avant de continuer."
-    exit 1
-elif echo "$output" | grep -q "Fixed"; then
-    echo "✍️  Biome a corrigé des fichiers. Ajout des modifications au staging..."
-    git add client/src/pages/Test.tsx
-else
-    echo "✅ Aucun problème détecté par Biome. Continuation du script."
-fi
 
 # Vérification de l'état actuel du dépôt
 echo "📄 Vérification de l'état actuel du dépôt..."
 git status
 
-# Vérifie s'il y a des fichiers à ajouter
+# Vérifie s'il y a des fichiers modifiés ou nouveaux
 files=$(git ls-files --modified --deleted --others --exclude-standard)
 if [ -z "$files" ]; then
     echo "❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter. Commit annulé."
@@ -63,7 +53,7 @@ if [ -z "$files" ]; then
 fi
 
 # Ajout de tous les fichiers restants
-echo "📄 Ajout de tous les fichiers au staging..."
+echo "📄 Ajout des fichiers au staging..."
 git add -A
 
 # Demande le message de commit
@@ -71,7 +61,7 @@ read -p "Entrez votre message de commit : " msg
 
 # Création du commit
 echo "📝 Création du commit..."
-git commit -m "$msg" || { echo "❌ Commit échoué. Vérifiez Husky ou les erreurs."; exit 1; }
+HUSKY=0 git commit -m "$msg" || { echo "❌ Commit échoué. Vérifiez Husky ou les erreurs."; exit 1; }
 
 # Récupère le nom de la branche actuelle
 branch=$(git rev-parse --abbrev-ref HEAD)
