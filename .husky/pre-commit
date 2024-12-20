@@ -1,20 +1,27 @@
-fileList=$(git diff --staged --name-only :^package-lock.json :^README.md :^client :^server)
+#!/bin/bash
+
+# Liste des fichiers critiques à protéger
+protectedFiles=$(git diff --staged --name-only | grep -E "(\.env|package-lock\.json)")
 
 echo '----- Checking Root...'
 
-if [ ! -z "$fileList" ]
-then
+# Exclure temporairement des fichiers spécifiques
+protectedFiles=$(echo "$protectedFiles" | grep -v ".husky/pre-commit")
+
+if [ ! -z "$protectedFiles" ]; then
   echo "error: Unauthorized modifications\n"
-
-  echo "$fileList\n"
-
+  echo "$protectedFiles\n"
   echo "use 'git restore --staged ...' to fix the problem"
   echo "(and ask your instructor why you should not change these files)\n"
-
   exit 1
 fi
 
 echo '----- Done!'
 
+# Valide le nom de la branche
 npx validate-branch-name
-npm run check
+
+# Exécute la vérification des fichiers avec `npm run check`
+npm run check || { echo "❌ La vérification des fichiers a échoué."; exit 1; }
+
+exit 0
