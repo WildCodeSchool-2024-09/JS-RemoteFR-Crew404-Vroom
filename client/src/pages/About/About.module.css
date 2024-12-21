@@ -1,0 +1,42 @@
+.backgroundAbout {
+  margin: 2em 1em 4em 1em;
+  padding: 1em;
+  background-color: var(--light);
+  border-radius: 30px;
+}
+
+.titleAbout {
+  position: absolute;
+  z-index: 10;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5em;
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.aboutCar,
+.aboutCarGathering {
+  display: block;
+  margin: 0 auto;
+  border-radius: 30px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  max-width: 90%;
+  height: auto;
+}
+
+.aboutCar {
+  margin-bottom: 1em;
+}
+
+.aboutCarGathering {
+  margin-top: 1em;
+}
+
+.pAbout {
+  font-size: 1rem;
+  text-align: justify;
+  color: var(--dark);
+  line-height: 1.5;
+}
