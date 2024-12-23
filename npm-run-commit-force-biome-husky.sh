@@ -123,6 +123,6 @@ git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo ""
 echo ""
 echo -e "\033[1,35mFin du script\033[0m"
-echo -e"\033[34m✅ Commit réussi, envoi sur la branche '$branch'avec le message :\033[0m"
+echo -e "\033[34m✅ Commit réussi, envoi sur la branche '$branch'avec le message :\033[0m"
 echo -e "\033[33m\"$msg\"\033[0m"
 rm .gitmessage.txt
