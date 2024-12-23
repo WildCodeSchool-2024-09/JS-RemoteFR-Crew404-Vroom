@@ -21,18 +21,21 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[35mVersion du script V5.2.7\033[0m"
+echo -e "\033[35mVersion du script V5.2.12\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
 
 # Etape 1 : Retrait des fichiers en zone de staging
-echo "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
+echo -e "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
+echo ""
 git reset
 
 # Etape 2 : Vérification agent SSH
 # Emplacement du fichier pour stocker les informations de l'agent
-echo "🔍 Vérification si un agent SSH est actif"
+echo ""
+echo -e "\033[36m🔍 Vérification si un agent SSH est actif\033[0m"
+echo ""
 SSH_ENV="$HOME/.ssh-agent.env"
 
 # Fonction pour démarrer un nouvel agent SSH
