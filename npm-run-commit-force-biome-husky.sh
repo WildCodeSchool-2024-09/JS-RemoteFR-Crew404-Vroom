@@ -21,11 +21,11 @@
 #!/bin/bash
 
 #Version du script
-echo "Version du script V5.2.5"
+echo -e "\033[32mVersion du script V5.2.6\033[0m"
 echo "Début d'exécution du script"
 
 # Etape 1 : Retrait des fichiers en zone de staging
-echo "🗑️ Retrait des fichiers en zone de staging"
+echo "🗑️. Retrait des fichiers en zone de staging"
 git reset
 
 # Etape 2 : Vérification agent SSH
