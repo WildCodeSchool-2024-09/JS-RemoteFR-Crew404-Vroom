@@ -15,27 +15,27 @@
 # Exécution de cette commande avec :
 # npm run commit-force
 
-#Pour forcer le passage du Husky :
+# Pour forcer le passage du Husky :
 # HUSKY=0 git commit -m ""
 
 #!/bin/bash
 
-#Version du script
-echo -e "\033[35mVersion du script V6.1.2\033[0m"
+# Version du script
+echo -e "\033[35mVersion du script V6.2.1\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
 echo ""
 
-# Piège pour nettoyer le fichier temporaire en cas de sortie du script
+# Étape 1 : Piège pour nettoyer le fichier temporaire en cas de sortie du script
 trap "rm -f .gitmessage.txt" EXIT
 
-# Etape 1 : Retrait des fichiers en zone de staging
+# Étape 2 : Retrait des fichiers en zone de staging
 echo -e "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
 git reset
 echo ""
 
-# Etape 2 : Vérification agent SSH
+# Étape 3 : Vérification agent SSH
 # Emplacement du fichier pour stocker les informations de l'agent
 echo -e "\033[36m🔍 Vérification si un agent SSH est actif\033[0m"
 echo ""
@@ -71,7 +71,7 @@ fi
 echo -e "\033[34m✅ Traitement agent SSH terminé\033[0m"
 echo ""
 
-# Étape 3 : Vérification avec Biome pour corriger les fichiers
+# Étape 4 : Vérification avec Biome pour corriger les fichiers
 echo ""
 echo -e "\033[36m🚀 Exécution de Biome...\033[0m"
 echo ""
@@ -80,52 +80,52 @@ npx @biomejs/biome check --fix --unsafe ./client
 echo -e "\033[34m✅ Exécution de Biome terminée\033[0m"
 echo ""
 
-# Étape 4 : Affiche l'état actuel du dépôt
+# Étape 5 : Affiche l'état actuel du dépôt
 echo -e "\033[36m📄 Vérification de l'état actuel du dépôt...\033[0m"
 git status
 echo ""
 
-# Étape 5 : Demande le message de commit
+# Étape 6 : Demande le message de commit
 read -p $'\033[1;33mEntrez votre message de commit : \033[0m' msg
 echo ""
 
-# Étape 6 : Récupère les fichiers modifiés, nouveaux et supprimés
+# Étape 7 : Récupère les fichiers modifiés, nouveaux et supprimés
 files=$(git ls-files --modified --deleted --others --exclude-standard)
 
-# Étape 7 : Vérifie s'il y a des fichiers à ajouter
+# Étape 8 : Vérifie s'il y a des fichiers à ajouter
 if [ -z "$files" ]; then
     echo -e "\033[1;31m❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter.\033[0m"
     echo -e "\033[1;35mCommit annulé.\033[0m"
     exit 1
 fi
 
-# Étape 8 : Ajoute les fichiers modifiés, nouveaux et supprimés
+# Étape 9 : Ajoute les fichiers modifiés, nouveaux et supprimés
 echo -e "\033[36m📄 Ajout des fichiers au staging...\033[0m"
 git add -A
 echo ""
 
-# Étape 9 : Crée un fichier temporaire pour le message de commit
+# Étape 10 : Crée un fichier temporaire pour le message de commit
 echo "$msg" > .gitmessage.txt
 
-# Étape 10 : Effectue le commit
+# Étape 11 : Effectue le commit
 echo -e "\033[36m📝 Création du commit...\033[0m"
 HUSKY=0 git commit -F .gitmessage.txt
 echo ""
 
-# Étape 11 : Supprime le fichier temporaire
+# Étape 12 : Supprime le fichier temporaire
 
 
-# Étape 12 : Récupère le nom de la branche actuelle
+# Étape 13 : Récupère le nom de la branche actuelle
 echo -e "\033[36m🌿 Récupération du nom de la branche actuelle\033[0m"
 branch=$(git rev-parse --abbrev-ref HEAD)
 echo ""
 
-# Étape 13 : Pousse sur la branche courante
+# Étape 14 : Pousse sur la branche courante
 echo -e "\033[36m🚀 Pousse sur la branche '$branch'...\033[0m"
 git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo ""
 
-# Étape 14 : Résumé du commit
+# Étape 15 : Résumé du commit
 echo ""
 echo -e "\033[1;35mFin du script\033[0m"
 echo -e "\033[34m✅ Commit réussi, envoi sur la branche \033[1;35m'$branch'\033[34m avec le message :\033[0m"
