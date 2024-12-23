@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import NavRoot from "./components/NavRoot/NavRoot";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
@@ -13,7 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <NavRoot />,
+        element: <Dashboard />,
       },
       {
         path: "/dashbord",
