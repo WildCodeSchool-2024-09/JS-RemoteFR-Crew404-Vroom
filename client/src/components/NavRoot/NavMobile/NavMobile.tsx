@@ -1,8 +1,8 @@
-import "./NavMobile.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
+import css from "./NavMobile.module.css";
 
 function NavMobile() {
   const [active, setActive] = useState(false);

@@ -21,7 +21,10 @@
 #!/bin/bash
 
 #Version du script
-echo "Version du script V5.1.1"
+echo "Version du script V5.2.1"
+
+#Retrait des fichiers en zone de staging
+git reset
 
 # Emplacement du fichier pour stocker les informations de l'agent
 SSH_ENV="$HOME/.ssh-agent.env"
