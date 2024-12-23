@@ -1,10 +1,12 @@
 import "./App.css";
-import Dashboard from "./pages/Dashboard/DashBoard";
+import { Outlet } from "react-router-dom";
+import NavRoot from "./components/NavRoot/NavRoot";
 
 function App() {
   return (
     <>
-      <Dashboard />
+      <NavRoot />
+      <Outlet />
     </>
   );
 }
