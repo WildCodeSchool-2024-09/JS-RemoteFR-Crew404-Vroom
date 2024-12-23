@@ -21,11 +21,14 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[35mVersion du script V5.2.20\033[0m"
+echo -e "\033[35mVersion du script V6.1.2\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
 echo ""
+
+# Piège pour nettoyer le fichier temporaire en cas de sortie du script
+trap "rm -f .gitmessage.txt" EXIT
 
 # Etape 1 : Retrait des fichiers en zone de staging
 echo -e "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
@@ -121,8 +124,9 @@ echo ""
 echo -e "\033[36m🚀 Pousse sur la branche '$branch'...\033[0m"
 git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo ""
+
+# Étape 14 : Résumé du commit
 echo ""
-echo -e "\033[1,35mFin du script\033[0m"
-echo -e "\033[34m✅ Commit réussi, envoi sur la branche '$branch'avec le message :\033[0m"
+echo -e "\033[1;35mFin du script\033[0m"
+echo -e "\033[34m✅ Commit réussi, envoi sur la branche \033[34m'$branch'\033[34mavec le message :\033[0m"
 echo -e "\033[33m\"$msg\"\033[0m"
-rm .gitmessage.txt
