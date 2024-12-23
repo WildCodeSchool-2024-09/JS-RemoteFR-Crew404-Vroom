@@ -21,7 +21,7 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[35mVersion du script V5.2.12\033[0m"
+echo -e "\033[35mVersion du script V5.2.13\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
@@ -30,6 +30,7 @@ echo -e "\033[35mDébut d'exécution du script\033[0m"
 echo -e "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
 echo ""
 git reset
+echo ""
 
 # Etape 2 : Vérification agent SSH
 # Emplacement du fichier pour stocker les informations de l'agent
@@ -40,7 +41,9 @@ SSH_ENV="$HOME/.ssh-agent.env"
 
 # Fonction pour démarrer un nouvel agent SSH
 start_agent() {
+    echo ""
     echo "🔑 Démarrage d'un nouvel agent SSH..."
+    echo ""
     eval "$(ssh-agent -s)" > "$SSH_ENV"
     echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$SSH_ENV"
     echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >> "$SSH_ENV"
@@ -53,7 +56,9 @@ start_agent() {
 }
 
 # Recharger ou démarrer l'agent SSH
-echo "🔄 Recharger ou démarrer l'agent SSH"
+echo ""
+echo -e "\033[36m🔄 Recharger ou démarrer l'agent SSH\033[0m"
+echo ""
 if [ -f "$SSH_ENV" ]; then
     source "$SSH_ENV" > /dev/null
     if ! ps -p $SSH_AGENT_PID > /dev/null 2>&1; then
@@ -62,10 +67,12 @@ if [ -f "$SSH_ENV" ]; then
 else
     start_agent
 fi
-echo "✅ Traitement agent SSH terminé"
+echo -e "\033[34m✅ Traitement agent SSH terminé\033[0m"
 
 # Étape 3 : Vérification avec Biome pour corriger les fichiers
+echo ""
 echo "🚀 Exécution de Biome..."
+echo ""
 echo "🛠️ Modification des fichiers nécessaires"
 npx @biomejs/biome check --fix --unsafe ./client
 echo "✅ Exécution de Biome terminée"
