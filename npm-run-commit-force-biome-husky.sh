@@ -21,12 +21,16 @@
 #!/bin/bash
 
 #Version du script
-echo "Version du script V5.2.1"
+echo "Version du script V5.2.5"
+echo "Début d'exécution du script"
 
-#Retrait des fichiers en zone de staging
+# Etape 1 : Retrait des fichiers en zone de staging
+echo "🗑️ Retrait des fichiers en zone de staging"
 git reset
 
+# Etape 2 : Vérification agent SSH
 # Emplacement du fichier pour stocker les informations de l'agent
+echo "🔍 Vérification si un agent SSH est actif"
 SSH_ENV="$HOME/.ssh-agent.env"
 
 # Fonction pour démarrer un nouvel agent SSH
@@ -44,6 +48,7 @@ start_agent() {
 }
 
 # Recharger ou démarrer l'agent SSH
+echo "🔄 Recharger ou démarrer l'agent SSH"
 if [ -f "$SSH_ENV" ]; then
     source "$SSH_ENV" > /dev/null
     if ! ps -p $SSH_AGENT_PID > /dev/null 2>&1; then
@@ -52,48 +57,49 @@ if [ -f "$SSH_ENV" ]; then
 else
     start_agent
 fi
+echo "✅ Traitement agent SSH terminé"
 
-# Étape 1 : Vérification avec Biome pour corriger les fichiers
+# Étape 3 : Vérification avec Biome pour corriger les fichiers
 echo "🚀 Exécution de Biome..."
 echo "🛠️ Modification des fichiers nécessaires"
 npx @biomejs/biome check --fix --unsafe ./client
 echo "✅ Exécution de Biome terminée"
 
-# Étape 2 : Affiche l'état actuel du dépôt
+# Étape 4 : Affiche l'état actuel du dépôt
 echo "📄 Vérification de l'état actuel du dépôt..."
 git status
 
-# Étape 3 : Demande le message de commit
+# Étape 5 : Demande le message de commit
 read -p "Entrez votre message de commit : " msg
 
-# Étape 4 : Récupère les fichiers modifiés, nouveaux et supprimés
+# Étape 6 : Récupère les fichiers modifiés, nouveaux et supprimés
 files=$(git ls-files --modified --deleted --others --exclude-standard)
 
-# Étape 5 : Vérifie s'il y a des fichiers à ajouter
+# Étape 7 : Vérifie s'il y a des fichiers à ajouter
 if [ -z "$files" ]; then
     echo "❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter. Commit annulé."
     exit 1
 fi
 
-# Étape 6 : Ajoute les fichiers modifiés, nouveaux et supprimés
+# Étape 8 : Ajoute les fichiers modifiés, nouveaux et supprimés
 echo "📄 Ajout des fichiers au staging..."
 git add -A
 
-# Étape 7 : Crée un fichier temporaire pour le message de commit
+# Étape 9 : Crée un fichier temporaire pour le message de commit
 echo "$msg" > .gitmessage.txt
 
-# Étape 8 : Effectue le commit
+# Étape 10 : Effectue le commit
 echo "📝 Création du commit..."
 HUSKY=0 git commit -F .gitmessage.txt
 
-# Étape 9 : Supprime le fichier temporaire
+# Étape 11 : Supprime le fichier temporaire
 rm .gitmessage.txt
 
-# Étape 10 : Récupère le nom de la branche actuelle
+# Étape 12 : Récupère le nom de la branche actuelle
 echo "🌿 Récupération du nom de la branche actuelle"
 branch=$(git rev-parse --abbrev-ref HEAD)
 
-# Étape 11 : Pousse sur la branche courante
+# Étape 13 : Pousse sur la branche courante
 echo "🚀 Pousse sur la branche '$branch'..."
 git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo "✅ Commit réussi, envoi sur la branche '$branch'..."
