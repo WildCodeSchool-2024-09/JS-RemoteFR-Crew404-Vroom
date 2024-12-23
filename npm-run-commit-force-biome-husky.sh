@@ -21,20 +21,19 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[35mVersion du script V5.2.13\033[0m"
+echo -e "\033[35mVersion du script V5.2.14\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
+echo ""
 
 # Etape 1 : Retrait des fichiers en zone de staging
 echo -e "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
-echo ""
 git reset
 echo ""
 
 # Etape 2 : Vérification agent SSH
 # Emplacement du fichier pour stocker les informations de l'agent
-echo ""
 echo -e "\033[36m🔍 Vérification si un agent SSH est actif\033[0m"
 echo ""
 SSH_ENV="$HOME/.ssh-agent.env"
@@ -56,7 +55,6 @@ start_agent() {
 }
 
 # Recharger ou démarrer l'agent SSH
-echo ""
 echo -e "\033[36m🔄 Recharger ou démarrer l'agent SSH\033[0m"
 echo ""
 if [ -f "$SSH_ENV" ]; then
@@ -68,12 +66,13 @@ else
     start_agent
 fi
 echo -e "\033[34m✅ Traitement agent SSH terminé\033[0m"
+echo ""
 
 # Étape 3 : Vérification avec Biome pour corriger les fichiers
 echo ""
-echo "🚀 Exécution de Biome..."
+echo -e "\033[36m🚀 Exécution de Biome...\033[0m"
 echo ""
-echo "🛠️ Modification des fichiers nécessaires"
+echo -e "\033[36m🛠️. Modification des fichiers nécessaires\033[0m"
 npx @biomejs/biome check --fix --unsafe ./client
 echo "✅ Exécution de Biome terminée"
 
