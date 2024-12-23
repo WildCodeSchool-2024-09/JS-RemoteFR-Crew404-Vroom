@@ -21,7 +21,8 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[32mVersion du script V5.2.6\033[0m"
+echo -e "\033[35mVersion du script V5.2.6\033[0m"
+echo ""
 echo "Début d'exécution du script"
 
 # Etape 1 : Retrait des fichiers en zone de staging
