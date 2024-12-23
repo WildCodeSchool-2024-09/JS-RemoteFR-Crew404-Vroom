@@ -21,15 +21,15 @@
 /*-----------------------------------------------*/
 /*Logique du Logo qui tourne*/
 
-#LogoMobile {
+.LogoMobile {
   display: inline-block; /* Ajuste la largeur et la hauteur au contenu */
   position: relative; /* Nécessaire pour positionner les faces */
   transform-style: preserve-3d; /* Active l'effet 3D */
   animation: flip 2s infinite ease-in-out; /* Animation de rotation */
 }
 
-#LogoMobile .front,
-#LogoMobile .back {
+.LogoMobile .front,
+.LogoMobile .back {
   position: absolute; /* Superpose les deux faces */
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@
   margin: 0; /* Supprime les marges par défaut des h1 */
 }
 
-#LogoMobile .back {
+.LogoMobile .back {
   transform: rotateY(180deg); /* Retourne la face arrière */
 }
 
@@ -78,7 +78,7 @@
 }
 
 /*Logique ouverture et fermeture MenuBurger*/
-#closeBtn {
+.closeBtn {
   margin: 1rem 0rem 0rem 1rem;
   padding: 0.5rem 1.5rem;
   text-decoration: none;
@@ -96,17 +96,16 @@
   cursor: pointer;
 }
 
-#closeBtn:hover {
+.closeBtn:hover {
   transform: rotate(90deg) scale(1.1); /* Légère rotation et agrandissement */
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Ombre renforcée */
   background: linear-gradient(135deg, #3498db, #2980b9); /* Dégradé de couleur */
 }
 
-#openBtn {
+.openBtn {
   position: fixed;
   top: 0.5rem;
   right: 0.5rem;
-  outline: none; /*Supprime le contour par défaut du bouton*/
   background-color: var(--primary-color);
 }
 .menuBurger > span {
@@ -115,6 +114,24 @@
   height: 5px;
   background-color: var(--textColorWhite);
   margin: 0.5rem 0rem;
+}
+
+.closeBtn,
+.openBtn {
+  outline: none; /* Supprime le contour au clic */
+  border: none; /* Supprime les bordures */
+}
+
+.closeBtn:focus,
+.openBtn:focus {
+  outline: none; /* Supprime le contour au focus */
+  box-shadow: none; /* Supprime tout effet de surbrillance au focus */
+}
+
+.closeBtn:hover,
+.openBtn:hover {
+  outline: none; /* Supprime le contour au survol */
+  box-shadow: none; /* Supprime tout effet de surbrillance au survol */
 }
 
 /*-----------------------------------------------*/

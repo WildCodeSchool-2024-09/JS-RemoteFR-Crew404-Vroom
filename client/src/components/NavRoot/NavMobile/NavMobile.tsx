@@ -13,7 +13,7 @@ function NavMobile() {
     <>
       <nav className={css.NavMobile}>
         <Link to="/home">
-          <div id={css.LogoMobile}>
+          <div className={css.LogoMobile}>
             <h1 className={css.front}>Vroom</h1>
             <h1 className={css.back}>Vroom</h1>
           </div>
@@ -21,16 +21,10 @@ function NavMobile() {
 
         <h3>Bienvenue sur VROOM</h3>
         <div
-          className={`${css.sideNav} ${active ? css.active : ""}`}
-          id={css.mySideNav}
+          className={`${css.sideNav} ${active ? css.active : ""} ${css.mySideNav}`}
         >
           <div>
-            <button
-              id={css.closeBtn}
-              className={css.ButtonClose}
-              type="button"
-              onClick={funcActive}
-            >
+            <button className={css.closeBtn} type="button" onClick={funcActive}>
               x
             </button>
           </div>
@@ -44,7 +38,7 @@ function NavMobile() {
           />
         </div>
 
-        <button type="button" id={css.openBtn} onClick={funcActive}>
+        <button type="button" className={css.openBtn} onClick={funcActive}>
           <span className={css.menuBurger}>
             <span />
             <span />
