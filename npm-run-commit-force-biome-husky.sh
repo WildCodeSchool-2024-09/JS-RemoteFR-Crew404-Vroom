@@ -24,10 +24,10 @@
 echo -e "\033[35mVersion du script V5.2.7\033[0m"
 echo ""
 echo ""
-echo -e "\033[35Début d'exécution du script\033[0m"
+echo -e "\033[35mDébut d'exécution du script\033[0m"
 
 # Etape 1 : Retrait des fichiers en zone de staging
-echo "\033[36🗑️. Retrait des fichiers en zone de staging\033[0m"
+echo "\033[36m🗑️. Retrait des fichiers en zone de staging\033[0m"
 git reset
 
 # Etape 2 : Vérification agent SSH
