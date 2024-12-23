@@ -21,7 +21,7 @@
 #!/bin/bash
 
 #Version du script
-echo -e "\033[35mVersion du script V5.2.14\033[0m"
+echo -e "\033[35mVersion du script V5.2.20\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
@@ -84,36 +84,45 @@ echo ""
 
 # Étape 5 : Demande le message de commit
 read -p $'\033[1;33mEntrez votre message de commit : \033[0m' msg
-echo -e "\033[1;33mVotre message de commit est : \"$msg\"\033[0m"
+echo ""
 
 # Étape 6 : Récupère les fichiers modifiés, nouveaux et supprimés
 files=$(git ls-files --modified --deleted --others --exclude-standard)
 
 # Étape 7 : Vérifie s'il y a des fichiers à ajouter
 if [ -z "$files" ]; then
-    echo "❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter. Commit annulé."
+    echo -e "\033[1;31m❌ Aucun fichier modifié, supprimé ou nouveau fichier à ajouter.\033[0m"
+    echo -e "\033[1;35mCommit annulé.\033[0m"
     exit 1
 fi
 
 # Étape 8 : Ajoute les fichiers modifiés, nouveaux et supprimés
-echo "📄 Ajout des fichiers au staging..."
+echo -e "\033[36m📄 Ajout des fichiers au staging...\033[0m"
 git add -A
+echo ""
 
 # Étape 9 : Crée un fichier temporaire pour le message de commit
 echo "$msg" > .gitmessage.txt
 
 # Étape 10 : Effectue le commit
-echo "📝 Création du commit..."
+echo -e "\033[36m📝 Création du commit...\033[0m"
 HUSKY=0 git commit -F .gitmessage.txt
+echo ""
 
 # Étape 11 : Supprime le fichier temporaire
-rm .gitmessage.txt
+
 
 # Étape 12 : Récupère le nom de la branche actuelle
-echo "🌿 Récupération du nom de la branche actuelle"
+echo -e "\033[36m🌿 Récupération du nom de la branche actuelle\033[0m"
 branch=$(git rev-parse --abbrev-ref HEAD)
+echo ""
 
 # Étape 13 : Pousse sur la branche courante
-echo "🚀 Pousse sur la branche '$branch'..."
+echo -e "\033[36m🚀 Pousse sur la branche '$branch'...\033[0m"
 git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
-echo "✅ Commit réussi, envoi sur la branche '$branch'..."
+echo ""
+echo ""
+echo -e "\033[1,35mFin du script\033[0m"
+echo -e"\033[34m✅ Commit réussi, envoi sur la branche '$branch'avec le message :\033[0m"
+echo -e "\033[33m\"$msg\"\033[0m"
+rm .gitmessage.txt
