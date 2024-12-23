@@ -19,6 +19,9 @@
 
 #!/bin/bash
 
+#Version du script
+echo "Version du script V5.1.1"
+
 # Emplacement du fichier pour stocker les informations de l'agent
 SSH_ENV="$HOME/.ssh-agent.env"
 
