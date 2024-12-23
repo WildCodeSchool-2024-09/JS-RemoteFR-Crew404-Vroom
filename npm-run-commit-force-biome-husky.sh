@@ -74,14 +74,17 @@ echo -e "\033[36m🚀 Exécution de Biome...\033[0m"
 echo ""
 echo -e "\033[36m🛠️. Modification des fichiers nécessaires\033[0m"
 npx @biomejs/biome check --fix --unsafe ./client
-echo "✅ Exécution de Biome terminée"
+echo -e "\033[34m✅ Exécution de Biome terminée\033[0m"
+echo ""
 
 # Étape 4 : Affiche l'état actuel du dépôt
-echo "📄 Vérification de l'état actuel du dépôt..."
+echo -e "\033[36m📄 Vérification de l'état actuel du dépôt...\033[0m"
 git status
+echo ""
 
 # Étape 5 : Demande le message de commit
-read -p "Entrez votre message de commit : " msg
+read -p $'\033[1;33mEntrez votre message de commit : \033[0m' msg
+echo -e "\033[1;33mVotre message de commit est : \"$msg\"\033[0m"
 
 # Étape 6 : Récupère les fichiers modifiés, nouveaux et supprimés
 files=$(git ls-files --modified --deleted --others --exclude-standard)
