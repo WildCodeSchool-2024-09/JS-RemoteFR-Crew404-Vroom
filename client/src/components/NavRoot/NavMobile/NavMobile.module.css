@@ -106,6 +106,8 @@
   position: fixed;
   top: 0.5rem;
   right: 0.5rem;
+  outline: none; /*Supprime le contour par défaut du bouton*/
+  background-color: var(--primary-color);
 }
 .menuBurger > span {
   display: block;
