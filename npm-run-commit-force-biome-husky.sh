@@ -21,7 +21,7 @@
 #!/bin/bash
 
 # Version du script
-echo -e "\033[35mVersion du script V6.2.1\033[0m"
+echo -e "\033[1;35mVersion du script V6.2.2\033[0m"
 echo ""
 echo ""
 echo -e "\033[35mDébut d'exécution du script\033[0m"
@@ -112,20 +112,17 @@ echo -e "\033[36m📝 Création du commit...\033[0m"
 HUSKY=0 git commit -F .gitmessage.txt
 echo ""
 
-# Étape 12 : Supprime le fichier temporaire
-
-
-# Étape 13 : Récupère le nom de la branche actuelle
+# Étape 12 : Récupère le nom de la branche actuelle
 echo -e "\033[36m🌿 Récupération du nom de la branche actuelle\033[0m"
 branch=$(git rev-parse --abbrev-ref HEAD)
 echo ""
 
-# Étape 14 : Pousse sur la branche courante
+# Étape 13 : Pousse sur la branche courante
 echo -e "\033[36m🚀 Pousse sur la branche '$branch'...\033[0m"
 git push origin "$branch" || { echo "❌ Erreur : Push échoué."; exit 1; }
 echo ""
 
-# Étape 15 : Résumé du commit
+# Étape 14 : Résumé du commit
 echo ""
 echo -e "\033[1;35mFin du script\033[0m"
 echo -e "\033[34m✅ Commit réussi, envoi sur la branche \033[1;35m'$branch'\033[34m avec le message :\033[0m"
