@@ -128,5 +128,5 @@ echo ""
 # Étape 14 : Résumé du commit
 echo ""
 echo -e "\033[1;35mFin du script\033[0m"
-echo -e "\033[34m✅ Commit réussi, envoi sur la branche \033[34m'$branch'\033[34mavec le message :\033[0m"
+echo -e "\033[34m✅ Commit réussi, envoi sur la branche \033[34m'$branch'\033[34m avec le message :\033[0m"
 echo -e "\033[33m\"$msg\"\033[0m"
