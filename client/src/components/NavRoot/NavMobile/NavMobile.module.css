@@ -122,6 +122,7 @@
   border: none; /* Supprime les bordures */
 }
 
+/*Suppression des contours buttons*/
 .closeBtn:focus,
 .openBtn:focus {
   outline: none; /* Supprime le contour au focus */
