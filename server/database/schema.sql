@@ -25,6 +25,16 @@ CREATE TABLE event (
   SPATIAL INDEX(location)
 );
 
+CREATE TABLE model (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  brand_id int unsigned NOT NULL,
+  motor_id int unsigned NOT NULL,
+  FOREIGN KEY(brand_id) REFERENCES brand(id),
+  FOREIGN KEY(motor_id) REFERENCES motor(id)
+);
+
 CREATE TABLE vehicle (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
   vehicle_picture VARCHAR(255) NOT NULL,
@@ -44,16 +54,6 @@ CREATE TABLE like (
   vehicle_id int unsigned NOT NULL,
   FOREIGN KEY(user_id) REFERENCES user(id),
   FOREIGN KEY(vehicle_id) REFERENCES user(id)
-);
-
-CREATE TABLE model (
-  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  year INT NOT NULL,
-  brand_id int unsigned NOT NULL,
-  motor_id int unsigned NOT NULL,
-  FOREIGN KEY(brand_id) REFERENCES brand(id),
-  FOREIGN KEY(motor_id) REFERENCES motor(id)
 );
 
 CREATE TABLE brand (
