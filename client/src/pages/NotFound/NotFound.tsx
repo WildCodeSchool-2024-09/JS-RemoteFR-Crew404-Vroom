@@ -1,18 +1,16 @@
 import styles from "./NotFound.module.css";
 
-const NotFound = () => {
+function NotFound() {
   return (
     <div className={styles.notFoundContainer}>
       <div className={styles.background} />
       <h1 className={styles.title}>404 - Page non trouvée</h1>
-      <p className={styles.description}>
-        Oops! The page you are looking for doesn&apos;t exist.
-      </p>
+      <p className={styles.description}>Oops! L'itinéraire n'existe pas.</p>
       <a href="/" className={styles.link}>
-        Return to Dashboard
+        Retour sur la page ??
       </a>
     </div>
   );
-};
+}
 
 export default NotFound;
