@@ -4,6 +4,7 @@ function NavRoot() {
   return (
     <>
       <NavMobile />
+      <div />
     </>
   );
 }
