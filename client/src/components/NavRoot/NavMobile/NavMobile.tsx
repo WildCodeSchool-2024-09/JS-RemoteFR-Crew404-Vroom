@@ -5,7 +5,7 @@ import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavMobile.module.css";
 
 function NavMobile() {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(false); /*Open Close MenuBurger*/
   const funcActive = () => {
     setActive(!active);
   };
