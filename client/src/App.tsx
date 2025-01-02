@@ -1,10 +1,10 @@
 import "./App.css";
-import Dashboard from "./pages/Dashboard/DashBoard";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
     <>
-      <Dashboard />
+      <NotFound />
     </>
   );
 }
