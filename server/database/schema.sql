@@ -1,21 +1,67 @@
-create table user (
-  id int unsigned primary key auto_increment not null,
-  email varchar(255) not null unique,
-  password varchar(255) not null
+CREATE TABLE user (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  username VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  profile_picture VARCHAR(255),
+  firstname VARCHAR(255),
+  lastname VARCHAR(255),
+  birthdate DATE,
+  phone_number VARCHAR(20),
+  sold INT
 );
 
-create table item (
-  id int unsigned primary key auto_increment not null,
-  title varchar(255) not null,
-  user_id int unsigned not null,
-  foreign key(user_id) references user(id)
+CREATE TABLE motor (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  name VARCHAR(255) NOT NULL
 );
 
-insert into user(id, email, password)
-values
-  (1, "jdoe@mail.com", "123456");
+CREATE TABLE brand (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  name VARCHAR(255) NOT NULL
+);
 
-insert into item(id, title, user_id)
-values
-  (1, "Stuff", 1),
-  (2, "Doodads", 1);
+CREATE TABLE event (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  type ENUM('salon', 'course', 'musée', 'vente aux enchères', 'roadtrip', 'rassemblement') NOT NULL,
+  date DATE NOT NULL,
+  location POINT NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  description VARCHAR(225),
+  link VARCHAR(255),
+  user_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  SPATIAL INDEX(location)
+);
+
+CREATE TABLE model (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  brand_id INT unsigned NOT NULL,
+  motor_id INT unsigned NOT NULL,
+  FOREIGN KEY(brand_id) REFERENCES brand(id),
+  FOREIGN KEY(motor_id) REFERENCES motor(id)
+);
+
+CREATE TABLE vehicle (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  vehicle_picture VARCHAR(255) NOT NULL,
+  type ENUM('moto', 'voiture') NOT NULL,
+  status ENUM('vente', 'essai', 'indisponible') NOT NULL,
+  location VARCHAR(100) NOT NULL,
+  energy ENUM('essence', 'diesel', 'electrique') NOT NULL,
+  user_id INT unsigned NOT NULL,
+  model_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  FOREIGN KEY(model_id) REFERENCES model(id)
+);
+
+CREATE TABLE `like` (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  user_id INT unsigned NOT NULL,
+  vehicle_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
+);
