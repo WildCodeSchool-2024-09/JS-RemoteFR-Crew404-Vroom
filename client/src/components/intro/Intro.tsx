@@ -1,7 +1,8 @@
 import "./Intro.css";
 import maps from "../../assets/images/maps.jpg";
 import mus from "../../assets/images/mus.jpg";
-const Intro = () => {
+
+function Intro() {
   return (
     <>
       <div className="intro-container">
@@ -18,4 +19,5 @@ const Intro = () => {
     </>
   );
 };
+
 export default Intro;
