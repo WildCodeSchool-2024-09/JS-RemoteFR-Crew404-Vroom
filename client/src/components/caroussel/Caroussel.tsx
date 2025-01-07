@@ -20,7 +20,7 @@ const images = [
 
 type SlidePosition = "prev" | "active" | "next";
 
-const Caroussel = () => {
+function Caroussel() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const nextSlide = (): void => {
@@ -62,6 +62,6 @@ const Caroussel = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Caroussel;
