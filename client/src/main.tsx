@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import About from "./pages/About/About";
+import Account from "./pages/Account/Account";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
 import NotFound from "./pages/NotFound/NotFound";
-import Account from "./pages/Account/Account";
 
 const router = createBrowserRouter([
   {
