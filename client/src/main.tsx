@@ -6,6 +6,7 @@ import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
 import NotFound from "./pages/NotFound/NotFound";
+import Account from "./pages/Account/Account";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/dashbord",
         element: <Dashboard />,
+      },
+      {
+        path: "/account",
+        element: <Account />,
       },
       {
         path: "/about",
