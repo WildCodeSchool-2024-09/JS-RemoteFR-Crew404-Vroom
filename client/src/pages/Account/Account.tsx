@@ -1,16 +1,20 @@
 import styles from "./Account.module.css";
+import Envelope from "../../assets/images/social/envelope.png"
+import Profilepic from "../../assets/images/social/person_15439869.png"
 
 function Account() {
   return (
     <div className={styles.accountContainer}>
       <section className={styles.generalContainer}>
-        <img src="/" alt="profil-picture" />
+        <div className={styles.imgContainer}>
+            <img src={Profilepic} alt="profil-picture" />
+        </div>
         <span className={styles.idContainer}>
           <input type="text" value="identifiant" />
           <button type="button">changer le mot de passe</button>
         </span>
         <span className={styles.mailContainer}>
-          <img src="../../assets/images/social/envelope.png" alt="icon-mail" />
+          <img src={Envelope} alt="icon-mail" />
           <input type="text" value="Email" />
         </span>
         <span className={styles.fieldContainer}>

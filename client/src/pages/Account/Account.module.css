@@ -16,5 +16,59 @@
 
   @media screen and (min-width: 750px) {
     min-width: 40rem;
+    padding: 1rem 5rem;
   }
+}
+
+.generalContainer input {
+    border-radius: 5px;
+    padding: 0.5em 1em;
+}
+
+.imgContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.imgContainer img {
+    justify-content: center;
+    width: 9vh;
+    height: 9vh;
+}
+
+.idContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 4rem;
+    gap: 1rem;
+}
+
+.idContainer button {
+    color: var(--light);
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 0.3rem 1rem;
+}
+
+.mailContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 3rem;
+    gap: 1rem;
+    padding: 0.3rem 1rem;
+}
+
+.mailContainer img {
+    width: 2em;
+    height: 1.5em;
+}
+
+.fieldContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 4rem;
+    gap: 1rem;
 }
