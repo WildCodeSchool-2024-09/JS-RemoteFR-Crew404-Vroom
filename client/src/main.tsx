@@ -17,6 +17,10 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/home",
+        element: <Home />,
+      },
+      {
         path: "/dashbord",
         element: <Dashboard />,
       },
@@ -25,8 +29,16 @@ const router = createBrowserRouter([
         element: <About />,
       },
       {
-        path: "/contact/:id",
+        path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/compte",
+        element: <h1>Page compte non disponible</h1>,
+      },
+      {
+        path: "/maps",
+        element: <h1>Page maps non disponible</h1>,
       },
       {
         path: "*",
