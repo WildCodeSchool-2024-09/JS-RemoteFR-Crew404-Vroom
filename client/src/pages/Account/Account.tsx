@@ -1,13 +1,13 @@
+import Envelope from "../../assets/images/social/envelope.png";
+import Profilepic from "../../assets/images/social/person_15439869.png";
 import styles from "./Account.module.css";
-import Envelope from "../../assets/images/social/envelope.png"
-import Profilepic from "../../assets/images/social/person_15439869.png"
 
 function Account() {
   return (
     <div className={styles.accountContainer}>
       <section className={styles.generalContainer}>
         <div className={styles.imgContainer}>
-            <img src={Profilepic} alt="profil-picture" />
+          <img src={Profilepic} alt="profil-picture" />
         </div>
         <span className={styles.idContainer}>
           <input type="text" value="identifiant" />
