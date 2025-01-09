@@ -16,7 +16,7 @@ function NavMobile() {
 
   useEffect(() => {
     setCount(() => Math.floor(Math.random() * 4) + 1);
-  });
+  }, []);
 
   const funcActive = () => {
     setActive(!active);
