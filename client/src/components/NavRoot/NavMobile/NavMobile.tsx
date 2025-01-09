@@ -5,6 +5,11 @@ import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavMobile.module.css";
 
+/*Import des Icons de fermeture du MenuBurger*/
+import Closebtn1 from "../../../assets/Icons/CloseBtn1.svg";
+import Closebtn2 from "../../../assets/Icons/CloseBtn2.svg";
+import Closebtn3 from "../../../assets/Icons/CloseBtn3.svg";
+
 function NavMobile() {
   const [active, setActive] = useState(false); /*Open Close MenuBurger*/
   const [count, setCount] = useState(() => Math.floor(Math.random() * 4) + 1);
@@ -20,6 +25,7 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
+        {/*lvl 1*/}
         <Link to="/home">
           <div className={css.LogoMobile}>
             <h1 className={css.front}>Vroom</h1>
@@ -27,11 +33,16 @@ function NavMobile() {
           </div>
         </Link>
 
+        {/*lvl 1*/}
         <h3>Bienvenue sur VROOM</h3>
+
+        {/*lvl 1*/}
         <div
           className={`${css.sideNav} ${active ? css.active : ""} ${css.mySideNav}`}
         >
+          {/*lvl 2*/}
           <div className={css.logCloseBtn}>
+            {/*lvl 3*/}
             {count === 1 && (
               <button
                 className={css.closeBtn}
@@ -41,10 +52,14 @@ function NavMobile() {
                 x
               </button>
             )}
+
+            {/*lvl 3*/}
+            {count === 2 && <img src={Closebtn1} alt="" />}
           </div>
 
           {/*Le style de ce composant est directement géré par le module CSS :
-                     MenuNavRoot.module.css*/}
+         MenuNavRoot.module.css*/}
+          {/*lvl 2*/}
           <MenuNavRoot
             moduleMenuUl={style.MenuUlMobile}
             moduleMenuLi={style.MenuLiMobile}
@@ -52,6 +67,7 @@ function NavMobile() {
           />
         </div>
 
+        {/*lvl 1*/}
         <button type="button" className={css.openBtn} onClick={funcActive}>
           <span className={css.menuBurger}>
             <span />
