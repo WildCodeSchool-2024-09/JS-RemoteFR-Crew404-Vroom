@@ -55,6 +55,11 @@ function NavMobile() {
 
             {/*lvl 3*/}
             {count === 2 && <img src={Closebtn1} alt="" />}
+
+            {/*lvl 3*/}
+            {count === 3 && <img src={Closebtn2} alt="" />}
+
+            {count === 4 && <img src={Closebtn3} alt="" />}
           </div>
 
           {/*Le style de ce composant est directement géré par le module CSS :
