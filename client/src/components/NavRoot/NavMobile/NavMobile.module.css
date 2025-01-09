@@ -119,6 +119,7 @@
   padding: 0rem 0rem 3rem 0rem;
 }
 
+/*Logique 1*/
 .closeBtn {
   margin: 1rem 0rem 0rem 1rem;
   padding: 0.5rem 1.5rem;
@@ -141,6 +142,13 @@
   transform: rotate(90deg) scale(1.1); /* Légère rotation et agrandissement */
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Ombre renforcée */
   background: linear-gradient(135deg, #3498db, #2980b9); /* Dégradé de couleur */
+}
+
+/*Logique 2, 3 et 4*/
+.ImgCloseBtn {
+  margin: 1rem 0rem 0rem 1rem;
+  width: 48px;
+  height: 48px;
 }
 
 /*-----------------------------------------------*/
