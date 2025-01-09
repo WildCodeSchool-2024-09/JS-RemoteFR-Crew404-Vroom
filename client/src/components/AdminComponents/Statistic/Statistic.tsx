@@ -21,7 +21,7 @@ function StatisticsComponent() {
     pointsEarned: 0,
     pointsSpent: 0,
   });
-  const [timeFrame, setTimeFrame] = useState<"day" | "month" | "year">("day");
+  const [, setTimeFrame] = useState<"day" | "month" | "year">("day");
 
   useEffect(() => {
     // Chargement des statistiques

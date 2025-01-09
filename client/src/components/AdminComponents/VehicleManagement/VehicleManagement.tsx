@@ -6,17 +6,9 @@ type Vehicle = {
   model: string;
   brand: string;
   vehicle_picture: string;
-  type:
-    | "moto"
-    | "voiture";
-  status:
-    | "vente"
-    | "essai"
-    | "indisponible";
-  energy:
-    | "essence"
-    | "diesel"
-    | "electrique";
+  type: "moto" | "voiture";
+  status: "vente" | "essai" | "indisponible";
+  energy: "essence" | "diesel" | "electrique";
   user: string;
   location: string;
 };
@@ -31,7 +23,8 @@ function VehicleManagement() {
         id: 1,
         model: "Skyline r34 GT-R 1970",
         brand: "Nissan",
-        vehicle_picture: "https://www.google.com/imgres?q=nissan%20skyline%20r34%201970&imgurl=https%3A%2F%2Fabcmoteur.fr%2Fwp-content%2Fuploads%2F2012%2F07%2Fskyline-c10-gtr-1970.jpg&imgrefurl=https%3A%2F%2Fabcmoteur.fr%2Fdivertissement%2Fpremiere-nissan-skyline-gt-r-1970-ca-chante%2F&docid=xtKzfF0marxDNM&tbnid=fKKzvjYxjiB2DM&vet=12ahUKEwi6soWaxuiKAxWeQ6QEHbT6B_4QM3oFCIIBEAA..i&w=1000&h=519&hcb=2&ved=2ahUKEwi6soWaxuiKAxWeQ6QEHbT6B_4QM3oFCIIBEAA",
+        vehicle_picture:
+          "https://www.google.com/imgres?q=nissan%20skyline%20r34%201970&imgurl=https%3A%2F%2Fabcmoteur.fr%2Fwp-content%2Fuploads%2F2012%2F07%2Fskyline-c10-gtr-1970.jpg&imgrefurl=https%3A%2F%2Fabcmoteur.fr%2Fdivertissement%2Fpremiere-nissan-skyline-gt-r-1970-ca-chante%2F&docid=xtKzfF0marxDNM&tbnid=fKKzvjYxjiB2DM&vet=12ahUKEwi6soWaxuiKAxWeQ6QEHbT6B_4QM3oFCIIBEAA..i&w=1000&h=519&hcb=2&ved=2ahUKEwi6soWaxuiKAxWeQ6QEHbT6B_4QM3oFCIIBEAA",
         type: "voiture",
         status: "essai",
         energy: "essence",
@@ -42,7 +35,8 @@ function VehicleManagement() {
         id: 2,
         model: "8 - XR750 1970",
         brand: "Harley Davidson",
-        vehicle_picture: "https://cdn.shopify.com/s/files/1/0059/3379/3362/files/harley-davidson-xr750.webp?v=1715107648",
+        vehicle_picture:
+          "https://cdn.shopify.com/s/files/1/0059/3379/3362/files/harley-davidson-xr750.webp?v=1715107648",
         type: "moto",
         status: "vente",
         energy: "essence",
@@ -61,7 +55,7 @@ function VehicleManagement() {
   function handleDeleteVehicle(id: number) {
     // Logique pour supprimer un véhicule
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?")) {
-        setvehicles(vehicles.filter((Vehicle) => Vehicle.id !== id));
+      setvehicles(vehicles.filter((Vehicle) => Vehicle.id !== id));
     }
   }
 

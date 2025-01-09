@@ -1,26 +1,26 @@
 import EventManagement from "../../components/AdminComponents/EventManagement/EventManagement";
 import StatisticsComponent from "../../components/AdminComponents/Statistic/Statistic";
 import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
-import VehicleManagement from "../../components/AdminComponents/VehicleManagement/VehicleManagement"
+import VehicleManagement from "../../components/AdminComponents/VehicleManagement/VehicleManagement";
 import styles from "./Admin.module.css";
 
 function BackofficeMain() {
   return (
-    <div className={styles.backofficeContainer}>
+    <div>
       <h1>Tableau de bord administrateur</h1>
-      <nav>
+      <nav className={styles.backofficeNavContainer}>
         <ul>
           <li>
             <a href="#stats">Statistiques</a>
           </li>
           <li>
-            <a href="#users">Gestion des utilisateurs</a>
+            <a href="#users">Utilisateurs</a>
           </li>
           <li>
-            <a href="#events">Gestion des événements</a>
+            <a href="#events">Événements</a>
           </li>
           <li>
-            <a href="#vehicles">Gestion des véhicules</a>
+            <a href="#vehicles">Véhicules</a>
           </li>
         </ul>
       </nav>
