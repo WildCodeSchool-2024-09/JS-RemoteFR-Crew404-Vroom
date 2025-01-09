@@ -45,7 +45,7 @@ function NavMobile() {
             {/*lvl 3*/}
             {count === 1 && (
               <button
-                className={css.closeBtn}
+                className={css.closeBtnLog1}
                 type="button"
                 onClick={funcActive}
               >
@@ -55,17 +55,35 @@ function NavMobile() {
 
             {/*lvl 3*/}
             {count === 2 && (
-              <img className={css.ImgCloseBtn} src={Closebtn1} alt="" />
+              <button
+                className={css.closeBtnLog2}
+                type="button"
+                onClick={funcActive}
+              >
+                <img className={css.ImgCloseBtn} src={Closebtn1} alt="" />
+              </button>
             )}
 
             {/*lvl 3*/}
             {count === 3 && (
-              <img className={css.ImgCloseBtn} src={Closebtn2} alt="" />
+              <button
+                className={css.closeBtnLog2}
+                type="button"
+                onClick={funcActive}
+              >
+                <img className={css.ImgCloseBtn} src={Closebtn2} alt="" />
+              </button>
             )}
 
             {/*lvl 3*/}
             {count === 4 && (
-              <img className={css.ImgCloseBtn} src={Closebtn3} alt="" />
+              <button
+                className={css.closeBtnLog2}
+                type="button"
+                onClick={funcActive}
+              >
+                <img className={css.ImgCloseBtn} src={Closebtn3} alt="" />
+              </button>
             )}
           </div>
 
