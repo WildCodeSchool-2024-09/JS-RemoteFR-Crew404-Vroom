@@ -1,0 +1,26 @@
+.userManagementContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1em;
+    margin-top: 2em;
+    background-color: var(--light);
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.603) 0px 4px 6px;
+  }
+
+.tableContainer {
+    border: solid;
+    border-collapse: collapse;
+    border-radius: 5px;
+  }
+
+tbody tr {
+    text-align: center;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgb(206, 219, 219);
+  }

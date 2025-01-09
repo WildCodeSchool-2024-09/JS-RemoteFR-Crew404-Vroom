@@ -1,0 +1,33 @@
+import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
+import EventManagement from "../../components/AdminComponents/EventManagement/EventManagement";
+import styles from "./Admin.module.css";
+
+function BackofficeMain() {
+  return (
+    <div className={styles.backofficeContainer}>
+      <h1>Tableau de bord administrateur</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="#stats">Statistiques</a>
+          </li>
+          <li>
+            <a href="#users">Gestion des utilisateurs</a>
+          </li>
+          <li>
+            <a href="#events">Gestion des événements</a>
+          </li>
+          <li>
+            <a href="#pages">Édition des pages</a>
+          </li>
+        </ul>
+      </nav>
+      <main>
+        <UserManagement />
+        <EventManagement />
+      </main>
+    </div>
+  );
+}
+
+export default BackofficeMain;

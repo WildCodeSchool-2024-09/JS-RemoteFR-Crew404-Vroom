@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import About from "./pages/About/About";
 import Account from "./pages/Account/Account";
+import BackofficeMain from "./pages/Admin/Admin";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
 import Home from "./pages/Home/Home";
@@ -38,8 +39,8 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/compte",
-        element: <h1>Page compte non disponible</h1>,
+        path: "/backoffice",
+        element: <BackofficeMain />,
       },
       {
         path: "/maps",
