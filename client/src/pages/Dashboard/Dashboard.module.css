@@ -1,8 +1,8 @@
-* {
+/* * {
   box-sizing: border-box;
 }
 
-.dashboardContainer {
+.container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -12,7 +12,7 @@
   margin-top: 2em;
 }
 
-.dashboardBox {
+.box {
   width: calc(100% - 2rem);
   background-color: var(--light);
   border-radius: 15px;
@@ -20,13 +20,13 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 }
 
-.dashboardTitle {
+.title {
   color: var(--secondary-color);
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.searchBar {
+.search {
   width: 100%;
   background-color: whitesmoke;
   color: var(--secondary-color);
@@ -39,7 +39,7 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.detailsContainer {
+.details {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,37 +47,37 @@
   margin-bottom: 1rem;
 }
 
-.detailsImage {
+.image {
   width: 3em;
   height: 3em;
   background-color: var(--secondary-color);
   border-radius: 10px;
 }
 
-.detailsInputs {
+.inputs {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.detailsInput {
+.input {
   width: 100%;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 0.5rem;
   font-size: 1rem;
-  box-sizing: border-box;
 }
 
-.placeholderImage {
+.placeholder {
   width: 100%;
   height: 150px;
   background-color: var(--secondary-color);
   border-radius: 10px;
 }
-.placeholderImagePlus {
+
+.addButton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,42 +87,41 @@
   transition: transform 0.3s ease;
 }
 
-.placeholderImagePlus svg {
+.addButton svg {
   fill: var(--secondary-color);
   width: 2rem;
   height: 2rem;
-  cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.placeholderImagePlus svg:hover {
+.addButton svg:hover {
   transform: scale(1.1);
 }
 
-.imagesContainer {
+.images {
   display: flex;
   gap: 0.5rem;
 }
 
-.imagesContainer .placeholderImage {
+.images .placeholder {
   flex: 1;
   height: 150px;
 }
 
-.placeholderImageSmall {
+.smallPlaceholder {
   width: 50%;
   height: 100px;
   background-color: var(--secondary-color);
-  margin: 1rem auto 0 auto;
+  margin: 1rem auto 0;
   border-radius: 10px;
 }
 
-.dashboardButtons {
+.buttons {
   display: flex;
   gap: 0.5rem;
 }
 
-.buttonLarge {
+.largeButton {
   flex: 2;
   background-color: whitesmoke;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -134,7 +133,7 @@
   font-weight: bold;
 }
 
-.buttonSmall {
+.smallButton {
   flex: 1;
   background-color: var(--secondary-color);
   padding: 1rem;
@@ -143,4 +142,282 @@
   border-radius: 10px;
   text-align: center;
   font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.largeButton,
+.smallButton {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.largeButton {
+  background-color: #4caf50; 
+  color: white;
+}
+
+.smallButton {
+  background-color: #f44336; 
+  color: white;
+  margin-left: 0.5rem;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.locationText {
+  text-transform: capitalize;
+}
+
+.modal {
+  border: none;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.clickable:hover {
+  transform: scale(1.1);
+}
+
+.locationText {
+  text-transform: capitalize;
+}
+
+.modal {
+  border: none;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+} */
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 2em 1em 4em;
+}
+
+.box {
+  width: calc(100% - 2rem);
+  background-color: var(--light);
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+}
+
+.title {
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.search {
+  width: 100%;
+  background-color: whitesmoke;
+  color: var(--secondary-color);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.image {
+  width: 3em;
+  height: 3em;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+}
+
+.inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.addButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.addButton svg {
+  fill: var(--secondary-color);
+  width: 2rem;
+  height: 2rem;
+}
+
+.images {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.smallPlaceholder {
+  width: 50%;
+  height: 100px;
+  background-color: var(--secondary-color);
+  margin: 1rem auto 0;
+  border-radius: 10px;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.largeButton {
+  flex: 2;
+  background-color: whitesmoke;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.smallButton {
+  flex: 1;
+  background-color: var(--secondary-color);
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.largeButton,
+.smallButton {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.locationText {
+  text-transform: capitalize;
+}
+
+.event {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: var(--light);
+  cursor: pointer;
+  width: 100%;
+}
+
+.event:hover {
+  background-color: var(--secondary-color-light);
 }
