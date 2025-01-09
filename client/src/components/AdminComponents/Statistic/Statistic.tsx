@@ -21,7 +21,7 @@ function StatisticsComponent() {
     pointsEarned: 0,
     pointsSpent: 0,
   });
-  const [timeFrame, setTimeFrame] = useState<"day" | "month">("day");
+  const [timeFrame, setTimeFrame] = useState<"day" | "month" | "year">("day");
 
   useEffect(() => {
     // Chargement des statistiques
@@ -45,7 +45,6 @@ function StatisticsComponent() {
         newEvents: 7,
         newVehicles: 20,
       },
-      // Ajoutez plus de jours si nécessaire
     ];
 
     const mockPointsStats: PointsStats = {
@@ -57,7 +56,7 @@ function StatisticsComponent() {
     setPointsStats(mockPointsStats);
   }
 
-  function handleTimeFrameChange(newTimeFrame: "day" | "month") {
+  function handleTimeFrameChange(newTimeFrame: "day" | "month" | "year") {
     setTimeFrame(newTimeFrame);
   }
 
@@ -81,19 +80,24 @@ function StatisticsComponent() {
         >
           Par Mois
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            handleTimeFrameChange("year");
+          }}
+        >
+          Par an
+        </button>
       </div>
 
-      <h3>
-        Statistiques {timeFrame === "day" ? "journalières" : "mensuelles"}
-      </h3>
       <table className={styles.tableContainer}>
         <thead>
           <tr>
             <th className={styles.tableContainer}>Date</th>
             <th className={styles.tableContainer}>Connexions</th>
-            <th className={styles.tableContainer}>Nouveaux Comptes</th>
-            <th className={styles.tableContainer}>Nouveaux Événements</th>
-            <th className={styles.tableContainer}>Nouveaux Véhicules</th>
+            <th className={styles.tableContainer}>Nb Comptes</th>
+            <th className={styles.tableContainer}>Nb Événements</th>
+            <th className={styles.tableContainer}>Nb Véhicules</th>
           </tr>
         </thead>
         <tbody>
@@ -109,7 +113,7 @@ function StatisticsComponent() {
         </tbody>
       </table>
 
-      <h3>Statistiques des Points</h3>
+      <h3>Économie des Points</h3>
       <p>Points gagnés : {pointsStats.pointsEarned}</p>
       <p>Points dépensés : {pointsStats.pointsSpent}</p>
       <p>Solde global : {pointsStats.pointsEarned - pointsStats.pointsSpent}</p>

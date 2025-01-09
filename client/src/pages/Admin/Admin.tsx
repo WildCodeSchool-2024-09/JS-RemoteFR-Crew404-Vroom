@@ -1,6 +1,7 @@
 import EventManagement from "../../components/AdminComponents/EventManagement/EventManagement";
 import StatisticsComponent from "../../components/AdminComponents/Statistic/Statistic";
 import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
+import VehicleManagement from "../../components/AdminComponents/VehicleManagement/VehicleManagement"
 import styles from "./Admin.module.css";
 
 function BackofficeMain() {
@@ -27,6 +28,7 @@ function BackofficeMain() {
         <StatisticsComponent />
         <UserManagement />
         <EventManagement />
+        <VehicleManagement />
       </main>
     </div>
   );
