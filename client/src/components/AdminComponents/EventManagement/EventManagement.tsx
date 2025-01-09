@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 import styles from "./EventManagement.module.css";
 
 type Event = {
   id: number;
   title: string;
-  type: 'salon' | 'course' | 'musée' | 'vente aux enchères' | 'roadtrip' | 'rassemblement';
+  type:
+    | "salon"
+    | "course"
+    | "musée"
+    | "vente aux enchères"
+    | "roadtrip"
+    | "rassemblement";
   date: string;
   address: string;
   description: string;
@@ -24,7 +30,7 @@ function EventManagement() {
         date: "2025-06-15",
         address: "123 Rue de l'Exposition, Paris",
         description: "Grand salon des véhicules de collection",
-        link: "https://salonautoretro.fr"
+        link: "https://salonautoretro.fr",
       },
       {
         id: 2,
@@ -33,7 +39,7 @@ function EventManagement() {
         date: "2025-03-10",
         address: "123 Rue de la plage, Deauville",
         description: "On débarque en Normandie",
-        link: "https://www.facebook.com/ffveofficiel/?locale=fr_FR"
+        link: "https://www.facebook.com/ffveofficiel/?locale=fr_FR",
       },
     ];
     setEvents(mockEvents);
@@ -67,18 +73,32 @@ function EventManagement() {
         </thead>
         <tbody>
           {events.map((event) => (
-              <tr key={event.id}>
-                <td>{event.id}</td>
-                <td>{event.title}</td>
-                <td>{event.type}</td>
-                <td>{event.date}</td>
-                <td>{event.address}</td>
-                <td>
-                  <button type='button' onClick={() => { handleEditEvent(event.id); }}>Modifier</button>
-                  <button type='button' onClick={() => { handleDeleteEvent(event.id); }}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
+            <tr key={event.id}>
+              <td>{event.id}</td>
+              <td>{event.title}</td>
+              <td>{event.type}</td>
+              <td>{event.date}</td>
+              <td>{event.address}</td>
+              <td>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleEditEvent(event.id);
+                  }}
+                >
+                  Modifier
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleDeleteEvent(event.id);
+                  }}
+                >
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

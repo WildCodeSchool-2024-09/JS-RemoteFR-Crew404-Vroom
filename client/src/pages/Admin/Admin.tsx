@@ -1,5 +1,6 @@
-import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
 import EventManagement from "../../components/AdminComponents/EventManagement/EventManagement";
+import StatisticsComponent from "../../components/AdminComponents/Statistic/Statistic";
+import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
 import styles from "./Admin.module.css";
 
 function BackofficeMain() {
@@ -18,11 +19,12 @@ function BackofficeMain() {
             <a href="#events">Gestion des événements</a>
           </li>
           <li>
-            <a href="#pages">Édition des pages</a>
+            <a href="#vehicles">Gestion des véhicules</a>
           </li>
         </ul>
       </nav>
       <main>
+        <StatisticsComponent />
         <UserManagement />
         <EventManagement />
       </main>

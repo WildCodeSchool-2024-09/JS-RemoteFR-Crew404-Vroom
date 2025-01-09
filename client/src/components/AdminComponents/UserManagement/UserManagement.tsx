@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 import styles from "./UserManagement.module.css";
 
 type User = {
@@ -14,51 +14,53 @@ type User = {
 
 function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
-  
-    useEffect(() => {
-      // Appel API ici
-  const users: User[] = [
-    {
-      id: 1,
-      username: "Aldup",
-      firstname: "Alice",
-      lastname: "Dupont",
-      birthday: "01-01-01",
-      email: "alice@example.com",
-      phone_number: +33607080910,
-      sold: 404,
-    },
-    {
-      id: 2,
-      username: "The B",
-      firstname: "Bob",
-      lastname: "Martin",
-      birthday: "01-01-01",
-      email: "bob@example.com",
-      phone_number: +33607080911,
-      sold: 404,
-    },
-  ];
-  setUsers(users);
-}, []);
 
-function handleEditUser(id: number) {
-  // Logique pour éditer un utilisateur
-  alert(`Édition de l'utilisateur ${id}`);
-}
+  useEffect(() => {
+    // Appel API ici
+    const users: User[] = [
+      {
+        id: 1,
+        username: "Aldup",
+        firstname: "Alice",
+        lastname: "Dupont",
+        birthday: "01-01-01",
+        email: "alice@example.com",
+        phone_number: +33607080910,
+        sold: 404,
+      },
+      {
+        id: 2,
+        username: "The B",
+        firstname: "Bob",
+        lastname: "Martin",
+        birthday: "01-01-01",
+        email: "bob@example.com",
+        phone_number: +33607080911,
+        sold: 404,
+      },
+    ];
+    setUsers(users);
+  }, []);
 
-function handleDeleteUser(id: number) {
-  // Logique pour supprimer un utilisateur
-  if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-    setUsers(users.filter((user) => user.id !== id));
+  function handleEditUser(id: number) {
+    // Logique pour éditer un utilisateur
+    alert(`Édition de l'utilisateur ${id}`);
   }
-}
+
+  function handleDeleteUser(id: number) {
+    // Logique pour supprimer un utilisateur
+    if (
+      window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
+    ) {
+      setUsers(users.filter((user) => user.id !== id));
+    }
+  }
 
   return (
     <div className={styles.userManagementContainer}>
       <h2>Gestion des utilisateurs</h2>
       <table className={styles.tableContainer}>
-        <thead >
+        <thead>
           <tr>
             <th className={styles.tableContainer}>ID</th>
             <th className={styles.tableContainer}>Pseudo</th>
