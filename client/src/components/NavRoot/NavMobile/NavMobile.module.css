@@ -106,8 +106,9 @@
   box-shadow: none; /* Supprime tout effet de surbrillance au focus */
 }
 
-.closeBtn:hover,
-.openBtn:hover {
+.closeBtnLog1:hover,
+.openBtn:hover,
+.closeBtnLog2 {
   outline: none; /* Supprime le contour au survol */
   box-shadow: none; /* Supprime tout effet de surbrillance au survol */
 }
@@ -144,9 +145,23 @@
   background: linear-gradient(135deg, #3498db, #2980b9); /* Dégradé de couleur */
 }
 
+.closeBtnLog2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0rem 0rem 1rem;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+.closeBtnLog2:hover {
+  transform: rotate(90deg) scale(1.1);
+}
+
 /*Logique 2, 3 et 4*/
 .ImgCloseBtn {
-  margin: 1rem 0rem 0rem 1rem;
   width: 48px;
   height: 48px;
 }
