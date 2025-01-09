@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
@@ -6,9 +7,16 @@ import css from "./NavMobile.module.css";
 
 function NavMobile() {
   const [active, setActive] = useState(false); /*Open Close MenuBurger*/
+  const [count, setCount] = useState(() => Math.floor(Math.random() * 4) + 1);
+
+  useEffect(() => {
+    setCount(() => Math.floor(Math.random() * 4) + 1);
+  });
+
   const funcActive = () => {
     setActive(!active);
   };
+
   return (
     <>
       <nav className={css.NavMobile}>
@@ -23,10 +31,16 @@ function NavMobile() {
         <div
           className={`${css.sideNav} ${active ? css.active : ""} ${css.mySideNav}`}
         >
-          <div>
-            <button className={css.closeBtn} type="button" onClick={funcActive}>
-              x
-            </button>
+          <div className={css.logCloseBtn}>
+            {count === 1 && (
+              <button
+                className={css.closeBtn}
+                type="button"
+                onClick={funcActive}
+              >
+                x
+              </button>
+            )}
           </div>
 
           {/*Le style de ce composant est directement géré par le module CSS :
