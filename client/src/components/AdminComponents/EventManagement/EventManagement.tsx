@@ -63,7 +63,6 @@ function EventManagement() {
       <table className={styles.tableContainer}>
         <thead>
           <tr>
-            <th className={styles.tableContainer}>ID</th>
             <th className={styles.tableContainer}>Titre</th>
             <th className={styles.tableContainer}>Type</th>
             <th className={styles.tableContainer}>Date</th>
@@ -74,7 +73,6 @@ function EventManagement() {
         <tbody>
           {events.map((event) => (
             <tr key={event.id}>
-              <td>{event.id}</td>
               <td>{event.title}</td>
               <td>{event.type}</td>
               <td>{event.date}</td>

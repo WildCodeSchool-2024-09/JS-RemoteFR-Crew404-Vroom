@@ -11,10 +11,28 @@
   box-shadow: rgba(0, 0, 0, 0.603) 0px 4px 6px;
 }
 
+.statGeneralContainer button {
+  margin: 5px;
+  font-size: 10px;
+  @media screen and (min-width: 550px) {
+    font-size: 14px;
+  }
+  @media screen and (min-width: 550px) {
+    font-size: 18px;
+  }
+}
+
 .tableContainer {
   border: solid;
   border-collapse: collapse;
   border-radius: 5px;
+  font-size: 10px;
+  @media screen and (min-width: 550px) {
+    font-size: 14px;
+  }
+  @media screen and (min-width: 550px) {
+    font-size: 18px;
+  }
 }
 
 tbody tr {

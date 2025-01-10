@@ -113,34 +113,35 @@ function UserManagement() {
   return (
     <div className={styles.userManagementContainer}>
       <h2>Gestion des utilisateurs</h2>
-      <input
-        type="text"
-        placeholder="Rechercher par pseudo, nom ou prénom"
-        value={searchTerm}
-        onChange={handleSearch}
-        className={styles.searchBar}
-      />
-      {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
-        <button
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className={styles.searchBar}
+          />
+        {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
+          <button
           type="button"
           onClick={handleResetSearch}
           className={styles.resetButton}
-        >
-          ↩ Réinitialiser
-        </button>
-      )}
-      <button type="button" onClick={handleSort} className={styles.sortButton}>
-        Trier par solde{" "}
-        {sortOrder === "none"
-          ? "❌"
-          : sortOrder === "asc"
+          >
+            ↩ Réinitialiser
+          </button>
+        )}
+        <button type="button" onClick={handleSort} className={styles.sortButton}>
+          Trier par solde{" "}
+          {sortOrder === "none"
+            ? "❌"
+            : sortOrder === "asc"
             ? "(Croissant)"
             : "(Décroissant)"}
-      </button>
+        </button>
+      </div>
       <table className={styles.tableContainer}>
         <thead>
           <tr>
-            <th className={styles.tableContainer}>ID</th>
             <th className={styles.tableContainer}>Pseudo</th>
             <th className={styles.tableContainer}>Prénom</th>
             <th className={styles.tableContainer}>Nom</th>
@@ -151,7 +152,6 @@ function UserManagement() {
         <tbody>
           {filteredUsers.map((user) => (
             <tr key={user.id}>
-              <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.firstname}</td>
               <td>{user.lastname}</td>

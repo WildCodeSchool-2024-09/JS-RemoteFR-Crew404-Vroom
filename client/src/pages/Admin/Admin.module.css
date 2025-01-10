@@ -14,7 +14,7 @@ h1 {
   text-align: center;
 }
 
-ul {
+.backofficeNavContainer ul {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@ ul {
   gap: 0.5em;
 }
 
-li {
+.backofficeNavContainer li {
   background-color: black;
   border: solid;
   border-collapse: collapse;
@@ -30,7 +30,7 @@ li {
   padding: 0.3em;
 }
 
-a {
+.backofficeNavContainer a {
   text-decoration: none;
   color: var(--light);
   font-weight: bold;

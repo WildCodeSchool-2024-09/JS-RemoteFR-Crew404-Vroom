@@ -65,7 +65,6 @@ function VehicleManagement() {
       <table className={styles.tableContainer}>
         <thead>
           <tr>
-            <th className={styles.tableContainer}>ID</th>
             <th className={styles.tableContainer}>Model</th>
             <th className={styles.tableContainer}>Marque</th>
             <th className={styles.tableContainer}>Type</th>
@@ -77,7 +76,6 @@ function VehicleManagement() {
         <tbody>
           {vehicles.map((Vehicle) => (
             <tr key={Vehicle.id}>
-              <td>{Vehicle.id}</td>
               <td>{Vehicle.model}</td>
               <td>{Vehicle.brand}</td>
               <td>{Vehicle.type}</td>
