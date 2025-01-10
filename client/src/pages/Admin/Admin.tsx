@@ -10,9 +10,6 @@ function BackofficeMain() {
       <nav className={styles.backofficeNavContainer}>
         <ul>
           <li>
-            <a href="#stats">Statistiques</a>
-          </li>
-          <li>
             <a href="#users">Utilisateurs</a>
           </li>
           <li>
