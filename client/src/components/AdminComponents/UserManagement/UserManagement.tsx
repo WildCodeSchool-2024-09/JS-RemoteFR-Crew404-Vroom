@@ -120,23 +120,27 @@ function UserManagement() {
           value={searchTerm}
           onChange={handleSearch}
           className={styles.searchBar}
-          />
+        />
         {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
           <button
-          type="button"
-          onClick={handleResetSearch}
-          className={styles.resetButton}
+            type="button"
+            onClick={handleResetSearch}
+            className={styles.resetButton}
           >
             ↩ Réinitialiser
           </button>
         )}
-        <button type="button" onClick={handleSort} className={styles.sortButton}>
+        <button
+          type="button"
+          onClick={handleSort}
+          className={styles.sortButton}
+        >
           Trier par solde{" "}
           {sortOrder === "none"
             ? "❌"
             : sortOrder === "asc"
-            ? "(Croissant)"
-            : "(Décroissant)"}
+              ? "(Croissant)"
+              : "(Décroissant)"}
         </button>
       </div>
       <table className={styles.tableContainer}>
