@@ -78,35 +78,12 @@
 }
 
 /*Logique ouverture et fermeture MenuBurger*/
-.closeBtn {
-  margin: 1rem 0rem 0rem 1rem;
-  padding: 0.5rem 1.5rem;
-  text-decoration: none;
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #3498db, #8e44ad); /* Dégradé bleu-violet */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre */
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  cursor: pointer;
-}
-
-.closeBtn:hover {
-  transform: rotate(90deg) scale(1.1); /* Légère rotation et agrandissement */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Ombre renforcée */
-  background: linear-gradient(135deg, #3498db, #2980b9); /* Dégradé de couleur */
-}
-
 .openBtn {
   position: fixed;
+  z-index: 9;
   top: 0.5rem;
   right: 0.5rem;
-  background-color: var(--primary-color);
+  background-color: var(--noColor);
 }
 .menuBurger > span {
   display: block;
@@ -129,22 +106,71 @@
   box-shadow: none; /* Supprime tout effet de surbrillance au focus */
 }
 
-.closeBtn:hover,
-.openBtn:hover {
+.closeBtnLog1:hover,
+.openBtn:hover,
+.closeBtnLog2 {
   outline: none; /* Supprime le contour au survol */
   box-shadow: none; /* Supprime tout effet de surbrillance au survol */
 }
 
-/*-----------------------------------------------*/
-
-/*Contenu du Menu Burger*/
-.sideNav > div {
+/*Container du bouton close MenuBurger*/
+.logCloseBtn {
   display: flex;
   justify-content: start;
   padding: 0rem 0rem 3rem 0rem;
 }
 
-/*Bouttons language drapeaux*/
+/*Logique 1*/
+.closeBtnLog1 {
+  margin: 1rem 0rem 0rem 1rem;
+  padding: 0.5rem 1.5rem;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3498db, #8e44ad); /* Dégradé bleu-violet */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+.closeBtnLog1:hover {
+  transform: rotate(90deg) scale(1.1); /* Légère rotation et agrandissement */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Ombre renforcée */
+  background: linear-gradient(135deg, #3498db, #2980b9); /* Dégradé de couleur */
+}
+
+/*Logique 2, 3 et 4*/
+.closeBtnLog2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0rem 0rem 1rem;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  outline: none;
+  transition: transform 0.3s ease;
+}
+
+.closeBtnLog2:hover {
+  transform: rotate(90deg) scale(1.1);
+}
+
+.ImgCloseBtn {
+  width: 60px;
+  height: 60px;
+}
+/*-----------------------------------------------*/
+/*Boutons langage drapeaux*/
 
 .sideNav > section {
   display: flex;

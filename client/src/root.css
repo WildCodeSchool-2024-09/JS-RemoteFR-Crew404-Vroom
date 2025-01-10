@@ -3,6 +3,7 @@
   --secondary-color: #001524;
   --dark: #001500;
   --light: azure;
+  --noColor: none;
 
   --BackgroudMenuBurger: var(--light);
   --textColorWhite: var(--secondary-color);
