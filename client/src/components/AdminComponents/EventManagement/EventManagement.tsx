@@ -4,7 +4,8 @@ import styles from "./EventManagement.module.css";
 type Event = {
   id: number;
   title: string;
-  type: "type"
+  type:
+    | "type"
     | "salon"
     | "course"
     | "musée"
@@ -26,7 +27,6 @@ function EventManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [filterType, setFilterType] = useState<Event["type"] | "">("");
-
 
   useEffect(() => {
     // Appel API ici
@@ -64,10 +64,9 @@ function EventManagement() {
     const filtered = events.filter(
       (event) =>
         (event.title.toLowerCase().includes(searchTerm) ||
-        event.date_start.includes(searchTerm) ||
-        event.date_end.includes(searchTerm))
-        &&
-      (filterType === "" || event.type === filterType)
+          event.date_start.includes(searchTerm) ||
+          event.date_end.includes(searchTerm)) &&
+        (filterType === "" || event.type === filterType),
     );
     setFilteredEvents(filtered);
   }
@@ -76,7 +75,7 @@ function EventManagement() {
   function handleFilterChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const newFilterType = event.target.value as Event["type"] | "";
     setFilterType(newFilterType);
-  
+
     if (newFilterType === "" || newFilterType === "type") {
       setFilteredEvents(events);
     } else {
@@ -103,9 +102,15 @@ function EventManagement() {
 
     const sorted = [...filteredEvents];
     if (newSortOrder === "asc") {
-      sorted.sort((a, b) => new Date(a.date_start).getTime() - new Date(b.date_start).getTime());
+      sorted.sort(
+        (a, b) =>
+          new Date(a.date_start).getTime() - new Date(b.date_start).getTime(),
+      );
     } else if (newSortOrder === "desc") {
-      sorted.sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime());
+      sorted.sort(
+        (a, b) =>
+          new Date(b.date_start).getTime() - new Date(a.date_start).getTime(),
+      );
     }
     setFilteredEvents(sorted);
   }
@@ -152,8 +157,8 @@ function EventManagement() {
             ↩ Réinitialiser
           </button>
         )}
-        <select  
-          name="typeEvent" 
+        <select
+          name="typeEvent"
           className={styles.selectButton}
           value={filterType}
           onChange={handleFilterChange}

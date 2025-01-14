@@ -14,7 +14,10 @@ type Vehicle = {
 };
 
 function VehicleManagement() {
-  const [vehicles, setvehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState<Event["type"] | "">("");
 
   useEffect(() => {
     // Appel API ici
@@ -44,8 +47,46 @@ function VehicleManagement() {
         location: "Marseille",
       },
     ];
-    setvehicles(mockvehicles);
+    setVehicles(mockvehicles);
+    setFilteredVehicles(mockvehicles);
   }, []);
+
+  // Fonction pour la barre de recherche
+  function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+
+    const filtered = vehicles.filter(
+      (vehicle) =>
+        vehicle.model.toLowerCase().includes(searchTerm) ||
+        vehicle.brand.toLowerCase().includes(searchTerm) ||
+        vehicle.location.toLowerCase().includes(searchTerm) ||
+        vehicle.user.toLowerCase().includes(searchTerm),
+    );
+    setFilteredVehicles(filtered);
+  }
+
+  // Fonction pour trier les événements par type
+  function handleFilterChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const newFilterType = event.target.value as Event["type"] | "";
+    setFilterType(newFilterType);
+
+    if (newFilterType === "" || newFilterType === "type") {
+      setFilteredVehicles(vehicles);
+    } else {
+      const filtered = vehicles.filter(
+        (vehicle) => vehicle.type === newFilterType,
+      );
+      setFilteredVehicles(filtered);
+    }
+  }
+
+  // Fonction pour réinitialiser la recherche
+  function handleResetSearch() {
+    setSearchTerm("");
+    setFilterType("");
+    setFilteredVehicles(vehicles);
+  }
 
   function handleEditVehicle(id: number) {
     // Logique pour éditer un véhicule
@@ -55,13 +96,43 @@ function VehicleManagement() {
   function handleDeleteVehicle(id: number) {
     // Logique pour supprimer un véhicule
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?")) {
-      setvehicles(vehicles.filter((Vehicle) => Vehicle.id !== id));
+      const updatedVehicles = vehicles.filter((vehicle) => vehicle.id !== id);
+      setVehicles(updatedVehicles);
+      setFilteredVehicles(updatedVehicles);
     }
   }
 
   return (
     <div className={styles.vehicleManagementContainer}>
       <h2>Gestion des véhicules</h2>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className={styles.searchBar}
+        />
+        {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
+          <button
+            type="button"
+            onClick={handleResetSearch}
+            className={styles.resetButton}
+          >
+            ↩ Réinitialiser
+          </button>
+        )}
+        <select
+          name="typeVehicle"
+          className={styles.selectButton}
+          value={filterType}
+          onChange={handleFilterChange}
+        >
+          <option value="type">Type</option>
+          <option value="moto">Moto</option>
+          <option value="voiture">Voiture</option>
+        </select>
+      </div>
       <table className={styles.tableContainer}>
         <thead>
           <tr>
@@ -74,7 +145,7 @@ function VehicleManagement() {
           </tr>
         </thead>
         <tbody>
-          {vehicles.map((Vehicle) => (
+          {filteredVehicles.map((Vehicle) => (
             <tr key={Vehicle.id}>
               <td>{Vehicle.model}</td>
               <td>{Vehicle.brand}</td>
