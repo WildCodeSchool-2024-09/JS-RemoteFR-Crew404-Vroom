@@ -110,10 +110,14 @@ function UserManagement() {
     }
   }
 
+  // Calculez le nombre total d'événements filtrés
+  const totalUsers = filteredUsers.length;
+
   return (
     <div className={styles.userManagementContainer}>
       <h2>Gestion des utilisateurs</h2>
       <div className={styles.searchContainer}>
+        <p className={styles.eventCounter}>Total : {totalUsers}</p>
         <input
           type="text"
           placeholder="Rechercher..."
@@ -135,7 +139,7 @@ function UserManagement() {
           onClick={handleSort}
           className={styles.sortButton}
         >
-          Trier par solde{" "}
+          Par solde{" "}
           {sortOrder === "none"
             ? "❌"
             : sortOrder === "asc"

@@ -13,8 +13,14 @@
 
 .searchContainer {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   min-height: 2.5rem;
+  align-items: center;
+}
+
+.eventCounter {
+  font-weight: bold;
 }
 
 .searchBar {

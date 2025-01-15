@@ -102,10 +102,14 @@ function VehicleManagement() {
     }
   }
 
+  // Calculez le nombre total d'événements filtrés
+  const totalVehicles = filteredVehicles.length;
+
   return (
     <div className={styles.vehicleManagementContainer}>
       <h2>Gestion des véhicules</h2>
       <div className={styles.searchContainer}>
+        <p className={styles.eventCounter}>Total : {totalVehicles}</p>
         <input
           type="text"
           placeholder="Rechercher..."

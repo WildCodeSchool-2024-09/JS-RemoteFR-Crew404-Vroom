@@ -137,10 +137,14 @@ function EventManagement() {
     }
   }
 
+    // Calculez le nombre total d'événements filtrés
+    const totalEvents = filteredEvents.length;
+
   return (
     <div className={styles.eventManagementContainer}>
       <h2>Gestion des Événements</h2>
       <div className={styles.searchContainer}>
+        <p className={styles.eventCounter}>Total : {totalEvents}</p>
         <input
           type="text"
           placeholder="Rechercher..."
@@ -176,7 +180,7 @@ function EventManagement() {
           onClick={handleSort}
           className={styles.sortButton}
         >
-          Trier par date{" "}
+          Par date{" "}
           {sortOrder === "none"
             ? "❌"
             : sortOrder === "asc"
