@@ -87,8 +87,15 @@
   }
 }
 
-.sideNav.active {
-  left: 0;
+@media (max-width: 768px) {
+  .sideNav.active {
+    right: 0;
+  }
+}
+@media (min-width: 769px) {
+  .sideNav.active {
+    left: 0;
+  }
 }
 
 /*Logique ouverture et fermeture MenuBurger*/
