@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
 import styles from "./VehicleManagement.module.css";
 
 type Vehicle = {
@@ -18,6 +20,7 @@ function VehicleManagement() {
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<Event["type"] | "">("");
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   useEffect(() => {
     // Appel API ici
@@ -50,6 +53,11 @@ function VehicleManagement() {
     setVehicles(mockvehicles);
     setFilteredVehicles(mockvehicles);
   }, []);
+
+  // Fonction pour l'expension du tableau
+  function toggleTableExpansion() {
+    setIsTableExpanded(!isTableExpanded);
+  }
 
   // Fonction pour la barre de recherche
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
@@ -102,82 +110,97 @@ function VehicleManagement() {
     }
   }
 
-  // Calculez le nombre total d'événements filtrés
+  // Calcule le nombre total d'événements filtrés
   const totalVehicles = filteredVehicles.length;
 
   return (
     <div className={styles.vehicleManagementContainer}>
       <h2>Gestion des véhicules</h2>
-      <div className={styles.searchContainer}>
+
+      <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalVehicles}</p>
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className={styles.searchBar}
-        />
-        {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
-          <button
-            type="button"
-            onClick={handleResetSearch}
-            className={styles.resetButton}
-          >
-            ↩ Réinitialiser
-          </button>
-        )}
-        <select
-          name="typeVehicle"
-          className={styles.selectButton}
-          value={filterType}
-          onChange={handleFilterChange}
+        <button
+          type="button"
+          onClick={toggleTableExpansion}
+          className={styles.expandButton}
         >
-          <option value="type">Type</option>
-          <option value="moto">Moto</option>
-          <option value="voiture">Voiture</option>
-        </select>
+          {isTableExpanded ? <SlArrowUp /> : <SlArrowDown />}
+        </button>
       </div>
-      <table className={styles.tableContainer}>
-        <thead>
-          <tr>
-            <th className={styles.tableContainer}>Model</th>
-            <th className={styles.tableContainer}>Marque</th>
-            <th className={styles.tableContainer}>Type</th>
-            <th className={styles.tableContainer}>Propriétaire</th>
-            <th className={styles.tableContainer}>localisation</th>
-            <th className={styles.tableContainer}> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredVehicles.map((Vehicle) => (
-            <tr key={Vehicle.id}>
-              <td>{Vehicle.model}</td>
-              <td>{Vehicle.brand}</td>
-              <td>{Vehicle.type}</td>
-              <td>{Vehicle.user}</td>
-              <td>{Vehicle.location}</td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleEditVehicle(Vehicle.id);
-                  }}
-                >
-                  Modifier
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleDeleteVehicle(Vehicle.id);
-                  }}
-                >
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {isTableExpanded && (
+        <>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className={styles.searchBar}
+            />
+            {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
+              <button
+                type="button"
+                onClick={handleResetSearch}
+                className={styles.resetButton}
+              >
+                ↩ Réinitialiser
+              </button>
+            )}
+            <select
+              name="typeVehicle"
+              className={styles.selectButton}
+              value={filterType}
+              onChange={handleFilterChange}
+            >
+              <option value="type">Type</option>
+              <option value="moto">Moto</option>
+              <option value="voiture">Voiture</option>
+            </select>
+          </div>
+          <table className={styles.tableContainer}>
+            <thead>
+              <tr>
+                <th className={styles.tableContainer}>Model</th>
+                <th className={styles.tableContainer}>Marque</th>
+                <th className={styles.tableContainer}>Type</th>
+                <th className={styles.tableContainer}>Propriétaire</th>
+                <th className={styles.tableContainer}>localisation</th>
+                <th className={styles.tableContainer}> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredVehicles.map((Vehicle) => (
+                <tr key={Vehicle.id}>
+                  <td>{Vehicle.model}</td>
+                  <td>{Vehicle.brand}</td>
+                  <td>{Vehicle.type}</td>
+                  <td>{Vehicle.user}</td>
+                  <td>{Vehicle.location}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleEditVehicle(Vehicle.id);
+                      }}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleDeleteVehicle(Vehicle.id);
+                      }}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
 import styles from "./EventManagement.module.css";
 
 type Event = {
@@ -27,6 +29,7 @@ function EventManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [filterType, setFilterType] = useState<Event["type"] | "">("");
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   useEffect(() => {
     // Appel API ici
@@ -55,6 +58,11 @@ function EventManagement() {
     setEvents(mockEvents);
     setFilteredEvents(mockEvents);
   }, []);
+
+  // Fonction pour l'expension du tableau
+  function toggleTableExpansion() {
+    setIsTableExpanded(!isTableExpanded);
+  }
 
   // Fonction pour la barre de recherche
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
@@ -137,98 +145,113 @@ function EventManagement() {
     }
   }
 
-    // Calculez le nombre total d'événements filtrés
-    const totalEvents = filteredEvents.length;
+  // Calcule le nombre total d'événements filtrés
+  const totalEvents = filteredEvents.length;
 
   return (
     <div className={styles.eventManagementContainer}>
       <h2>Gestion des Événements</h2>
-      <div className={styles.searchContainer}>
+
+      <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className={styles.searchBar}
-        />
-        {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
-          <button
-            type="button"
-            onClick={handleResetSearch}
-            className={styles.resetButton}
-          >
-            ↩ Réinitialiser
-          </button>
-        )}
-        <select
-          name="typeEvent"
-          className={styles.selectButton}
-          value={filterType}
-          onChange={handleFilterChange}
-        >
-          <option value="type">Type</option>
-          <option value="salon">Salon</option>
-          <option value="course">Course</option>
-          <option value="musée">Musée</option>
-          <option value="roadtrip">Roadtrip</option>
-          <option value="vente aux enchères">Enchères</option>
-          <option value="rassemblement">Rassemblement</option>
-        </select>
         <button
           type="button"
-          onClick={handleSort}
-          className={styles.sortButton}
+          onClick={toggleTableExpansion}
+          className={styles.expandButton}
         >
-          Par date{" "}
-          {sortOrder === "none"
-            ? "❌"
-            : sortOrder === "asc"
-              ? "(Croissante)"
-              : "(Décroissante)"}
+          {isTableExpanded ? <SlArrowUp /> : <SlArrowDown />}
         </button>
       </div>
-      <table className={styles.tableContainer}>
-        <thead>
-          <tr>
-            <th className={styles.tableContainer}>Titre</th>
-            <th className={styles.tableContainer}>Type</th>
-            <th className={styles.tableContainer}>Début</th>
-            <th className={styles.tableContainer}>Fin</th>
-            <th className={styles.tableContainer}>Adresse</th>
-            <th className={styles.tableContainer}> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEvents.map((event) => (
-            <tr key={event.id}>
-              <td>{event.title}</td>
-              <td>{event.type}</td>
-              <td>{event.date_start}</td>
-              <td>{event.date_end}</td>
-              <td>{event.address}</td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleEditEvent(event.id);
-                  }}
-                >
-                  Modifier
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleDeleteEvent(event.id);
-                  }}
-                >
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {isTableExpanded && (
+        <>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className={styles.searchBar}
+            />
+            {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
+              <button
+                type="button"
+                onClick={handleResetSearch}
+                className={styles.resetButton}
+              >
+                ↩ Réinitialiser
+              </button>
+            )}
+            <select
+              name="typeEvent"
+              className={styles.selectButton}
+              value={filterType}
+              onChange={handleFilterChange}
+            >
+              <option value="type">Type</option>
+              <option value="salon">Salon</option>
+              <option value="course">Course</option>
+              <option value="musée">Musée</option>
+              <option value="roadtrip">Roadtrip</option>
+              <option value="vente aux enchères">Enchères</option>
+              <option value="rassemblement">Rassemblement</option>
+            </select>
+            <button
+              type="button"
+              onClick={handleSort}
+              className={styles.sortButton}
+            >
+              Par date{" "}
+              {sortOrder === "none"
+                ? "❌"
+                : sortOrder === "asc"
+                  ? "(Croissante)"
+                  : "(Décroissante)"}
+            </button>
+          </div>
+          <table className={styles.tableContainer}>
+            <thead>
+              <tr>
+                <th className={styles.tableContainer}>Titre</th>
+                <th className={styles.tableContainer}>Type</th>
+                <th className={styles.tableContainer}>Début</th>
+                <th className={styles.tableContainer}>Fin</th>
+                <th className={styles.tableContainer}>Adresse</th>
+                <th className={styles.tableContainer}> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredEvents.map((event) => (
+                <tr key={event.id}>
+                  <td>{event.title}</td>
+                  <td>{event.type}</td>
+                  <td>{event.date_start}</td>
+                  <td>{event.date_end}</td>
+                  <td>{event.address}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleEditEvent(event.id);
+                      }}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleDeleteEvent(event.id);
+                      }}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }

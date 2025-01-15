@@ -19,6 +19,24 @@
   align-items: center;
 }
 
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expandButton {
+  padding: 7px 10px 5px 10px;
+  background-color: var(--dark);
+  color: var(--light);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.expandButton:hover {
+  background-color: #424242;
+}
+
 .eventCounter {
   font-weight: bold;
 }
