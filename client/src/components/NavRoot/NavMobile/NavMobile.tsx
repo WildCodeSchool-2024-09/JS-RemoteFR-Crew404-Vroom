@@ -37,9 +37,7 @@ function NavMobile() {
         <h3>Bienvenue sur VROOM</h3>
 
         {/*lvl 1*/}
-        <div
-          className={`${css.sideNav} ${active ? css.active : ""} ${css.mySideNav}`}
-        >
+        <div className={`${css.sideNav} ${active ? css.active : ""}`}>
           {/*lvl 2*/}
           <div className={css.logCloseBtn}>
             {/*lvl 3*/}
@@ -96,6 +94,13 @@ function NavMobile() {
             moduleMenuLink={style.MenuLinkMobile}
           />
         </div>
+
+        {/*lvl 1*/}
+        <button
+          className={`${css.subSideNav} ${active ? css.active : ""}`}
+          onClick={funcActive}
+          type="button"
+        />
 
         {/*lvl 1*/}
         <button type="button" className={css.openBtn} onClick={funcActive}>

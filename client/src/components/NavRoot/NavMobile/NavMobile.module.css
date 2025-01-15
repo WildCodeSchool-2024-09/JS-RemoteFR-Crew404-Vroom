@@ -98,6 +98,47 @@
   }
 }
 
+/*-----------------------------------------------*/
+/*Logique de fermeture du MenuBurger par la div*/
+
+@media (max-width: 768px) {
+  .subSideNav {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 8;
+    top: 0;
+    left: -100vw;
+    background-color: inherit;
+  }
+}
+
+@media (min-width: 769px) {
+  .subSideNav {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 8;
+    top: 0;
+    right: -100vw;
+    background-color: inherit;
+  }
+}
+
+@media (max-width: 768px) {
+  .subSideNav.active {
+    left: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .subSideNav.active {
+    right: 0;
+  }
+}
+/*-----------------------------------------------*/
 /*Logique ouverture et fermeture MenuBurger*/
 @media (max-width: 768px) {
   .openBtn {
