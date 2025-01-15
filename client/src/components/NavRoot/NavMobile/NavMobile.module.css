@@ -62,29 +62,105 @@
 /*Menu Burger*/
 
 /*Position du Menu Burger*/
-.sideNav {
-  width: 250px;
-  height: 100%;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  right: -250px;
-  background-color: var(--BackgroudMenuBurger);
-  transition: right 0.5s ease;
+@media (max-width: 768px) {
+  .sideNav {
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    right: -250px;
+    background-color: var(--BackgroudMenuBurger);
+    transition: right 0.5s ease;
+  }
+}
+@media (min-width: 769px) {
+  .sideNav {
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: -250px;
+    background-color: var(--BackgroudMenuBurger);
+    transition: right 0.5s ease;
+  }
 }
 
-.sideNav.active {
-  right: 0;
+@media (max-width: 768px) {
+  .sideNav.active {
+    right: 0;
+  }
+}
+@media (min-width: 769px) {
+  .sideNav.active {
+    left: 0;
+  }
 }
 
+/*-----------------------------------------------*/
+/*Logique de fermeture du MenuBurger par la div*/
+
+@media (max-width: 768px) {
+  .subSideNav {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 8;
+    top: 0;
+    left: -100vw;
+    background-color: inherit;
+  }
+}
+
+@media (min-width: 769px) {
+  .subSideNav {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 8;
+    top: 0;
+    right: -100vw;
+    background-color: inherit;
+  }
+}
+
+@media (max-width: 768px) {
+  .subSideNav.active {
+    left: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .subSideNav.active {
+    right: 0;
+  }
+}
+/*-----------------------------------------------*/
 /*Logique ouverture et fermeture MenuBurger*/
-.openBtn {
-  position: fixed;
-  z-index: 9;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: var(--noColor);
+@media (max-width: 768px) {
+  .openBtn {
+    position: fixed;
+    z-index: 9;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: var(--noColor);
+    cursor: pointer;
+  }
 }
+@media (min-width: 769px) {
+  .openBtn {
+    position: fixed;
+    z-index: 9;
+    top: 0.5rem;
+    left: 0.5rem;
+    background-color: var(--noColor);
+    cursor: pointer;
+  }
+}
+
 .menuBurger > span {
   display: block;
   width: 35px;
@@ -114,10 +190,20 @@
 }
 
 /*Container du bouton close MenuBurger*/
-.logCloseBtn {
-  display: flex;
-  justify-content: start;
-  padding: 0rem 0rem 3rem 0rem;
+@media (max-width: 768px) {
+  .logCloseBtn {
+    display: flex;
+    justify-content: start;
+    width: 250px;
+    padding: 0rem 0rem 3rem 0rem;
+  }
+}
+@media (min-width: 769px) {
+  .logCloseBtn {
+    display: flex;
+    justify-content: end;
+    padding: 0rem 2rem 3rem 0rem;
+  }
 }
 
 /*Logique 1*/
