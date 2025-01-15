@@ -9,6 +9,7 @@ import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
+import Connexion from "./pages/connexion/Connexion";
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <NotFound />,
+      },
+      {
+        path: "/connexion",
+        element: <Connexion />,
       },
     ],
   },
