@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
+import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./UserManagement.module.css";
 
 type User = {
@@ -19,6 +22,7 @@ function UserManagement() {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   useEffect(() => {
     // Futur appel API ici
@@ -47,6 +51,11 @@ function UserManagement() {
     setUsers(users);
     setFilteredUsers(users);
   }, []);
+
+  // Fonction pour l'expension du tableau
+  function toggleTableExpansion() {
+    setIsTableExpanded(!isTableExpanded);
+  }
 
   // Fonction pour la barre de recherche
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
@@ -110,68 +119,94 @@ function UserManagement() {
     }
   }
 
+  // Calcule le nombre total d'événements filtrés
+  const totalUsers = filteredUsers.length;
+
   return (
     <div className={styles.userManagementContainer}>
       <h2>Gestion des utilisateurs</h2>
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className={styles.searchBar}
-        />
-        {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
-          <button
-            type="button"
-            onClick={handleResetSearch}
-            className={styles.resetButton}
-          >
-            ↩ Réinitialiser
-          </button>
-        )}
+
+      <div className={styles.tableHeader}>
+        <p className={styles.eventCounter}>Total : {totalUsers}</p>
+        <ExportCSV data={filteredUsers} fileName="data_utilisateurs.csv" />
         <button
           type="button"
-          onClick={handleSort}
-          className={styles.sortButton}
+          onClick={toggleTableExpansion}
+          className={styles.expandButton}
         >
-          Trier par solde{" "}
-          {sortOrder === "none"
-            ? "❌"
-            : sortOrder === "asc"
-              ? "(Croissant)"
-              : "(Décroissant)"}
+          {isTableExpanded ? <SlArrowUp /> : <SlArrowDown />}
         </button>
       </div>
-      <table className={styles.tableContainer}>
-        <thead>
-          <tr>
-            <th className={styles.tableContainer}>Pseudo</th>
-            <th className={styles.tableContainer}>Prénom</th>
-            <th className={styles.tableContainer}>Nom</th>
-            <th className={styles.tableContainer}>Sold</th>
-            <th className={styles.tableContainer}> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.username}</td>
-              <td>{user.firstname}</td>
-              <td>{user.lastname}</td>
-              <td>{user.sold}</td>
-              <td>
-                <button type="button" onClick={() => handleEditUser(user.id)}>
-                  Modifier
-                </button>
-                <button type="button" onClick={() => handleDeleteUser(user.id)}>
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {isTableExpanded && (
+        <>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className={styles.searchBar}
+            />
+            {searchTerm && ( // Le bouton n'apparaît que si un terme de recherche existe
+              <button
+                type="button"
+                onClick={handleResetSearch}
+                className={styles.resetButton}
+              >
+                ↩ Réinitialiser
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleSort}
+              className={styles.sortButton}
+            >
+              Par solde{" "}
+              {sortOrder === "none"
+                ? "❌"
+                : sortOrder === "asc"
+                  ? "(Croissant)"
+                  : "(Décroissant)"}
+            </button>
+          </div>
+          <table className={styles.tableContainer}>
+            <thead>
+              <tr>
+                <th className={styles.tableContainer}>Pseudo</th>
+                <th className={styles.tableContainer}>Prénom</th>
+                <th className={styles.tableContainer}>Nom</th>
+                <th className={styles.tableContainer}>Sold</th>
+                <th className={styles.tableContainer}> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.username}</td>
+                  <td>{user.firstname}</td>
+                  <td>{user.lastname}</td>
+                  <td>{user.sold}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => handleEditUser(user.id)}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteUser(user.id)}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }

@@ -11,6 +11,44 @@
   box-shadow: rgba(0, 0, 0, 0.603) 0px 4px 6px;
 }
 
+.searchContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  min-height: 2.5rem;
+  align-items: center;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expandButton {
+  padding: 7px 10px 5px 10px;
+  background-color: var(--dark);
+  color: var(--light);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.expandButton:hover {
+  background-color: #424242;
+}
+
+.eventCounter {
+  font-weight: bold;
+}
+
+.searchBar {
+  width: 40%;
+}
+
+.resetButton {
+  width: 7em;
+}
+
 .tableContainer {
   border: solid;
   border-collapse: collapse;
