@@ -62,29 +62,55 @@
 /*Menu Burger*/
 
 /*Position du Menu Burger*/
-.sideNav {
-  width: 250px;
-  height: 100%;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  right: -250px;
-  background-color: var(--BackgroudMenuBurger);
-  transition: right 0.5s ease;
+@media (max-width: 768px) {
+  .sideNav {
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    right: -250px;
+    background-color: var(--BackgroudMenuBurger);
+    transition: right 0.5s ease;
+  }
+}
+@media (min-width: 769px) {
+  .sideNav {
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: -250px;
+    background-color: var(--BackgroudMenuBurger);
+    transition: right 0.5s ease;
+  }
 }
 
 .sideNav.active {
-  right: 0;
+  left: 0;
 }
 
 /*Logique ouverture et fermeture MenuBurger*/
-.openBtn {
-  position: fixed;
-  z-index: 9;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: var(--noColor);
+@media (max-width: 768px) {
+  .openBtn {
+    position: fixed;
+    z-index: 9;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: var(--noColor);
+  }
 }
+@media (min-width: 769px) {
+  .openBtn {
+    position: fixed;
+    z-index: 9;
+    top: 0.5rem;
+    left: 0.5rem;
+    background-color: var(--noColor);
+  }
+}
+
 .menuBurger > span {
   display: block;
   width: 35px;
