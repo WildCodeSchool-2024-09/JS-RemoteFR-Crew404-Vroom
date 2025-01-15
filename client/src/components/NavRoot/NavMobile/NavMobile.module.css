@@ -106,6 +106,7 @@
     top: 0.5rem;
     right: 0.5rem;
     background-color: var(--noColor);
+    cursor: pointer;
   }
 }
 @media (min-width: 769px) {
@@ -115,6 +116,7 @@
     top: 0.5rem;
     left: 0.5rem;
     background-color: var(--noColor);
+    cursor: pointer;
   }
 }
 
@@ -147,10 +149,20 @@
 }
 
 /*Container du bouton close MenuBurger*/
-.logCloseBtn {
-  display: flex;
-  justify-content: start;
-  padding: 0rem 0rem 3rem 0rem;
+@media (max-width: 768px) {
+  .logCloseBtn {
+    display: flex;
+    justify-content: start;
+    width: 250px;
+    padding: 0rem 0rem 3rem 0rem;
+  }
+}
+@media (min-width: 769px) {
+  .logCloseBtn {
+    display: flex;
+    justify-content: end;
+    padding: 0rem 2rem 3rem 0rem;
+  }
 }
 
 /*Logique 1*/
