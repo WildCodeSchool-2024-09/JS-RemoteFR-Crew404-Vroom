@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./VehicleManagement.module.css";
 
 type Vehicle = {
@@ -119,6 +120,7 @@ function VehicleManagement() {
 
       <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalVehicles}</p>
+        <ExportCSV data={filteredVehicles} fileName="data_véhicules.csv" />
         <button
           type="button"
           onClick={toggleTableExpansion}

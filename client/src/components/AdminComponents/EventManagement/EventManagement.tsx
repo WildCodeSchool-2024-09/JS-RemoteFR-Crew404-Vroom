@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
 type Event = {
@@ -154,6 +155,7 @@ function EventManagement() {
 
       <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
+        <ExportCSV data={filteredEvents} fileName="data_événements.csv" />
         <button
           type="button"
           onClick={toggleTableExpansion}
