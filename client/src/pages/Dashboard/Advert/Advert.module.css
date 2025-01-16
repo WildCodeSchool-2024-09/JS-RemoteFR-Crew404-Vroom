@@ -1,0 +1,107 @@
+.container {
+  background-color: #d0e7ff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.input {
+  flex: 1;
+  margin-right: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dropdown {
+  margin-right: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.searchButton {
+  padding: 8px 16px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton:disabled {
+  background-color: #f5c6cb;
+  cursor: not-allowed;
+}
+
+.favoriteList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.advertItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.picture {
+  width: 80px;
+  height: 80px;
+  background-color: green;
+  border-radius: 8px;
+}
+
+.info {
+  flex: 1;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.arrowContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.arrowButton {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d61bf3;
+}
