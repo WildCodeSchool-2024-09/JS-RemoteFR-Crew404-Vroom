@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { DataProvider } from "./contexts/DataContext";
 
 import App from "./App";
 import About from "./pages/About/About";
@@ -67,9 +68,12 @@ if (rootElement == null) {
 
 // Render the app inside the root element
 createRoot(rootElement).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  <DataProvider>
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+    ,
+  </DataProvider>,
 );
 
 /**
