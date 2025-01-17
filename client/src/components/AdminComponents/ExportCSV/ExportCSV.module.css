@@ -9,7 +9,7 @@
 }
 
 .buttonCSV:hover {
-  background-color: #424242;
+  background-color: var(--tertiary-color);
 }
 
 .icon {
