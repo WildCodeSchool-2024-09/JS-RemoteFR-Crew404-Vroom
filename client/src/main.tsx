@@ -1,31 +1,59 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 import App from "./App";
 import About from "./pages/About/About";
+import Account from "./pages/Account/Account";
+import BackofficeMain from "./pages/Admin/Admin";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
+import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
-
+import Connexion from "./pages/connexion/Connexion";
 const router = createBrowserRouter([
   {
     element: <App />,
     children: [
       {
         path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/home",
+        element: <Home />,
+      },
+      {
+        path: "/dashbord",
         element: <Dashboard />,
+      },
+      {
+        path: "/account",
+        element: <Account />,
       },
       {
         path: "/about",
         element: <About />,
       },
       {
-        path: "/contact/:id",
+        path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/backoffice",
+        element: <BackofficeMain />,
+      },
+      {
+        path: "/maps",
+        element: <h1>Page maps non disponible</h1>,
       },
       {
         path: "*",
         element: <NotFound />,
+      },
+      {
+        path: "/connexion",
+        element: <Connexion />,
       },
     ],
   },

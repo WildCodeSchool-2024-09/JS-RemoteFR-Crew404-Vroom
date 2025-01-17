@@ -5,17 +5,6 @@
   border-radius: 30px;
 }
 
-.titleAbout {
-  position: absolute;
-  z-index: 10;
-  top: 0%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5em;
-  text-align: center;
-  color: var(--primary-color);
-}
-
 .aboutCar,
 .aboutCarGathering {
   display: block;
@@ -39,4 +28,14 @@
   text-align: justify;
   color: var(--dark);
   line-height: 1.5;
+}
+@media screen and (min-width: 768px) {
+  .pAbout {
+    font-size: 1rem;
+    text-align: justify;
+    color: var(--dark);
+    line-height: 1.5;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
 }

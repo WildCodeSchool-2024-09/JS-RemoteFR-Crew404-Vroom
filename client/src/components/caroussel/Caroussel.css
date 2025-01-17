@@ -112,6 +112,7 @@
 @media (max-width: 480px) {
   .carousel-container {
     padding: 0 50px;
+    margin-top: -30%;
   }
 
   .slide.active {

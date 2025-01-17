@@ -1,73 +1,95 @@
 .contact-container {
   margin: 2em;
   margin-bottom: 4em;
-  padding-bottom: 0.5em;
   background-color: azure;
   border-radius: 30px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
+  overflow: hidden;
 }
 
 .contact-hero {
-  width: 100%;
+  width: 130%;
   border-radius: 30px 30px 0 0;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 10px;
 }
 
 .contact-lower-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 1em;
+  width: 150%;
 }
 
 .contact-side-image {
-  width: 100%;
-  max-width: 300px;
+  width: 40%;
   height: auto;
-  border-radius: 0 0 0 30px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 10px;
+  object-fit: cover;
 }
 
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: 1em;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 0.5em;
+  width: 50%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5em;
-  font-size: 0.5em;
 }
 
 .icon {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
-
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
+  .contact-container {
+    max-width: 35%;
+    margin-left: 33%;
+    margin-bottom: 4em;
+    background-color: azure;
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+  .contact-hero {
+    max-width: 100%;
+    border-radius: 30px 30px 0 0;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 10px;
+  }
   .contact-lower-content {
-    flex-direction: row;
-    gap: 1.5em;
+    display: flex;
+    width: 100%;
   }
-
-  .contact-info {
-    align-items: flex-start;
-    text-align: left;
-  }
-
   .contact-side-image {
-    max-width: 400px;
+    width: 50%;
+    height: auto;
+    object-fit: cover;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 2em;
+    width: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+  .icon {
+    width: 50px;
+    height: 50px;
   }
 }

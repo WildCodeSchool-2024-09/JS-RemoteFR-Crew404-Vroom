@@ -1,7 +1,7 @@
-import facebook from "../assets/images/facebook.png";
-import instagram from "../assets/images/instagram.png";
-import linkedin from "../assets/images/linkedin.png";
-import twitter from "../assets/images/twitter.png";
+import facebook from "../../assets/images/social/facebook.png";
+import instagram from "../../assets/images/social/instagram.png";
+import linkedin from "../../assets/images/social/linkedin.png";
+import twitter from "../../assets/images/social/twitter.png";
 import styles from "./Footer.module.css";
 
 function Footer() {

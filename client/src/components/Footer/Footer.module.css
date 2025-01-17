@@ -3,7 +3,7 @@
 }
 
 .footer {
-  position: fixed;
+  position: relative;
   bottom: 0;
   width: 100%;
   background-color: var(--light);
@@ -14,7 +14,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  margin: 0.5em;
 }
 
 .containerIcon {
@@ -25,8 +24,9 @@
 }
 
 .socialIcon {
-  width: 30px;
-  height: 30px;
+  margin-top: 2em;
+  width: 20px;
+  height: 20px;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: grayscale(100%);
 }
