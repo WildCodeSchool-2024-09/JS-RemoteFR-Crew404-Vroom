@@ -1,12 +1,14 @@
+import Header from "../../components/Header/Header";
 import aboutCar from "../../assets/images/pictures/aboutCar.jpg";
 import aboutCarGathering from "../../assets/images/pictures/aboutCarGathering.jpg";
 import styles from "./About.module.css";
 
 function About() {
   return (
+    <>
+      <Header title="À PROPOS" />
     <div>
       <div className={styles.backgroundAbout}>
-        <h1 className={styles.titleAbout}>About</h1>
         <img src={aboutCar} alt="Créateur." className={styles.aboutCar} />
         <p className={styles.pAbout}>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur in
@@ -35,6 +37,7 @@ function About() {
         />
       </div>
     </div>
+    </>
   );
 }
 

@@ -233,6 +233,7 @@ function EventManagement() {
                   <td>
                     <button
                       type="button"
+                      className={styles.opButton}
                       onClick={() => {
                         handleEditEvent(event.id);
                       }}
@@ -241,6 +242,7 @@ function EventManagement() {
                     </button>
                     <button
                       type="button"
+                      className={styles.opButton}
                       onClick={() => {
                         handleDeleteEvent(event.id);
                       }}

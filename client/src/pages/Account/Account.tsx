@@ -1,9 +1,12 @@
+import Header from "../../components/Header/Header";
 import Envelope from "../../assets/images/social/envelope.png";
 import Profilepic from "../../assets/images/social/person_15439869.png";
 import styles from "./Account.module.css";
 
 function Account() {
   return (
+    <>
+      <Header title="MON COMPTE" />
     <div className={styles.accountContainer}>
       <section className={styles.generalContainer}>
         <div className={styles.imgContainer}>
@@ -35,6 +38,7 @@ function Account() {
         </span>
       </section>
     </div>
+    </>
   );
 }
 

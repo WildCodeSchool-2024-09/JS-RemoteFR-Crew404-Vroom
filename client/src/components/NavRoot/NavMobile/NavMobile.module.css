@@ -144,8 +144,8 @@
   .openBtn {
     position: fixed;
     z-index: 9;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.7rem;
+    right: 1rem;
     background-color: var(--noColor);
     cursor: pointer;
   }
@@ -154,8 +154,8 @@
   .openBtn {
     position: fixed;
     z-index: 9;
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 1rem;
+    left: 1rem;
     background-color: var(--noColor);
     cursor: pointer;
   }

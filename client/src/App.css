@@ -26,4 +26,9 @@
 
 body {
   background-color: #15616d;
+  margin-top: 4em;
+
+  @media (min-width: 769px) {
+    margin-top: 5em;
+  }
 }
