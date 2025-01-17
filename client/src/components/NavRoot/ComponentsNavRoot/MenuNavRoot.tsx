@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-/*Le style de ce composant est directement géré par le 
+/* Le style de ce composant est directement géré par le 
 CSS du composant qui l'importe et l'utilise*/
 
 interface MenuNavRootProps {
@@ -16,7 +16,7 @@ function MenuNavRoot(Props: MenuNavRootProps) {
       <ul className={moduleMenuUl}>
         <li className={moduleMenuLi}>
           <Link to="/home" className={moduleMenuLink}>
-            Home
+            Accueil
           </Link>
         </li>
 
@@ -27,7 +27,7 @@ function MenuNavRoot(Props: MenuNavRootProps) {
         </li>
 
         <li className={moduleMenuLi}>
-          <Link to="/compte" className={moduleMenuLink}>
+          <Link to="/account" className={moduleMenuLink}>
             Compte
           </Link>
         </li>
@@ -46,7 +46,7 @@ function MenuNavRoot(Props: MenuNavRootProps) {
 
         <li className={moduleMenuLi}>
           <Link to="/about" className={moduleMenuLink}>
-            About
+            A propos
           </Link>
         </li>
       </ul>
