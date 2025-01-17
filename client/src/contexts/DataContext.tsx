@@ -15,6 +15,11 @@ interface VroomType {
   Valeur3: number;
 }
 
+interface dataType {
+  data: VroomType[];
+  setData: React.Dispatch<React.SetStateAction<VroomType[]>>;
+}
+
 /* Création du context */
 
 const DataContext = createContext(null);
