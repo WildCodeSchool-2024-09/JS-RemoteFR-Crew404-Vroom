@@ -5,14 +5,29 @@ import { useState } from "react";
 
 /* Déclarations des types */
 
+interface childrenType {
+  children: React.ReactNode;
+}
 /* Création du context */
 
 const DataContext = createContext(null);
 
 /* Déclaration des valeurs mise a disposition dans le context */
 
+const Vroom = [
+  {
+    Valeur1: "",
+    Valeur2: true,
+    valeur3: 0,
+  },
+  {
+    Valeur1: "",
+    Valeur2: false,
+    Valeur3: 0,
+  },
+];
 /* Mise a disposition du contexte */
-export function DataProvider({ children }) {
+export function DataProvider({ children }: childrenType) {
   const [data, setData] = useState([]);
 
   return (
