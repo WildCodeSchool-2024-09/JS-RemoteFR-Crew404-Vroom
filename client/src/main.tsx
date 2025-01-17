@@ -2,6 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+/**
+ * Pages
+ */
 import App from "./App";
 import About from "./pages/About/About";
 import Account from "./pages/Account/Account";
@@ -9,8 +12,10 @@ import BackofficeMain from "./pages/Admin/Admin";
 import Contact from "./pages/Contact/Contact";
 import Dashboard from "./pages/Dashboard/DashBoard";
 import Home from "./pages/Home/Home";
+import Maps from "./pages/Map/Map";
 import NotFound from "./pages/NotFound/NotFound";
 import Connexion from "./pages/connexion/Connexion";
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -45,7 +50,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/maps",
-        element: <h1>Page maps non disponible</h1>,
+        element: <Maps />,
       },
       {
         path: "*",
