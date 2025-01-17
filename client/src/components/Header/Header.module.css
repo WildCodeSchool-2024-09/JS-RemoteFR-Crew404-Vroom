@@ -3,7 +3,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 92%;
+  width: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,12 +16,18 @@
 
   @media screen and (min-width: 768px) {
     flex-direction: row-reverse;
-    width: 97%;
+    width: 95%;
+  }
 
-    @media screen and (max-width: 1400px) {
-      flex-direction: row-reverse;
-      width: 96%;
-    }
+  @media screen and (min-width: 1192px) {
+    width: 96%;
+  }
+
+  @media screen and (min-width: 1434px) {
+    width: 97%;
+  }
+  @media screen and (min-width: 1900px) {
+    width: 98.5%;
   }
 }
 
