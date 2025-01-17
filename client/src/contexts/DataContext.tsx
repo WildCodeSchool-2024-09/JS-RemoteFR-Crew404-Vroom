@@ -22,7 +22,7 @@ interface dataType {
 
 /* Création du context */
 
-const DataContext = createContext(null);
+const DataContext = createContext<dataType | null>(null);
 
 /* Déclaration des valeurs mise a disposition dans le context */
 
