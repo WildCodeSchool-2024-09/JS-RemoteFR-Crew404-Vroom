@@ -40,7 +40,7 @@ const Vroom = [
 ];
 /* Mise a disposition du contexte */
 export function DataProvider({ children }: childrenType) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<VroomType[]>(Vroom);
 
   return (
     <DataContext.Provider value={{ data, setData }}>
@@ -48,3 +48,13 @@ export function DataProvider({ children }: childrenType) {
     </DataContext.Provider>
   );
 }
+
+export const useData = () => {
+  const data = useContext(DataContext);
+  if (!data) {
+    throw new Error(
+      "useData doit être utilisé à l'intérieur d'un DataProvider.",
+    );
+  }
+  return data;
+};
