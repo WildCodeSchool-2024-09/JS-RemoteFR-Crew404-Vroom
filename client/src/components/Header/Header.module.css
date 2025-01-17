@@ -24,6 +24,9 @@
   }
 
   @media screen and (min-width: 1434px) {
+    width: 97%;
+  }
+  @media screen and (min-width: 1900px) {
     width: 98.5%;
   }
 }
