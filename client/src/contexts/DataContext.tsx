@@ -8,6 +8,13 @@ import { useState } from "react";
 interface childrenType {
   children: React.ReactNode;
 }
+
+interface VroomType {
+  Valeur1: string;
+  Valeur2: boolean;
+  Valeur3: number;
+}
+
 /* Création du context */
 
 const DataContext = createContext(null);
