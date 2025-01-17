@@ -7,7 +7,7 @@ function NotFound() {
       <h1 className={styles.title}>404 - Page non trouvée</h1>
       <p className={styles.description}>Oops! L'itinéraire n'existe pas.</p>
       <a href="/" className={styles.link}>
-        Retour sur la page ??
+        Retour sur la page Accueil
       </a>
     </div>
   );
