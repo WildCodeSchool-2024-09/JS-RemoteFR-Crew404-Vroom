@@ -10,9 +10,9 @@ interface childrenType {
 }
 
 interface VroomType {
-  Valeur1: string;
-  Valeur2: boolean;
-  Valeur3: number;
+  Values1: string;
+  Values2: boolean;
+  Values3: number;
 }
 
 interface dataType {
@@ -24,18 +24,18 @@ interface dataType {
 
 const DataContext = createContext<dataType | null>(null);
 
-/* Déclaration des valeurs mise a disposition dans le context */
+/* Déclaration des Valuess mise a disposition dans le context */
 
 const Vroom = [
   {
-    Valeur1: "",
-    Valeur2: true,
-    Valeur3: 0,
+    Values1: "",
+    Values2: true,
+    Values3: 0,
   },
   {
-    Valeur1: "",
-    Valeur2: false,
-    Valeur3: 0,
+    Values1: "",
+    Values2: false,
+    Values3: 0,
   },
 ];
 /* Mise a disposition du contexte */
