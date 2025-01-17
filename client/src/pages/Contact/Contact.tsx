@@ -10,47 +10,47 @@ function Contact() {
   return (
     <>
       <Header title="CONTACT" />
-    <div className={styles["contact-container"]}>
-      <img
-        src={contactHeroBanner}
-        alt="Hero banner for contact page"
-        className={styles["contact-hero"]}
-        />
-      <div className={styles["contact-lower-content"]}>
+      <div className={styles["contact-container"]}>
         <img
-          src={contactSideImage}
-          alt="Contact side pic"
-          className={styles["contact-side-image"]}
+          src={contactHeroBanner}
+          alt="Hero banner for contact page"
+          className={styles["contact-hero"]}
+        />
+        <div className={styles["contact-lower-content"]}>
+          <img
+            src={contactSideImage}
+            alt="Contact side pic"
+            className={styles["contact-side-image"]}
           />
-        <div className={styles["contact-info"]}>
-          <div className={styles["contact-item"]}>
-            <img
-              src={envelopeIcon}
-              alt="Envelope icon"
-              className={styles.icon}
+          <div className={styles["contact-info"]}>
+            <div className={styles["contact-item"]}>
+              <img
+                src={envelopeIcon}
+                alt="Envelope icon"
+                className={styles.icon}
               />
-            <span>vroom@vroom.vroom</span>
-          </div>
-          <div className={styles["contact-item"]}>
-            <img
-              src={instagramIcon}
-              alt="Instagram icon"
-              className={styles.icon}
+              <span>vroom@vroom.vroom</span>
+            </div>
+            <div className={styles["contact-item"]}>
+              <img
+                src={instagramIcon}
+                alt="Instagram icon"
+                className={styles.icon}
               />
-            <span>@vroom</span>
-          </div>
-          <div className={styles["contact-item"]}>
-            <img
-              src={facebookIcon}
-              alt="Facebook icon"
-              className={styles.icon}
+              <span>@vroom</span>
+            </div>
+            <div className={styles["contact-item"]}>
+              <img
+                src={facebookIcon}
+                alt="Facebook icon"
+                className={styles.icon}
               />
-            <span>@vroom</span>
+              <span>@vroom</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </>
+    </>
   );
 }
 

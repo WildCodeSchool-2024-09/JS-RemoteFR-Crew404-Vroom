@@ -3,59 +3,64 @@
   padding: 16px;
   border-radius: 8px;
   margin-top: 2em;
-  margin-left: 1em;
-  margin-right: 1em;
+  overflow: hidden;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
-  text-align: center;
   margin-bottom: 16px;
 }
 
 .searchBar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
 .input {
-  flex: 1;
-  margin-right: 8px;
+  flex: 1 1 calc(100% - 16px);
+  margin-right: 0;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .dropdown {
-  margin-right: 8px;
+  flex: 1 1 calc(50% - 8px);
+  margin-right: 0;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .searchButton {
+  flex: 1 1 auto;
   padding: 8px 16px;
-  background-color: #ff6347;
+  background-color: var(--secondary-color);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.searchButton:onclick {
+  background-color: var(--tertiary-color);
 }
 
 .deleteButton {
+  flex: 1 1 100%;
   padding: 8px 16px;
-  background-color: #dc3545;
+  background-color: var(--fourthly-color);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center;
 }
 
 .deleteButton:disabled {
-  background-color: #f5c6cb;
+  background-color: #78290f3d;
   cursor: not-allowed;
 }
 

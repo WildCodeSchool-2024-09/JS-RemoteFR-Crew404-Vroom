@@ -24,7 +24,6 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
-
         {/*lvl 1*/}
         <div className={`${css.sideNav} ${active ? css.active : ""}`}>
           {/*lvl 2*/}
