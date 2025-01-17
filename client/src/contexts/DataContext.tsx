@@ -6,7 +6,18 @@ import { useState } from "react";
 /* Déclarations des types */
 
 /* Création du context */
+
 const DataContext = createContext(null);
 
 /* Déclaration des valeurs mise a disposition dans le context */
-const [data, setData] = useState([]);
+
+/* Mise a disposition du contexte */
+export function DataProvider({ children }) {
+  const [data, setData] = useState([]);
+
+  return (
+    <DataContext.Provider value={{ data, setData }}>
+      {children}
+    </DataContext.Provider>
+  );
+}
