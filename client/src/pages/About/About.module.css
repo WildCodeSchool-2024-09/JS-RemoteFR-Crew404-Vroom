@@ -40,3 +40,14 @@
   color: var(--dark);
   line-height: 1.5;
 }
+@media  screen and (min-width: 768px) {
+
+  .pAbout {
+  font-size: 1rem;
+  text-align: justify;
+  color: var(--dark);
+  line-height: 1.5;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+}
