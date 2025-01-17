@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavMobile.module.css";
@@ -25,17 +24,6 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
-        {/*lvl 1*/}
-        <Link to="/home">
-          <div className={css.LogoMobile}>
-            <h1 className={css.front}>Vroom</h1>
-            <h1 className={css.back}>Vroom</h1>
-          </div>
-        </Link>
-
-        {/*lvl 1*/}
-        <h3>Bienvenue sur VROOM</h3>
-
         {/*lvl 1*/}
         <div className={`${css.sideNav} ${active ? css.active : ""}`}>
           {/*lvl 2*/}
