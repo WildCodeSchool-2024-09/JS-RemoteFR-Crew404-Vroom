@@ -1,8 +1,81 @@
+import type { AxiosResponse } from "axios";
+import axios from "axios";
 import { useState } from "react";
 import styles from "./connexion.module.css";
 
+interface LoginResponse {
+  token: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+}
+
+interface RegisterResponse {
+  message: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    firstname: string;
+    lastname: string;
+  };
+}
+
 function Connexion() {
   const [isLogin, setIsLogin] = useState(true);
+  const [register, setRegister] = useState({
+    username: "",
+    email: "",
+    password: "",
+    firstname: "",
+    lastname: "",
+  });
+
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (isLogin) {
+      setLogin((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      setRegister((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      let response: AxiosResponse<LoginResponse | RegisterResponse>;
+      if (isLogin) {
+        response = await axios.post<LoginResponse>(
+          `${import.meta.env.VITE_API_URL}/api/login`,
+          login,
+        );
+      } else {
+        response = await axios.post<RegisterResponse>(
+          `${import.meta.env.VITE_API_URL}/api/register`,
+          register,
+        );
+      }
+      console.info(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la soumission :", error);
+    }
+  };
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -13,10 +86,17 @@ function Connexion() {
       {isLogin ? (
         <div>
           <h2>Connexion</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="login-email">Email:</label>
-              <input type="email" id="login-email" name="email" required />
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                required
+                onChange={handleChange}
+                autoComplete="email"
+              />
             </div>
             <div>
               <label htmlFor="login-password">Mot de passe:</label>
@@ -24,6 +104,8 @@ function Connexion() {
                 type="password"
                 id="login-password"
                 name="password"
+                onChange={handleChange}
+                autoComplete="current-password"
                 required
               />
             </div>
@@ -39,10 +121,17 @@ function Connexion() {
       ) : (
         <div>
           <h2>Inscription</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="register-name">Nom:</label>
-              <input type="text" id="register-name" name="name" required />
+              <label htmlFor="register-lastname">Nom:</label>
+              <input
+                type="text"
+                id="register-lastname"
+                name="lastname"
+                required
+                onChange={handleChange}
+                autoComplete="lastname"
+              />
             </div>
             <div>
               <label htmlFor="register-firtsname">Prenom:</label>
@@ -51,15 +140,31 @@ function Connexion() {
                 id="register-firstname"
                 name="firstname"
                 required
+                onChange={handleChange}
+                autoComplete="firstname"
               />
             </div>
             <div>
-              <label htmlFor="register-pseudo">Pseudo:</label>
-              <input type="text" id="register-pseudo" name="pseudo" required />
+              <label htmlFor="register-username">Pseudo:</label>
+              <input
+                type="text"
+                id="register-username"
+                name="username"
+                required
+                onChange={handleChange}
+                autoComplete="username"
+              />
             </div>
             <div>
               <label htmlFor="register-email">Email:</label>
-              <input type="email" id="register-email" name="email" required />
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                required
+                onChange={handleChange}
+                autoComplete="email"
+              />
             </div>
             <div>
               <label htmlFor="register-password">Mot de passe:</label>
@@ -68,6 +173,8 @@ function Connexion() {
                 id="register-password"
                 name="password"
                 required
+                onChange={handleChange}
+                autoComplete="current-password"
               />
             </div>
             <button type="submit">S'inscrire</button>
