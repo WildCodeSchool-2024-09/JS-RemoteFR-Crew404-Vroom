@@ -17,7 +17,7 @@ router.post("/api/items", itemActions.add);
 import authMiddleware from "./middlewares/authMiddleware";
 import authActions from "./modules/auth/authActions";
 
-router.post("/api/login", authMiddleware.isRegistered, authActions.login);
+router.post("/api/login", authActions.login);
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
 
 /* ************************************************************************* */
