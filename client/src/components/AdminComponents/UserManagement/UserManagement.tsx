@@ -351,7 +351,10 @@ function UserManagement() {
                   type="number"
                   value={currentUser.phone_number}
                   onChange={(e) =>
-                    setCurrentUser({ ...currentUser, phone_number: e.target.value })
+                    setCurrentUser({
+                      ...currentUser,
+                      phone_number: e.target.value,
+                    })
                   }
                   className={styles.input}
                 />
