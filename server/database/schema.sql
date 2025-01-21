@@ -67,3 +67,5 @@ CREATE TABLE `like` (
   FOREIGN KEY(user_id) REFERENCES user(id),
   FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
 );
+
+insert into user (username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold) values ('admin', 'admin@vroom.com', 'azerty', 'https://www.gravatar.com/avatar/,', 'admin', 'admin', '1990-01-01', '0601020304', 100);
