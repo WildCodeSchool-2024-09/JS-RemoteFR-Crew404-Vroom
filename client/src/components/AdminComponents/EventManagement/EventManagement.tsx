@@ -151,7 +151,7 @@ function EventManagement() {
       setIsModalOpen(true);
     }
   }
-  
+
   // Gestion du clic en dehors de la modale
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {

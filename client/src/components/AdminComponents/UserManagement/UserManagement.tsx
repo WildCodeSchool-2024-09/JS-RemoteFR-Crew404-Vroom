@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import ExportCSV from "../ExportCSV/ExportCSV";
@@ -31,7 +31,8 @@ function UserManagement() {
     const users: User[] = [
       {
         id: 1,
-        profile_picture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s",
+        profile_picture:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s",
         username: "Aldup",
         firstname: "Alice",
         lastname: "Dupont",
@@ -107,7 +108,7 @@ function UserManagement() {
     setSortOrder("none");
   }
 
-// Gestion des modales pour éditer un événement
+  // Gestion des modales pour éditer un événement
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -121,7 +122,7 @@ function UserManagement() {
     }
   }
 
-   // Gestion du clic en dehors de la modale
+  // Gestion du clic en dehors de la modale
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setIsModalOpen(false);
@@ -131,14 +132,14 @@ function UserManagement() {
   const updateUser = () => {
     if (currentUser) {
       const updatedUsers = users.map((user) =>
-        user.id === currentUser.id ? currentUser : user
+        user.id === currentUser.id ? currentUser : user,
       );
       setUsers(updatedUsers);
       setFilteredUsers(updatedUsers);
     }
     setIsModalOpen(false);
     setCurrentUser(null);
-  }
+  };
 
   function handleDeleteUser(id: number) {
     // Logique pour supprimer un utilisateur
@@ -323,7 +324,10 @@ function UserManagement() {
                   type="text"
                   value={currentUser.firstname}
                   onChange={(e) =>
-                    setCurrentUser({ ...currentUser, firstname: e.target.value })
+                    setCurrentUser({
+                      ...currentUser,
+                      firstname: e.target.value,
+                    })
                   }
                   className={styles.input}
                 />
@@ -347,7 +351,10 @@ function UserManagement() {
                   type="number"
                   value={currentUser.phone_number}
                   onChange={(e) =>
-                    setCurrentUser({ ...currentUser, phone_number: +e.target.value})
+                    setCurrentUser({
+                      ...currentUser,
+                      phone_number: +e.target.value,
+                    })
                   }
                   className={styles.input}
                 />
