@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import ExportCSV from "../ExportCSV/ExportCSV";
@@ -7,6 +7,7 @@ import styles from "./EventManagement.module.css";
 type Event = {
   id: number;
   title: string;
+  event_picture: string | null;
   type:
     | "type"
     | "salon"
@@ -31,12 +32,15 @@ function EventManagement() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [filterType, setFilterType] = useState<Event["type"] | "">("");
   const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     // Appel API ici
     const mockEvents: Event[] = [
       {
         id: 1,
+        event_picture:
+          "https://upload.wikimedia.org/wikipedia/commons/5/54/Tms2007_01.jpg",
         title: "Salon Auto Rétro",
         type: "salon",
         date_start: "2025-06-15",
@@ -47,6 +51,8 @@ function EventManagement() {
       },
       {
         id: 2,
+        event_picture:
+          "https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2",
         title: "En route les BG",
         type: "roadtrip",
         date_start: "2025-03-10",
@@ -132,21 +138,20 @@ function EventManagement() {
     setSortOrder("none");
   }
 
-// Gestion des modales pour éditer un événement
-const [isModalOpen, setIsModalOpen] = useState(false);
-const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
-const modalRef = useRef<HTMLDivElement | null>(null);
-
+  // Gestion des modales pour éditer un événement
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
   function handleEditEvent(id: number) {
     // Logique pour éditer un événement
-    const eventToEdit = events.find(event => event.id === id);
-      if (eventToEdit) {
-        setCurrentEvent(eventToEdit);
-        setIsModalOpen(true);
+    const eventToEdit = events.find((event) => event.id === id);
+    if (eventToEdit) {
+      setCurrentEvent(eventToEdit);
+      setIsModalOpen(true);
     }
   }
-// Gestion du clic en dehors de la modale
+  // Gestion du clic en dehors de la modale
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setIsModalOpen(false);
@@ -155,8 +160,8 @@ const modalRef = useRef<HTMLDivElement | null>(null);
 
   const updateEvent = () => {
     if (currentEvent) {
-      const updatedEvents = events.map(event =>
-        event.id === currentEvent.id ? currentEvent : event
+      const updatedEvents = events.map((event) =>
+        event.id === currentEvent.id ? currentEvent : event,
       );
       setEvents(updatedEvents);
       setFilteredEvents(updatedEvents);
@@ -164,7 +169,6 @@ const modalRef = useRef<HTMLDivElement | null>(null);
     setIsModalOpen(false);
     setCurrentEvent(null);
   };
-
 
   function handleDeleteEvent(id: number) {
     // Logique pour supprimer un événement
@@ -174,6 +178,41 @@ const modalRef = useRef<HTMLDivElement | null>(null);
       setFilteredEvents(updatedEvents);
     }
   }
+
+  // Fonction pour uploader une image
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setPreviewImage(reader.result);
+          if (currentEvent) {
+            setCurrentEvent({
+              ...currentEvent,
+              event_picture: reader.result,
+            });
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  //supression de l'image
+  const handleImageDelete = () => {
+    const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
+
+    if (window.confirm(confirmMessage)) {
+      if (currentEvent) {
+        setCurrentEvent({
+          ...currentEvent,
+          event_picture: null,
+        });
+        setPreviewImage(null);
+      }
+    }
+  };
 
   // Calcule le nombre total d'événements filtrés
   const totalEvents = filteredEvents.length;
@@ -283,82 +322,140 @@ const modalRef = useRef<HTMLDivElement | null>(null);
           </table>
         </>
       )}
-    {isModalOpen && (
-<div 
-  className={styles.modalOverlay} 
-  onClick={handleOutsideClick}
-  onKeyDown={(e) => {
+      {isModalOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={handleOutsideClick}
+          onKeyDown={(e) => {
             if (e.key === "Escape") {
               setIsModalOpen(false);
             }
           }}
           tabIndex={-1}
         >
-        <div className={styles.modalContent} ref={modalRef}>
-          <h3>Modifier l'événement</h3>
-          {currentEvent && (
-            <>
-              <input
-                type="text"
-                value={currentEvent.title}
-                onChange={(e) => setCurrentEvent({...currentEvent, title: e.target.value})}
-                className={styles.input}
-              />
-              <select
-                value={currentEvent.type}
-                onChange={(e) => setCurrentEvent({...currentEvent, type: e.target.value as Event['type']})}
-                className={styles.input}
-              >
-                <option value="salon">Salon</option>
-                <option value="course">Course</option>
-                <option value="musée">Musée</option>
-                <option value="vente aux enchères">Vente aux enchères</option>
-                <option value="roadtrip">Roadtrip</option>
-                <option value="rassemblement">Rassemblement</option>
-              </select>
-              <input
-                type="date"
-                value={currentEvent.date_start}
-                onChange={(e) => setCurrentEvent({...currentEvent, date_start: e.target.value})}
-                className={styles.input}
-              />
-              <input
-                type="date"
-                value={currentEvent.date_end}
-                onChange={(e) => setCurrentEvent({...currentEvent, date_end: e.target.value})}
-                className={styles.input}
-              />
-              <input
-                type="text"
-                value={currentEvent.address}
-                onChange={(e) => setCurrentEvent({...currentEvent, address: e.target.value})}
-                className={styles.input}
-              />
-              <textarea
-                value={currentEvent.description}
-                onChange={(e) => setCurrentEvent({...currentEvent, description: e.target.value})}
-                className={styles.input}
-              />
-              <input
-                type="text"
-                value={currentEvent.link || ''}
-                onChange={(e) => setCurrentEvent({...currentEvent, link: e.target.value})}
-                className={styles.input}
-              />
-              <div className={styles.modalButtons}>
-                <button type="button" onClick={updateEvent} className={styles.largeButton}>
-                  Modifier
-                </button>
-                <button type="button" onClick={() => setIsModalOpen(false)} className={styles.smallButton}>
-                  Annuler
-                </button>
-              </div>
-            </>
-          )}
+          <div className={styles.modalContent} ref={modalRef}>
+            <h3>Modifier l'événement</h3>
+            {currentEvent && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className={styles.input}
+                />
+                {(previewImage || currentEvent.event_picture) && (
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={previewImage || currentEvent.event_picture || ""}
+                      alt="Aperçu de l'événement"
+                      className={styles.previewImage}
+                      onClick={handleImageDelete}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") {
+                          setIsModalOpen(false);
+                        }
+                      }}
+                      tabIndex={-1}
+                    />
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={currentEvent.title}
+                  onChange={(e) =>
+                    setCurrentEvent({ ...currentEvent, title: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <select
+                  value={currentEvent.type}
+                  onChange={(e) =>
+                    setCurrentEvent({
+                      ...currentEvent,
+                      type: e.target.value as Event["type"],
+                    })
+                  }
+                  className={styles.input}
+                >
+                  <option value="salon">Salon</option>
+                  <option value="course">Course</option>
+                  <option value="musée">Musée</option>
+                  <option value="vente aux enchères">Vente aux enchères</option>
+                  <option value="roadtrip">Roadtrip</option>
+                  <option value="rassemblement">Rassemblement</option>
+                </select>
+                <input
+                  type="date"
+                  value={currentEvent.date_start}
+                  onChange={(e) =>
+                    setCurrentEvent({
+                      ...currentEvent,
+                      date_start: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="date"
+                  value={currentEvent.date_end}
+                  onChange={(e) =>
+                    setCurrentEvent({
+                      ...currentEvent,
+                      date_end: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="text"
+                  value={currentEvent.address}
+                  onChange={(e) =>
+                    setCurrentEvent({
+                      ...currentEvent,
+                      address: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <textarea
+                  value={currentEvent.description}
+                  onChange={(e) =>
+                    setCurrentEvent({
+                      ...currentEvent,
+                      description: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="text"
+                  value={currentEvent.link || ""}
+                  onChange={(e) =>
+                    setCurrentEvent({ ...currentEvent, link: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <div className={styles.modalButtons}>
+                  <button
+                    type="button"
+                    onClick={updateEvent}
+                    className={styles.largeButton}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className={styles.smallButton}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    )}
-    
+      )}
     </div>
   );
 }
