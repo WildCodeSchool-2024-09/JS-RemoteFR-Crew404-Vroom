@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import ExportCSV from "../ExportCSV/ExportCSV";
@@ -132,10 +132,39 @@ function EventManagement() {
     setSortOrder("none");
   }
 
+// Gestion des modales pour éditer un événement
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+const modalRef = useRef<HTMLDivElement | null>(null);
+
+
   function handleEditEvent(id: number) {
     // Logique pour éditer un événement
-    alert(`Édition de l'événement ${id}`);
+    const eventToEdit = events.find(event => event.id === id);
+      if (eventToEdit) {
+        setCurrentEvent(eventToEdit);
+        setIsModalOpen(true);
+    }
   }
+// Gestion du clic en dehors de la modale
+  const handleOutsideClick = (event: React.MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setIsModalOpen(false);
+    }
+  };
+
+  const updateEvent = () => {
+    if (currentEvent) {
+      const updatedEvents = events.map(event =>
+        event.id === currentEvent.id ? currentEvent : event
+      );
+      setEvents(updatedEvents);
+      setFilteredEvents(updatedEvents);
+    }
+    setIsModalOpen(false);
+    setCurrentEvent(null);
+  };
+
 
   function handleDeleteEvent(id: number) {
     // Logique pour supprimer un événement
@@ -254,6 +283,82 @@ function EventManagement() {
           </table>
         </>
       )}
+    {isModalOpen && (
+<div 
+  className={styles.modalOverlay} 
+  onClick={handleOutsideClick}
+  onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setIsModalOpen(false);
+            }
+          }}
+          tabIndex={-1}
+        >
+        <div className={styles.modalContent} ref={modalRef}>
+          <h3>Modifier l'événement</h3>
+          {currentEvent && (
+            <>
+              <input
+                type="text"
+                value={currentEvent.title}
+                onChange={(e) => setCurrentEvent({...currentEvent, title: e.target.value})}
+                className={styles.input}
+              />
+              <select
+                value={currentEvent.type}
+                onChange={(e) => setCurrentEvent({...currentEvent, type: e.target.value as Event['type']})}
+                className={styles.input}
+              >
+                <option value="salon">Salon</option>
+                <option value="course">Course</option>
+                <option value="musée">Musée</option>
+                <option value="vente aux enchères">Vente aux enchères</option>
+                <option value="roadtrip">Roadtrip</option>
+                <option value="rassemblement">Rassemblement</option>
+              </select>
+              <input
+                type="date"
+                value={currentEvent.date_start}
+                onChange={(e) => setCurrentEvent({...currentEvent, date_start: e.target.value})}
+                className={styles.input}
+              />
+              <input
+                type="date"
+                value={currentEvent.date_end}
+                onChange={(e) => setCurrentEvent({...currentEvent, date_end: e.target.value})}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                value={currentEvent.address}
+                onChange={(e) => setCurrentEvent({...currentEvent, address: e.target.value})}
+                className={styles.input}
+              />
+              <textarea
+                value={currentEvent.description}
+                onChange={(e) => setCurrentEvent({...currentEvent, description: e.target.value})}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                value={currentEvent.link || ''}
+                onChange={(e) => setCurrentEvent({...currentEvent, link: e.target.value})}
+                className={styles.input}
+              />
+              <div className={styles.modalButtons}>
+                <button type="button" onClick={updateEvent} className={styles.largeButton}>
+                  Modifier
+                </button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className={styles.smallButton}>
+                  Annuler
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    )}
+    
     </div>
   );
 }
