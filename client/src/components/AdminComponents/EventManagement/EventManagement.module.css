@@ -163,10 +163,13 @@ tbody tr:nth-child(odd) {
 
 .imageContainer {
   position: relative;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 
 .previewImage {
   max-width: 100%;
+  max-height: 30vh;
   height: auto;
 }
