@@ -11,7 +11,7 @@ type User = {
   firstname: string;
   lastname: string;
   email: string;
-  phone_number: number;
+  phone_number: string;
   birthday: string;
   sold: number;
 };
@@ -38,7 +38,7 @@ function UserManagement() {
         lastname: "Dupont",
         birthday: "01-01-01",
         email: "alice@example.com",
-        phone_number: +33607080910,
+        phone_number: "+33607080910",
         sold: 403,
       },
       {
@@ -49,7 +49,7 @@ function UserManagement() {
         lastname: "Martin",
         birthday: "01-01-01",
         email: "bob@example.com",
-        phone_number: +33607080911,
+        phone_number: "+33607080911",
         sold: 404,
       },
     ];
@@ -351,10 +351,7 @@ function UserManagement() {
                   type="number"
                   value={currentUser.phone_number}
                   onChange={(e) =>
-                    setCurrentUser({
-                      ...currentUser,
-                      phone_number: +e.target.value,
-                    })
+                    setCurrentUser({ ...currentUser, phone_number: e.target.value })
                   }
                   className={styles.input}
                 />

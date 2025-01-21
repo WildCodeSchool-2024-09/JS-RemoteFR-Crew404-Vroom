@@ -33,10 +33,6 @@
   cursor: pointer;
 }
 
-.expandButton:hover {
-  background-color: var(--tertiary-color);
-}
-
 .eventCounter {
   font-weight: bold;
 }
@@ -56,6 +52,7 @@
   color: var(--light);
 }
 
+.expandButton:hover,
 .smallButton:hover,
 .largeButton:hover,
 .sortButton:hover,
