@@ -7,29 +7,8 @@
 /* Font Import */
 /* @import url(''); */
 
-/* Root Variables */
-:root {
-  --primary-color: #15616d;
-  --secondary-color: #001524;
-  --tertiary-color: #ff7d00;
-  --fourthly-color: #78290f;
-  --fifthly-color: #ffecd1;
-  --dark: #001500;
-  --light: #f0ffff;
-}
-
 .pages {
   color: #316685;
   text-align: center;
   font-size: calc(1.5rem + 2vw);
-}
-
-body {
-  background-color: #15616d;
-  margin-top: 4em;
-  padding: 1em;
-
-  @media (min-width: 769px) {
-    margin-top: 5em;
-  }
 }
