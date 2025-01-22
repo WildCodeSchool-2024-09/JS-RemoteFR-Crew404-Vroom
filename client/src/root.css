@@ -1,8 +1,11 @@
 :root {
   --primary-color: #15616d;
   --secondary-color: #001524;
+  --tertiary-color: #ff7d00;
+  --fourthly-color: #78290f;
+  --fifthly-color: #ffecd1;
   --dark: #001500;
-  --light: azure;
+  --light: #f0ffff;
   --noColor: none;
 
   --BackgroudMenuBurger: var(--light);
