@@ -178,6 +178,7 @@ function Vehicule() {
         type="button"
         className={styles.deleteButton}
         onClick={handleDeleteSelected}
+        disabled={selectedIds.length === 0}
       >
         Supprimer la sélection
       </button>
