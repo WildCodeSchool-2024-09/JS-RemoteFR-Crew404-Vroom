@@ -33,10 +33,6 @@
   cursor: pointer;
 }
 
-.expandButton:hover {
-  background-color: var(--tertiary-color);
-}
-
 .eventCounter {
   font-weight: bold;
 }
@@ -56,6 +52,9 @@
   color: var(--light);
 }
 
+.expandButton:hover,
+.smallButton:hover,
+.largeButton:hover,
 .sortButton:hover,
 .resetButton:hover {
   background-color: var(--tertiary-color);
@@ -96,4 +95,78 @@ tbody tr {
 
 tbody tr:nth-child(odd) {
   background-color: rgb(206, 219, 219);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.modalButtons {
+  gap: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.input {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  min-height: 2.2em;
+}
+
+.largeButton {
+  background-color: whitesmoke;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.smallButton {
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+.imageContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.previewImage {
+  max-width: 100%;
+  max-height: 30vh;
+  height: auto;
 }

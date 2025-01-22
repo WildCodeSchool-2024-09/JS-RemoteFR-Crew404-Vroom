@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import ExportCSV from "../ExportCSV/ExportCSV";
@@ -6,11 +6,12 @@ import styles from "./UserManagement.module.css";
 
 type User = {
   id: number;
+  profile_picture: string | null;
   username: string;
   firstname: string;
   lastname: string;
   email: string;
-  phone_number: number;
+  phone_number: string;
   birthday: string;
   sold: number;
 };
@@ -23,28 +24,32 @@ function UserManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     // Futur appel API ici
     const users: User[] = [
       {
         id: 1,
+        profile_picture:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s",
         username: "Aldup",
         firstname: "Alice",
         lastname: "Dupont",
         birthday: "01-01-01",
         email: "alice@example.com",
-        phone_number: +33607080910,
+        phone_number: "+33607080910",
         sold: 403,
       },
       {
         id: 2,
+        profile_picture: "https://gallerix.fr/gallery/4/5/9/2/36740-800.jpg",
         username: "The B",
         firstname: "Bob",
         lastname: "Martin",
         birthday: "01-01-01",
         email: "bob@example.com",
-        phone_number: +33607080911,
+        phone_number: "+33607080911",
         sold: 404,
       },
     ];
@@ -103,10 +108,38 @@ function UserManagement() {
     setSortOrder("none");
   }
 
+  // Gestion des modales pour éditer un événement
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
   function handleEditUser(id: number) {
     // Logique pour éditer un utilisateur
-    alert(`Édition de l'utilisateur ${id}`);
+    const userToEdit = users.find((user) => user.id === id);
+    if (userToEdit) {
+      setCurrentUser(userToEdit);
+      setIsModalOpen(true);
+    }
   }
+
+  // Gestion du clic en dehors de la modale
+  const handleOutsideClick = (event: React.MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setIsModalOpen(false);
+    }
+  };
+
+  const updateUser = () => {
+    if (currentUser) {
+      const updatedUsers = users.map((user) =>
+        user.id === currentUser.id ? currentUser : user,
+      );
+      setUsers(updatedUsers);
+      setFilteredUsers(updatedUsers);
+    }
+    setIsModalOpen(false);
+    setCurrentUser(null);
+  };
 
   function handleDeleteUser(id: number) {
     // Logique pour supprimer un utilisateur
@@ -118,6 +151,41 @@ function UserManagement() {
       setFilteredUsers(updatedUsers);
     }
   }
+
+  // Fonction pour uploader une image
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setPreviewImage(reader.result);
+          if (currentUser) {
+            setCurrentUser({
+              ...currentUser,
+              profile_picture: reader.result,
+            });
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  //supression de l'image
+  const handleImageDelete = () => {
+    const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
+
+    if (window.confirm(confirmMessage)) {
+      if (currentUser) {
+        setCurrentUser({
+          ...currentUser,
+          profile_picture: null,
+        });
+        setPreviewImage(null);
+      }
+    }
+  };
 
   // Calcule le nombre total d'événements filtrés
   const totalUsers = filteredUsers.length;
@@ -206,6 +274,126 @@ function UserManagement() {
             </tbody>
           </table>
         </>
+      )}
+      {isModalOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={handleOutsideClick}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setIsModalOpen(false);
+            }
+          }}
+          tabIndex={-1}
+        >
+          <div className={styles.modalContent} ref={modalRef}>
+            <h3>Modifier l'utilisateur</h3>
+            {currentUser && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className={styles.input}
+                />
+                {(previewImage || currentUser.profile_picture) && (
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={previewImage || currentUser.profile_picture || ""}
+                      alt="Avatar utilisateur"
+                      className={styles.previewImage}
+                      onClick={handleImageDelete}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") {
+                          setIsModalOpen(false);
+                        }
+                      }}
+                      tabIndex={-1}
+                    />
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={currentUser.username}
+                  onChange={(e) =>
+                    setCurrentUser({ ...currentUser, username: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="text"
+                  value={currentUser.firstname}
+                  onChange={(e) =>
+                    setCurrentUser({
+                      ...currentUser,
+                      firstname: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="text"
+                  value={currentUser.lastname}
+                  onChange={(e) =>
+                    setCurrentUser({ ...currentUser, lastname: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="email"
+                  value={currentUser.email}
+                  onChange={(e) =>
+                    setCurrentUser({ ...currentUser, email: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="number"
+                  value={currentUser.phone_number}
+                  onChange={(e) =>
+                    setCurrentUser({
+                      ...currentUser,
+                      phone_number: e.target.value,
+                    })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="date"
+                  value={currentUser.birthday}
+                  onChange={(e) =>
+                    setCurrentUser({ ...currentUser, birthday: e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <input
+                  type="number"
+                  value={currentUser.sold}
+                  onChange={(e) =>
+                    setCurrentUser({ ...currentUser, sold: +e.target.value })
+                  }
+                  className={styles.input}
+                />
+                <div className={styles.modalButtons}>
+                  <button
+                    type="button"
+                    onClick={updateUser}
+                    className={styles.largeButton}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className={styles.smallButton}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
