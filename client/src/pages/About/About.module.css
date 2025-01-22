@@ -11,7 +11,7 @@
   margin: 0 auto;
   border-radius: 30px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  max-width: 90%;
+  max-width: 70%;
   height: auto;
 }
 
@@ -35,7 +35,26 @@
     text-align: justify;
     color: var(--dark);
     line-height: 1.5;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 7%;
+  }
+  .backgroundAbout {
+    margin: 2em 1em 4em 1em;
+    padding: 1em;
+    background-color: var(--light);
+    border-radius: 30px;
+    display: flex;
+  }
+
+  .aboutCarGathering {
+    margin: 0 auto;
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 20%;
+    height: 100%;
+  }
+  .aboutCar {
+    display: none;
   }
 }

@@ -2,20 +2,20 @@ import { useState } from "react";
 import "./Caroussel.css";
 
 // Importez vos images
-import img1 from "../../assets/images/img1.jpg";
-import img2 from "../../assets/images/img2.jpg";
-import img3 from "../../assets/images/img3.jpg";
-import img4 from "../../assets/images/img4.jpg";
-import img5 from "../../assets/images/img5.jpg";
-import img6 from "../../assets/images/img6.jpg";
+import car1 from "../../assets/matiere/car1.jpg";
+import car2 from "../../assets/matiere/car2.jpg";
+import car3 from "../../assets/matiere/car3.jpg";
+import car4 from "../../assets/matiere/car4.jpg";
+import car5 from "../../assets/matiere/car5.jpg";
+import car6 from "../../assets/matiere/car6.jpg";
 
 const images = [
-  { id: 1, src: img1 },
-  { id: 2, src: img2 },
-  { id: 3, src: img3 },
-  { id: 4, src: img4 },
-  { id: 5, src: img5 },
-  { id: 6, src: img6 },
+  { id: 1, src: car1 },
+  { id: 2, src: car2 },
+  { id: 3, src: car3 },
+  { id: 4, src: car4 },
+  { id: 5, src: car5 },
+  { id: 6, src: car6 },
 ];
 
 type SlidePosition = "prev" | "active" | "next";
