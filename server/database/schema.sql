@@ -3,7 +3,7 @@ CREATE TABLE user (
   username VARCHAR(255) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  profile_picture VARCHAR(255) DEFAULT '../../client/src/assets/images/social/person_15439869.png',
+  profile_picture VARCHAR(255) DEFAULT '../src/assets/images/person_15439869.png',
   firstname VARCHAR(255),
   lastname VARCHAR(255),
   birthdate DATE,
