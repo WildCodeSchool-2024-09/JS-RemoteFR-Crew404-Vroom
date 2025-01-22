@@ -69,7 +69,7 @@ CREATE TABLE `like` (
   FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
 );
 
-insert into user (id, username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold) values 
+insert into user (id, username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin) values 
 (1, 'admin', 'admin@vroom.com', 'azerty', 'https://static.wikia.nocookie.net/avatar-ldmdla/images/8/86/Avatar_Aang.png/revision/latest/scale-to-width/360?cb=20220523181440&path-prefix=fr', 'admin', 'admin', '1990-01-01', '+33601020304', 100  , true),
 (2, 'Aldup', 'alice@example.com', 'azerty', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s', 'Alice', 'Dupont', '2001-01-01', '+33601020304', 2, false),
 (3, 'The B', 'bob@example.com', 'azerty', 'https://gallerix.fr/gallery/4/5/9/2/36740-800.jpg', 'Bob', 'Martin', '2001-01-01', '+33601020311', 1, false);
@@ -143,7 +143,7 @@ insert into brand (id, name) values
 
 insert into event (id, title, type, event_picture, date_start, date_end, location, address, description, link, user_id) values 
 (1, "Salon de l'automobile versaille", 'salon', 'https://upload.wikimedia.org/wikipedia/commons/5/54/Tms2007_01.jpg', '2025-10-01', '2025-10-10', POINT(48.83033737457059, 2.2872173892810004), '1 Pl. de la Prte de Versailles, 75015 Paris', 'Le salon de l''auto est un événement incontournable pour les passionnés de voitures.', 'https://www.salon-auto.com/', 3),
-(2, 'En route les BG', 'roadtrip', 'https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2', '2025-11-01', '2025 -11-1', POINT(50.60880719840839, 3.111964658850651), 'Rdpt des Acacias, 59790 Ronchin', 'Le dernier arrivé achète une LADA.', 'https://www.facebook.com/ffveofficiel/?locale=fr_FR"', 1);
+(2, 'En route les BG', 'roadtrip', 'https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2', '2025-11-01', '2025-11-1', POINT(50.60880719840839, 3.111964658850651), 'Rdpt des Acacias, 59790 Ronchin', 'Le dernier arrivé achète une LADA.', 'https://www.facebook.com/ffveofficiel/?locale=fr_FR"', 1);
 
 insert into model (id, name, year, brand_id, motor_id) values 
 (1, 'A3', 2022, 1, 1),
