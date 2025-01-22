@@ -3,12 +3,13 @@ CREATE TABLE user (
   username VARCHAR(255) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  profile_picture VARCHAR(255),
+  profile_picture VARCHAR(255) DEFAULT '../src/assets/images/person_15439869.png',
   firstname VARCHAR(255),
   lastname VARCHAR(255),
   birthdate DATE,
   phone_number VARCHAR(20),
-  sold INT
+  sold INT,
+  is_admin BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE motor (
@@ -68,4 +69,114 @@ CREATE TABLE `like` (
   FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
 );
 
-insert into user (username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold) values ('admin', 'admin@vroom.com', 'azerty', 'https://www.gravatar.com/avatar/,', 'admin', 'admin', '1990-01-01', '0601020304', 100);
+insert into user (id, username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin) values 
+(1, 'admin', 'admin@vroom.com', 'azerty', 'https://static.wikia.nocookie.net/avatar-ldmdla/images/8/86/Avatar_Aang.png/revision/latest/scale-to-width/360?cb=20220523181440&path-prefix=fr', 'admin', 'admin', '1990-01-01', '+33601020304', 100  , true),
+(2, 'Aldup', 'alice@example.com', 'azerty', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s', 'Alice', 'Dupont', '2001-01-01', '+33601020304', 2, false),
+(3, 'The B', 'bob@example.com', 'azerty', 'https://gallerix.fr/gallery/4/5/9/2/36740-800.jpg', 'Bob', 'Martin', '2001-01-01', '+33601020311', 1, false);
+
+insert into motor (id, name) values 
+(1, 'V8'),
+(2, 'V6'),
+(3, 'V4'),
+(4, 'V2'),
+(5, 'V1'),
+(6, 'V12'),
+(7, 'V10'),
+(8, 'V3'),
+(9, 'V5'),
+(10, 'V7'),
+(11, 'V9'),
+(12, 'V11'),
+(13, '6 cylindres en ligne'),
+(14, 'bicylindre');
+
+insert into brand (id, name) values 
+(1, 'Audi'),
+(2, 'BMW'),
+(3, 'Mercedes'),
+(4, 'Porsche'),
+(5, 'Ferrari'),
+(6, 'Lamborghini'),
+(7, 'Bugatti'),
+(8, 'Renault'),
+(9, 'Peugeot'),
+(10, 'Citroën'),
+(11, 'Toyota'),
+(12, 'Honda'),
+(13, 'Suzuki'),
+(14, 'Yamaha'),
+(15, 'Kawasaki'),
+(16, 'Ducati'),
+(17, 'Triumph'),
+(18, 'Harley-Davidson'),
+(19, 'Indian'),
+(20, 'BMW Motorrad'),
+(21, 'KTM'),
+(22, 'Aprilia'),
+(23, 'Moto Guzzi'),
+(24, 'MV Agusta'),
+(25, 'Husqvarna'),
+(26, 'Royal Enfield'),
+(27, 'Bimota'),
+(28, 'Benelli'),
+(29, 'Norton'),
+(30, 'Zero Motorcycles'),
+(31, 'Victory Motorcycles'),
+(32, 'Buell'),
+(33, 'Gas Gas'),
+(34, 'Sherco'),
+(35, 'Ossa'),
+(36, 'Beta'),
+(37, 'Rieju'),
+(38, 'Derbi'),
+(39, 'AJP'),
+(40, 'Fantic'),
+(41, 'Mondial'),
+(42, 'FB Mondial'),
+(43, 'Brixton'),
+(44, 'Bullit'),
+(45, 'Mash'),
+(46, 'Oral'),
+(47, 'Lancia'),
+(48, 'Lada'),
+(49, 'Nissan');
+
+insert into event (id, title, type, event_picture, date_start, date_end, location, address, description, link, user_id) values 
+(1, "Salon de l'automobile versaille", 'salon', 'https://upload.wikimedia.org/wikipedia/commons/5/54/Tms2007_01.jpg', '2025-10-01', '2025-10-10', POINT(48.83033737457059, 2.2872173892810004), '1 Pl. de la Prte de Versailles, 75015 Paris', 'Le salon de l''auto est un événement incontournable pour les passionnés de voitures.', 'https://www.salon-auto.com/', 3),
+(2, 'En route les BG', 'roadtrip', 'https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2', '2025-11-01', '2025-11-1', POINT(50.60880719840839, 3.111964658850651), 'Rdpt des Acacias, 59790 Ronchin', 'Le dernier arrivé achète une LADA.', 'https://www.facebook.com/ffveofficiel/?locale=fr_FR"', 1);
+
+insert into model (id, name, year, brand_id, motor_id) values 
+(1, 'A3', 2022, 1, 1),
+(2, 'A4', 2022, 1, 2),
+(3, 'A5', 2022, 1, 3),
+(4, 'A6', 2022, 1, 4),
+(5, 'A7', 2022, 1, 5),
+(6, 'A8', 2022, 1, 6),
+(7, 'Q2', 2022, 1, 7),
+(8, 'Q3', 2022, 1, 8),
+(9, 'Q4', 2022, 1, 9),
+(10, 'Q5', 2022, 1, 10),
+(11, 'Q6', 2022, 1, 11),
+(12, 'Q7', 2022, 1, 12),
+(13, 'Q8', 2022, 1, 1),
+(14, 'TT', 2022, 1, 2),
+(15, 'R8', 2022, 1, 3),
+(16, 'Z4', 2022, 2, 4),
+(17, 'X1', 2022, 2, 5),
+(18, 'X2', 2022, 2, 6),
+(19, 'X3', 2022, 2, 7),
+(20, 'X4', 2022, 2, 8),
+(21, 'X5', 2022, 2, 9),
+(22, 'X6', 2022, 2, 10),
+(23, 'X7', 2022, 2, 11),
+(24, 'X8', 2022, 2, 12),
+(25, 'Classe A', 2022, 3, 1),
+(26, 'Classe B', 2022, 3, 2),
+(27, 'Classe C', 2022, 3, 3),
+(28, 'Classe E', 2022, 3, 4),
+(29, 'skyline r34 GT-R', 1970, 49, 13),
+(30, '8 - XR750', 1970, 18, 14);
+
+insert into vehicle (id, vehicle_picture, type, status, location, energy, user_id, model_id) values 
+(1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg"', 'voiture', 'vente', 'Paris', 'essence', 2, 29),
+(2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'voiture', 'essai', 'Lille', 'essence', 3, 30);
