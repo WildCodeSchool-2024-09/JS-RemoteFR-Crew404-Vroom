@@ -54,6 +54,23 @@ function Vehicule() {
   const [errors, setErrors] = useState<string[]>([]);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const handleCheckboxChange = (id: number) => {
+    setSelectedIds((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((selectedId) => selectedId !== id)
+        : [...prevSelected, id],
+    );
+  };
+
+  const handleDeleteSelected = () => {
+    setVehicules((prevVehicules) =>
+      prevVehicules.filter((vehicule) => !selectedIds.includes(vehicule.id)),
+    );
+    setSelectedIds([]);
+  };
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -124,32 +141,47 @@ function Vehicule() {
 
       <div>
         {vehicules.map((vehicule) => (
-          <button
-            type="button"
-            key={vehicule.id}
-            className={styles.event}
-            onClick={() => handleVehiculeClick(vehicule)}
-          >
-            <div
-              className={styles.image}
-              style={{
-                backgroundImage: vehicule.picture
-                  ? `url(${vehicule.picture})`
-                  : "url(/default-placeholder.png)",
-                backgroundSize: "cover",
-              }}
+          <div key={vehicule.id} className={styles.eventWrapper}>
+            <input
+              type="checkbox"
+              checked={selectedIds.includes(vehicule.id)}
+              onChange={() => handleCheckboxChange(vehicule.id)}
             />
-            <div>
-              <p>Marque: {vehicule.marque}</p>
-              <p>Modèle: {vehicule.modele}</p>
-              <p>Année: {vehicule.year}</p>
-              <p className={styles.locationText}>
-                Ville: {vehicule.city.toUpperCase()}
-              </p>
-            </div>
-          </button>
+            <button
+              type="button"
+              className={styles.event}
+              onClick={() => handleVehiculeClick(vehicule)}
+            >
+              <div
+                className={styles.image}
+                style={{
+                  backgroundImage: vehicule.picture
+                    ? `url(${vehicule.picture})`
+                    : "url(/default-placeholder.png)",
+                  backgroundSize: "cover",
+                }}
+              />
+              <div>
+                <p>Marque: {vehicule.marque}</p>
+                <p>Modèle: {vehicule.modele}</p>
+                <p>Année: {vehicule.year}</p>
+                <p className={styles.locationText}>
+                  Ville: {vehicule.city.toUpperCase()}
+                </p>
+              </div>
+            </button>
+          </div>
         ))}
       </div>
+
+      <button
+        type="button"
+        className={styles.deleteButton}
+        onClick={handleDeleteSelected}
+        disabled={selectedIds.length === 0}
+      >
+        Supprimer la sélection
+      </button>
 
       <button
         type="button"

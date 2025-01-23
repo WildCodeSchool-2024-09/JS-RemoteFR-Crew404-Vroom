@@ -4,6 +4,11 @@
   gap: 1rem;
   padding: 1rem;
   margin: 2em 1em 4em;
+  padding: 20px;
+  background-color: #f0fdfd;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .box {
@@ -33,21 +38,6 @@
   font-size: 1rem;
   text-align: center;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.image {
-  width: 3em;
-  height: 3em;
-  background-color: var(--secondary-color);
-  border-radius: 10px;
 }
 
 .inputs {
@@ -81,9 +71,57 @@
   height: 2rem;
 }
 
-.images {
+.largeButton,
+.smallButton {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.largeButton {
+  background-color: var(--light);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.smallButton {
+  background-color: var(--secondary-color);
+  font-weight: bold;
+  color: var(--light);
+}
+
+.buttons {
   display: flex;
   gap: 0.5rem;
+}
+
+.deleteButton {
+  padding: 10px 20px;
+  border: none;
+  color: var(--light);
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  background-color: var(--fourthly-color);
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+}
+
+.deleteButton:disabled {
+  cursor: not-allowed;
+  background-color: #78290f3d;
+}
+
+.image {
+  width: 3em;
+  height: 3em;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
 }
 
 .smallPlaceholder {
@@ -94,26 +132,9 @@
   border-radius: 10px;
 }
 
-.buttons {
+.images {
   display: flex;
   gap: 0.5rem;
-}
-
-.largeButton {
-  flex: 2;
-  background-color: whitesmoke;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 1rem;
-  text-align: center;
-  font-weight: bold;
-}
-
-.smallButton {
-  flex: 1;
-  background-color: var(--secondary-color);
-  padding: 1rem;
-  text-align: center;
-  font-weight: bold;
 }
 
 .modalOverlay {
@@ -144,21 +165,70 @@
   justify-content: space-between;
 }
 
-.largeButton,
-.smallButton {
-  flex: 1;
-  text-align: center;
+.eventWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   padding: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: var(--light);
 }
 
-.capitalize {
-  text-transform: capitalize;
+.eventWrapper input[type="checkbox"] {
+  order: 2;
 }
 
+.eventWrapper button {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+}
+
+.eventWrapper .details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+}
+
+.capitalize,
 .locationText {
   text-transform: capitalize;
+}
+
+.vehicleList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vehicle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.details {
+  flex-grow: 1;
+  margin-left: 10px;
+}
+
+.deleteContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
 .event {
@@ -167,7 +237,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc00;
   border-radius: 10px;
   background-color: var(--light);
   cursor: pointer;

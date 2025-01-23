@@ -55,6 +55,8 @@ function Dashboard() {
     },
   ]);
 
+  const [selectedEvents, setSelectedEvents] = useState<Set<number>>(new Set());
+
   const [searchCriterion, setSearchCriterion] = useState<string>("name");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,10 +131,31 @@ function Dashboard() {
     setIsModalOpen(true);
   };
 
-  const handleOutsideClick = (event: React.MouseEvent) => {
+  const handleOutsideClick = (
+    event: React.MouseEvent | React.KeyboardEvent,
+  ) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setIsModalOpen(false);
     }
+  };
+
+  const handleDeleteSelectedEvents = () => {
+    setEvents((prevEvents) =>
+      prevEvents.filter((event) => !selectedEvents.has(event.id)),
+    );
+    setSelectedEvents(new Set());
+  };
+
+  const handleCheckboxChange = (eventId: number) => {
+    setSelectedEvents((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (newSelected.has(eventId)) {
+        newSelected.delete(eventId);
+      } else {
+        newSelected.add(eventId);
+      }
+      return newSelected;
+    });
   };
 
   const filteredEvents = events.filter((event) =>
@@ -167,73 +190,81 @@ function Dashboard() {
 
       <div>
         {filteredEvents.map((event) => (
-          <button
-            type="button"
-            key={event.id}
-            className={styles.event}
-            onClick={() => handleEventClick(event)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleEventClick(event);
-              }
-            }}
-          >
-            <div
-              className={styles.image}
-              style={{
-                backgroundImage: event.picture
-                  ? `url(${event.picture})`
-                  : "url(/default-placeholder.png)",
-                backgroundSize: "cover",
-              }}
+          <div key={event.id} className={styles.eventWrapper}>
+            <button
+              type="button"
+              className={styles.event}
+              onClick={() => handleEventClick(event)}
+            >
+              <div
+                className={styles.image}
+                style={{
+                  backgroundImage: event.picture
+                    ? `url(${event.picture})`
+                    : "url(/default-placeholder.png)",
+                  backgroundSize: "cover",
+                }}
+              />
+              <div>
+                <p>Nom: {event.name}</p>
+                <p>Date: {event.date}</p>
+                <p className={styles.locationText}>
+                  Localisation: {event.location.toUpperCase()}
+                </p>
+              </div>
+            </button>
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={selectedEvents.has(event.id)}
+              onChange={() => handleCheckboxChange(event.id)}
             />
-            <div>
-              <p>Nom: {event.name}</p>
-              <p>Date: {event.date}</p>
-              <p className={styles.locationText}>
-                Localisation: {event.location.toUpperCase()}
-              </p>
-            </div>
-          </button>
+          </div>
         ))}
+        <button
+          type="button"
+          className={styles.deleteButton}
+          onClick={handleDeleteSelectedEvents}
+          disabled={selectedEvents.size === 0}
+        >
+          Supprimer la sélection
+        </button>
+        <button
+          type="button"
+          className={styles.addButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="32"
+            height="32"
+          >
+            <title>Ajouter un événement</title>
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        </button>
       </div>
 
-      <button
-        type="button"
-        className={styles.addButton}
-        onClick={() => setIsModalOpen(true)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          width="32"
-          height="32"
-        >
-          <title>Ajouter un événement</title>
-          <path d="M12 5v14m-7-7h14" stroke="currentColor" strokeWidth="2" />
-        </svg>
-      </button>
-
       {isModalOpen && (
-        <div
+        <dialog
           className={styles.modalOverlay}
           onClick={handleOutsideClick}
           onKeyDown={(e) => {
-            if (e.key === "Escape") {
-              setIsModalOpen(false);
-            }
+            if (e.key === "Escape") handleOutsideClick(e);
           }}
-          tabIndex={-1}
+          aria-labelledby="modal-title"
+          open
         >
           <div className={styles.modalContent} ref={modalRef}>
-            <h3>
+            <h3 id="modal-title">
               {formData.id !== -1
                 ? "Modifier l'événement"
                 : "Ajouter un événement"}
             </h3>
             {errors.map((error) => (
-              <p key={error} className={styles.errorMessage || "error-message"}>
+              <p key={error} className={styles.errorMessage}>
                 {error}
               </p>
             ))}
@@ -298,21 +329,21 @@ function Dashboard() {
             <div className={styles.modalButtons}>
               <button
                 type="button"
+                className={styles.submitButton}
                 onClick={addOrUpdateEvent}
-                className={styles.largeButton}
               >
                 {formData.id !== -1 ? "Modifier" : "Ajouter"}
               </button>
               <button
                 type="button"
+                className={styles.cancelButton}
                 onClick={() => setIsModalOpen(false)}
-                className={styles.smallButton}
               >
                 Annuler
               </button>
             </div>
           </div>
-        </div>
+        </dialog>
       )}
     </div>
   );

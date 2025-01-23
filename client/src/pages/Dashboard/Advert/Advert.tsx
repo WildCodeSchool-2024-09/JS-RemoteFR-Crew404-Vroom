@@ -116,7 +116,7 @@ const Advert: React.FC = () => {
           onClick={handleRemoveSelected}
           disabled={selectedFavorites.length === 0}
         >
-          Supprimer sélection
+          Supprimer la sélection
         </button>
       </div>
 

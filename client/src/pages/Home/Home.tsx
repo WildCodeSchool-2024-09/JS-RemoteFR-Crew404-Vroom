@@ -10,7 +10,7 @@ function Home() {
   return (
     <>
       <img className={Styles.logo} src={LogoVroom} alt="Logo" />
-      <h1 className={Styles.welcome}>BIENVENUE SUR VROOM</h1>
+      <h1 className={Styles.welcome}>BIENVENUE SUR RoadAddict</h1>
       <Caroussel />
       <Button />
       <Intro />
