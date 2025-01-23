@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
-import axios from "axios";
 import { useState } from "react";
+import api from "../../helpers/api";
 import styles from "./connexion.module.css";
 
 interface LoginResponse {
@@ -61,15 +61,9 @@ function Connexion() {
     try {
       let response: AxiosResponse<LoginResponse | RegisterResponse>;
       if (isLogin) {
-        response = await axios.post<LoginResponse>(
-          `${import.meta.env.VITE_API_URL}/api/login`,
-          login,
-        );
+        response = await api.post<LoginResponse>("/api/login", login);
       } else {
-        response = await axios.post<RegisterResponse>(
-          `${import.meta.env.VITE_API_URL}/api/register`,
-          register,
-        );
+        response = await api.post<RegisterResponse>("/api/register", register);
       }
       console.info(response.data);
     } catch (error) {

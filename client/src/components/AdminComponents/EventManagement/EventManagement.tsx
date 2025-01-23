@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import api from "../../../helpers/api";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
@@ -44,9 +44,7 @@ function EventManagement() {
     // Appel API ici
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/events`,
-        );
+        const response = await api.get("/api/events");
         setEvents(response.data);
         setFilteredEvents(response.data);
       } catch (error) {
@@ -164,10 +162,7 @@ function EventManagement() {
       };
 
       try {
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/events/${currentEvent.id}`,
-          updatedEvent,
-        );
+        await api.put(`/api/events/${currentEvent.id}`, updatedEvent);
         const updatedEvents = events.map((event) =>
           event.id === currentEvent.id ? currentEvent : event,
         );
@@ -184,8 +179,8 @@ function EventManagement() {
   function handleDeleteEvent(id: number) {
     // Logique pour supprimer un événement
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
-      axios
-        .delete(`${import.meta.env.VITE_API_URL}/api/events/${id}`)
+      api
+        .delete(`/api/events/${id}`)
         .then(() => {
           const updatedEvents = events.filter((event) => event.id !== id);
           setEvents(updatedEvents);
@@ -234,6 +229,16 @@ function EventManagement() {
 
   // Calcule le nombre total d'événements filtrés
   const totalEvents = filteredEvents.length;
+
+  //formatage de la date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   return (
     <div className={styles.eventManagementContainer}>
@@ -319,8 +324,8 @@ function EventManagement() {
                 <tr key={event.id}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
-                  <td>{event.date_start}</td>
-                  <td>{event.date_end}</td>
+                  <td>{formatDate(event.date_start)}</td>
+                  <td>{formatDate(event.date_end)}</td>
                   <td>{event.address}</td>
                   <td>
                     <button
