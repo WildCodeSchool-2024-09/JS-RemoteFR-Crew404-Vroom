@@ -79,18 +79,18 @@ from "../NavPC/NavPC.tsx"
   text-decoration: none;
   color: orangered;
 }
-@media (min-width: 768px) and (max-width: 795px) {
+@media (min-width: 768px) and (max-width: 875px) {
   .MenuLinkPC {
     font-size: calc(var(--h5) + 1px);
   }
 }
-@media (min-width: 795px) and (max-width: 875px) {
-  .MenuLinkPC {
-    font-size: var(--h5);
-  }
-}
-@media (min-width: 875px) {
+@media (min-width: 875px) and (max-width: 1500px) {
   .MenuLinkPC {
     font-size: var(--h4);
+  }
+}
+@media (min-width: 1500px) {
+  .MenuLinkPC {
+    font-size: var(--h3);
   }
 }

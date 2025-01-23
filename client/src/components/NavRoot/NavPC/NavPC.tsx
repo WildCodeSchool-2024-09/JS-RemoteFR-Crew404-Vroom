@@ -28,7 +28,6 @@ function NavPC() {
         <Link to="/">
           <h1>BIENVENUE SUR RoadAddict</h1>
         </Link>
-        <h3>test test tes</h3>
       </section>
     </nav>
   );
