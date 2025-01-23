@@ -44,6 +44,7 @@
 
 .NavBottomPC > a > h1 {
   font-size: var(--h1);
+  color: var(--tertiary-color);
 }
 
 .NavBottomPC > h3 {

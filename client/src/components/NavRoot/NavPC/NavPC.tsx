@@ -25,7 +25,7 @@ function NavPC() {
       </div>
 
       <section className={css.NavBottomPC}>
-        <Link to="/home">
+        <Link to="/">
           <h1>BIENVENUE SUR RoadAddict</h1>
         </Link>
         <h3>test test tes</h3>
