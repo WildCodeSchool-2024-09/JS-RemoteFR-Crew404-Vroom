@@ -10,10 +10,10 @@ function Home() {
   return (
     <>
       <NavRoot />
-      <img className={Styles.logo} src={LogoVroom} alt="Logo" />
+      {/*<img className={Styles.logo} src={LogoVroom} alt="Logo" />
       <h1 className={Styles.welcome}>BIENVENUE SUR RoadAddict</h1>
       <main />
-      {/*<Caroussel />
+      <Caroussel />
       <Button />
       <Intro />
       <Footer />*/}

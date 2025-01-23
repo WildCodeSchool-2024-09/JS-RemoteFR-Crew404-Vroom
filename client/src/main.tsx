@@ -77,7 +77,6 @@ createRoot(rootElement).render(
     <StrictMode>
       <RouterProvider router={router} />
     </StrictMode>
-    ,
   </DataProvider>,
 );
 

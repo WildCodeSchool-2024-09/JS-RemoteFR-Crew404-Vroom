@@ -17,6 +17,7 @@ from "../NavPC/NavPC.tsx"
   justify-content: center;
   align-items: flex-start;
   list-style-type: none;
+  width: 100%;
   padding: 0;
   margin: 0px 0px 0px 2rem;
 }
@@ -27,6 +28,7 @@ from "../NavPC/NavPC.tsx"
 
 .MenuLinkMobile {
   text-decoration: none;
+  color: black;
 }
 
 /*Style version PC*/
@@ -38,10 +40,11 @@ from "../NavPC/NavPC.tsx"
 
 .MenuLiPC {
   list-style: none;
-  margin: 2em;
+  margin: 1em;
 }
 
 .MenuLinkPC {
   text-decoration: none;
   color: inherit;
+  font-size: calc(var(--h6) + 2px);
 }

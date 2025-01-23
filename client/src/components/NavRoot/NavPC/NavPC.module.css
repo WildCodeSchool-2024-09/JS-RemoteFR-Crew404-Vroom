@@ -7,7 +7,9 @@
   align-items: center;
   width: 100%;
   color: var(--textColorWhite);
-  @media (max-width: 768px) {
+}
+@media (max-width: 767.99px) {
+  .NavPC {
     display: none;
   }
 }
