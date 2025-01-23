@@ -13,6 +13,7 @@ type User = {
   birthdate: string;
   phone_number: number;
   sold: number;
+  is_admin: boolean;
 };
 
 class AuthRepository {

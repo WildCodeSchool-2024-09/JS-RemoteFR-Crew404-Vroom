@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
@@ -18,9 +19,14 @@ type Event = {
     | "rassemblement";
   date_start: string;
   date_end: string;
+  location: {
+    x: number;
+    y: number;
+  };
   address: string;
-  description: string;
+  description: string | "Description...";
   link: string | null;
+  user_id: number;
 };
 
 type SortOrder = "none" | "asc" | "desc";
@@ -36,34 +42,19 @@ function EventManagement() {
 
   useEffect(() => {
     // Appel API ici
-    const mockEvents: Event[] = [
-      {
-        id: 1,
-        event_picture:
-          "https://upload.wikimedia.org/wikipedia/commons/5/54/Tms2007_01.jpg",
-        title: "Salon Auto Rétro",
-        type: "salon",
-        date_start: "2025-06-15",
-        date_end: "2025-06-23",
-        address: "123 Rue de l'Exposition, Paris",
-        description: "Grand salon des véhicules de collection",
-        link: "https://salonautoretro.fr",
-      },
-      {
-        id: 2,
-        event_picture:
-          "https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2",
-        title: "En route les BG",
-        type: "roadtrip",
-        date_start: "2025-03-10",
-        date_end: "2025-03-10",
-        address: "123 Rue de la plage, Deauville",
-        description: "On débarque en Normandie",
-        link: "https://www.facebook.com/ffveofficiel/?locale=fr_FR",
-      },
-    ];
-    setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/events`,
+        );
+        setEvents(response.data);
+        setFilteredEvents(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements:", error);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   // Fonction pour l'expension du tableau
@@ -159,24 +150,50 @@ function EventManagement() {
     }
   };
 
-  const updateEvent = () => {
+  const updateEvent = async () => {
     if (currentEvent) {
-      const updatedEvents = events.map((event) =>
-        event.id === currentEvent.id ? currentEvent : event,
-      );
-      setEvents(updatedEvents);
-      setFilteredEvents(updatedEvents);
+      const formatDateForMySQL = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
+      const updatedEvent = {
+        ...currentEvent,
+        date_start: formatDateForMySQL(currentEvent.date_start),
+        date_end: formatDateForMySQL(currentEvent.date_end),
+      };
+
+      try {
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/events/${currentEvent.id}`,
+          updatedEvent,
+        );
+        const updatedEvents = events.map((event) =>
+          event.id === currentEvent.id ? currentEvent : event,
+        );
+        setEvents(updatedEvents);
+        setFilteredEvents(updatedEvents);
+        setIsModalOpen(false);
+        setCurrentEvent(null);
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'événement:", error);
+      }
     }
-    setIsModalOpen(false);
-    setCurrentEvent(null);
   };
 
   function handleDeleteEvent(id: number) {
     // Logique pour supprimer un événement
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
-      const updatedEvents = events.filter((event) => event.id !== id);
-      setEvents(updatedEvents);
-      setFilteredEvents(updatedEvents);
+      axios
+        .delete(`${import.meta.env.VITE_API_URL}/api/events/${id}`)
+        .then(() => {
+          const updatedEvents = events.filter((event) => event.id !== id);
+          setEvents(updatedEvents);
+          setFilteredEvents(updatedEvents);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la suppression de l'événement:", error);
+        });
     }
   }
 
@@ -224,7 +241,13 @@ function EventManagement() {
 
       <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
-        <ExportCSV data={filteredEvents} fileName="data_événements.csv" />
+        <ExportCSV
+          data={filteredEvents.map((event) => ({
+            ...event,
+            location: `${event.location.x}, ${event.location.y}`,
+          }))}
+          fileName="data_événements.csv"
+        />
         <button
           type="button"
           onClick={toggleTableExpansion}
@@ -387,7 +410,13 @@ function EventManagement() {
                 </select>
                 <input
                   type="date"
-                  value={currentEvent.date_start}
+                  value={
+                    currentEvent.date_start
+                      ? new Date(currentEvent.date_start)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   onChange={(e) =>
                     setCurrentEvent({
                       ...currentEvent,
@@ -398,7 +427,13 @@ function EventManagement() {
                 />
                 <input
                   type="date"
-                  value={currentEvent.date_end}
+                  value={
+                    currentEvent.date_end
+                      ? new Date(currentEvent.date_end)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   onChange={(e) =>
                     setCurrentEvent({
                       ...currentEvent,

@@ -15,6 +15,29 @@ declare global {
         email: string;
         password: string;
       };
+
+      event?: {
+        id: number;
+        title: string;
+        event_picture: string | null;
+        type:
+          | "salon"
+          | "course"
+          | "musée"
+          | "vente aux enchères"
+          | "roadtrip"
+          | "rassemblement";
+        date_start: string;
+        date_end: string;
+        location: {
+          x: number;
+          y: number;
+        };
+        address: string;
+        description: string;
+        link: string | null;
+        user_id: number;
+      };
     }
   }
 }

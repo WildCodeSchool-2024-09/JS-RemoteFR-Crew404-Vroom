@@ -20,6 +20,15 @@ import authActions from "./modules/auth/authActions";
 router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
 
+/** events */
+import eventActions from "./modules/event/eventActions";
+
+router.get("/api/events", eventActions.browse);
+router.get("/api/events/:id", eventActions.read);
+router.post("/api/events", eventActions.add);
+router.put("/api/events/:id", eventActions.editEvent);
+router.delete("/api/events/:id", eventActions.deleteEvent);
+
 /* ************************************************************************* */
 
 export default router;
