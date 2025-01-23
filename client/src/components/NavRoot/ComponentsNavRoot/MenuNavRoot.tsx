@@ -7,14 +7,22 @@ interface MenuNavRootProps {
   moduleMenuUl: string;
   moduleMenuLi: string;
   moduleMenuLink: string;
+  moduleMenuLiNone?: string;
+  moduleMenuNavRoot?: string;
 }
 
 function MenuNavRoot(Props: MenuNavRootProps) {
-  const { moduleMenuUl, moduleMenuLi, moduleMenuLink } = Props;
+  const {
+    moduleMenuUl,
+    moduleMenuLi,
+    moduleMenuLink,
+    moduleMenuLiNone,
+    moduleMenuNavRoot,
+  } = Props;
   return (
-    <>
+    <div className={moduleMenuNavRoot}>
       <ul className={moduleMenuUl}>
-        <li className={moduleMenuLi}>
+        <li className={`${moduleMenuLi} ${moduleMenuLiNone}`}>
           <Link to="/home" className={moduleMenuLink}>
             Accueil
           </Link>
@@ -50,13 +58,13 @@ function MenuNavRoot(Props: MenuNavRootProps) {
           </Link>
         </li>
 
-        <li className={moduleMenuLi}>
-          <Link to="/connexion" className={moduleMenuLink}>
+        <li className={`${moduleMenuLi} ${moduleMenuLiNone}`}>
+          <Link to="/conne" className={moduleMenuLink}>
             Connexion / Inscription
           </Link>
         </li>
       </ul>
-    </>
+    </div>
   );
 }
 

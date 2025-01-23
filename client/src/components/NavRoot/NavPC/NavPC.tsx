@@ -6,21 +6,29 @@ import css from "./NavPC.module.css";
 function NavPC() {
   return (
     <nav className={css.NavPC}>
-      <div className="NavTopPC">
+      <div className={css.NavTopPC}>
         {/*Le style de ce composant est directement géré par le module CSS :
                  MenuNavRoot.module.css*/}
         <MenuNavRoot
           moduleMenuUl={style.MenuUlPC}
           moduleMenuLi={style.MenuLiPC}
           moduleMenuLink={style.MenuLinkPC}
+          moduleMenuLiNone={style.MenuLiNonePC}
+          moduleMenuNavRoot={style.MenuNavRootPC}
         />
+
+        <li className={style.MenuLiPC}>
+          <Link to="/conne" className={style.MenuLinkPC}>
+            Connexion / Inscription
+          </Link>
+        </li>
       </div>
 
       <section className={css.NavBottomPC}>
         <Link to="/home">
-          <h1>Ryan DECIAN</h1>
+          <h1>BIENVENUE SUR RoadAddict</h1>
         </Link>
-        <h3>Développeur web full stack junior</h3>
+        <h3>test test tes</h3>
       </section>
     </nav>
   );
