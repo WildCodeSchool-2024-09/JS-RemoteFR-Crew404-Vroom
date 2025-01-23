@@ -1,16 +1,12 @@
-import "./NavPC.css";
 import { Link } from "react-router-dom";
-import IconNavRoot from "../ComponentsNavRoot/IconNavRoot";
-import StyleIcon from "../ComponentsNavRoot/IconNavRoot.module.css";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
+import css from "./NavPC.module.css";
 
 function NavPC() {
   return (
-    <nav className="NavPC">
+    <nav className={css.NavPC}>
       <div className="NavTopPC">
-        <IconNavRoot iconNav={StyleIcon.IconNavPC} />
-
         {/*Le style de ce composant est directement géré par le module CSS :
                  MenuNavRoot.module.css*/}
         <MenuNavRoot
@@ -20,7 +16,7 @@ function NavPC() {
         />
       </div>
 
-      <section className="NavBottomPC">
+      <section className={css.NavBottomPC}>
         <Link to="/home">
           <h1>Ryan DECIAN</h1>
         </Link>
