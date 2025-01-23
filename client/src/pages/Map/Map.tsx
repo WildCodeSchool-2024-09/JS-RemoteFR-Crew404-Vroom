@@ -16,29 +16,31 @@ function Maps({
   markers = [{ position: [51.505, -0.09], label: "Default Marker" }],
 }: MapsProps) {
   return (
-    <div className={styles.container}>
-      <SearchBar placeholder="Rechercher un lieu..." />
-      <IconsContainer icons={["🏍️", "🚗", "🎉"]} />
+    <div className={styles.outerContainer}>
+      <div className={styles.innerContainer}>
+        <SearchBar placeholder="Rechercher un lieu..." />
+        <IconsContainer icons={["🏍️", "🚗", "🎉"]} />
 
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        scrollWheelZoom={false}
-        className={styles.maps}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        <MapContainer
+          center={center}
+          zoom={zoom}
+          scrollWheelZoom={false}
+          className={styles.maps}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-        {markers.map((marker) => (
-          <Marker key={marker.position.join(",")} position={marker.position}>
-            <Popup>{marker.label || "A marker"}</Popup>
-          </Marker>
-        ))}
+          {markers.map((marker) => (
+            <Marker key={marker.position.join(",")} position={marker.position}>
+              <Popup>{marker.label || "A marker"}</Popup>
+            </Marker>
+          ))}
 
-        <AdjustZoomControls />
-      </MapContainer>
+          <AdjustZoomControls />
+        </MapContainer>
+      </div>
     </div>
   );
 }
