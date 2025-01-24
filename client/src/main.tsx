@@ -4,8 +4,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 /**
  * Pages
-*/
+ */
 import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 import About from "./pages/About/About";
 import Account from "./pages/Account/Account";
 import BackofficeMain from "./pages/Admin/Admin";
@@ -15,8 +17,6 @@ import Home from "./pages/Home/Home";
 import Maps from "./pages/Map/Map";
 import NotFound from "./pages/NotFound/NotFound";
 import Connexion from "./pages/connexion/Connexion";
-import { AuthProvider } from "./contexts/AuthContext";
-import { DataProvider } from "./contexts/DataContext";
 
 const router = createBrowserRouter([
   {

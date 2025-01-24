@@ -27,8 +27,17 @@ import eventActions from "./modules/event/eventActions";
 router.get("/api/events", authMiddleware.checkToken, eventActions.browse);
 router.get("/api/events/:id", authMiddleware.checkToken, eventActions.read);
 router.post("/api/events", authMiddleware.checkToken, eventActions.add);
-router.put("/api/events/:id", authMiddleware.checkToken, eventActions.editEvent, authMiddleware.checkToken);
-router.delete("/api/events/:id", eventActions.deleteEvent, authMiddleware.checkToken);
+router.put(
+  "/api/events/:id",
+  authMiddleware.checkToken,
+  eventActions.editEvent,
+  authMiddleware.checkToken,
+);
+router.delete(
+  "/api/events/:id",
+  eventActions.deleteEvent,
+  authMiddleware.checkToken,
+);
 
 /* ************************************************************************* */
 

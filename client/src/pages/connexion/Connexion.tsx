@@ -1,8 +1,8 @@
 import type { AxiosResponse } from "axios";
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
 import styles from "./connexion.module.css";
-import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginResponse {
   token: string;

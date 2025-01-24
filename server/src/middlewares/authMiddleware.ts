@@ -28,11 +28,16 @@ const verifyPwd: RequestHandler = async (req, res, next) => {
 
       const token = jwt.createToken(user);
 
-      res.cookie("user_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', 
-        sameSite: 'strict' 
-      }).json({ user: { ...user, password: undefined }, message: "Login successful" });
+      res
+        .cookie("user_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        })
+        .json({
+          user: { ...user, password: undefined },
+          message: "Login successful",
+        });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }
