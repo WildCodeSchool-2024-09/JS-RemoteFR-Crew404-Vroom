@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import api from "../../../helpers/api";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
 type Event = {
   id: number;
   title: string;
-  event_picture: string | null;
+  event_picture?: string | null;
   type:
     | "type"
     | "salon"
@@ -15,12 +16,18 @@ type Event = {
     | "musée"
     | "vente aux enchères"
     | "roadtrip"
-    | "rassemblement";
-  date_start: string;
-  date_end: string;
+    | "rassemblement"
+    | "autre";
+  date_start: string | Date;
+  date_end: string | Date;
+  location: {
+    x: number;
+    y: number;
+  };
   address: string;
   description: string;
-  link: string | null;
+  link?: string | null;
+  user_id: number;
 };
 
 type SortOrder = "none" | "asc" | "desc";
@@ -36,34 +43,17 @@ function EventManagement() {
 
   useEffect(() => {
     // Appel API ici
-    const mockEvents: Event[] = [
-      {
-        id: 1,
-        event_picture:
-          "https://upload.wikimedia.org/wikipedia/commons/5/54/Tms2007_01.jpg",
-        title: "Salon Auto Rétro",
-        type: "salon",
-        date_start: "2025-06-15",
-        date_end: "2025-06-23",
-        address: "123 Rue de l'Exposition, Paris",
-        description: "Grand salon des véhicules de collection",
-        link: "https://salonautoretro.fr",
-      },
-      {
-        id: 2,
-        event_picture:
-          "https://external-preview.redd.it/3_1tq9x-NJAxcucUwCWVqZHeohhPvtoK5IkrZWm-dmY.jpg?width=640&crop=smart&auto=webp&s=89c421b4989131b9bc6cb4cf58eb3627e5a808e2",
-        title: "En route les BG",
-        type: "roadtrip",
-        date_start: "2025-03-10",
-        date_end: "2025-03-10",
-        address: "123 Rue de la plage, Deauville",
-        description: "On débarque en Normandie",
-        link: "https://www.facebook.com/ffveofficiel/?locale=fr_FR",
-      },
-    ];
-    setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
+    const fetchEvents = async () => {
+      try {
+        const response = await api.get("/api/events");
+        setEvents(response.data);
+        setFilteredEvents(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements:", error);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   // Fonction pour l'expension du tableau
@@ -79,8 +69,10 @@ function EventManagement() {
     const filtered = events.filter(
       (event) =>
         (event.title.toLowerCase().includes(searchTerm) ||
-          event.date_start.includes(searchTerm) ||
-          event.date_end.includes(searchTerm)) &&
+          (typeof event.date_start === "string" &&
+            event.date_start.includes(searchTerm)) ||
+          (typeof event.date_end === "string" &&
+            event.date_end.includes(searchTerm))) &&
         (filterType === "" || event.type === filterType),
     );
     setFilteredEvents(filtered);
@@ -159,24 +151,55 @@ function EventManagement() {
     }
   };
 
-  const updateEvent = () => {
+  const updateEvent = async () => {
     if (currentEvent) {
-      const updatedEvents = events.map((event) =>
-        event.id === currentEvent.id ? currentEvent : event,
-      );
-      setEvents(updatedEvents);
-      setFilteredEvents(updatedEvents);
+      const formatDateForMySQL = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
+      const updatedEvent = {
+        ...currentEvent,
+        date_start: formatDateForMySQL(
+          typeof currentEvent.date_start === "string"
+            ? currentEvent.date_start
+            : currentEvent.date_start.toISOString(),
+        ),
+        date_end: formatDateForMySQL(
+          typeof currentEvent.date_end === "string"
+            ? currentEvent.date_end
+            : currentEvent.date_end.toISOString(),
+        ),
+      };
+
+      try {
+        await api.put(`/api/events/${currentEvent.id}`, updatedEvent);
+        const updatedEvents = events.map((event) =>
+          event.id === currentEvent.id ? currentEvent : event,
+        );
+        setEvents(updatedEvents);
+        setFilteredEvents(updatedEvents);
+        setIsModalOpen(false);
+        setCurrentEvent(null);
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'événement:", error);
+      }
     }
-    setIsModalOpen(false);
-    setCurrentEvent(null);
   };
 
   function handleDeleteEvent(id: number) {
     // Logique pour supprimer un événement
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
-      const updatedEvents = events.filter((event) => event.id !== id);
-      setEvents(updatedEvents);
-      setFilteredEvents(updatedEvents);
+      api
+        .delete(`/api/events/${id}`)
+        .then(() => {
+          const updatedEvents = events.filter((event) => event.id !== id);
+          setEvents(updatedEvents);
+          setFilteredEvents(updatedEvents);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la suppression de l'événement:", error);
+        });
     }
   }
 
@@ -218,13 +241,37 @@ function EventManagement() {
   // Calcule le nombre total d'événements filtrés
   const totalEvents = filteredEvents.length;
 
+  //formatage de la date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
   return (
     <div className={styles.eventManagementContainer}>
       <h2>Gestion des Événements</h2>
 
       <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
-        <ExportCSV data={filteredEvents} fileName="data_événements.csv" />
+        <ExportCSV
+          data={filteredEvents.map((event) => ({
+            ...event,
+            location: `${event.location.x}, ${event.location.y}`,
+            date_start:
+              typeof event.date_start === "string"
+                ? event.date_start
+                : event.date_start.toISOString(),
+            date_end:
+              typeof event.date_end === "string"
+                ? event.date_end
+                : event.date_end.toISOString(),
+          }))}
+          fileName="data_événements.csv"
+        />
         <button
           type="button"
           onClick={toggleTableExpansion}
@@ -296,8 +343,20 @@ function EventManagement() {
                 <tr key={event.id}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
-                  <td>{event.date_start}</td>
-                  <td>{event.date_end}</td>
+                  <td>
+                    {formatDate(
+                      typeof event.date_start === "string"
+                        ? event.date_start
+                        : event.date_start.toISOString(),
+                    )}
+                  </td>
+                  <td>
+                    {formatDate(
+                      typeof event.date_end === "string"
+                        ? event.date_end
+                        : event.date_end.toISOString(),
+                    )}
+                  </td>
                   <td>{event.address}</td>
                   <td>
                     <button
@@ -387,7 +446,13 @@ function EventManagement() {
                 </select>
                 <input
                   type="date"
-                  value={currentEvent.date_start}
+                  value={
+                    currentEvent.date_start
+                      ? new Date(currentEvent.date_start)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   onChange={(e) =>
                     setCurrentEvent({
                       ...currentEvent,
@@ -398,7 +463,13 @@ function EventManagement() {
                 />
                 <input
                   type="date"
-                  value={currentEvent.date_end}
+                  value={
+                    currentEvent.date_end
+                      ? new Date(currentEvent.date_end)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
                   onChange={(e) =>
                     setCurrentEvent({
                       ...currentEvent,

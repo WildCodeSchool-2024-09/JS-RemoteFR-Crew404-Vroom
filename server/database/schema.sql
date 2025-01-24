@@ -25,7 +25,7 @@ CREATE TABLE brand (
 CREATE TABLE event (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
   title VARCHAR(255) NOT NULL,
-  type ENUM('salon', 'course', 'musée', 'vente aux enchères', 'roadtrip', 'rassemblement') NOT NULL,
+  type ENUM('salon', 'course', 'musée', 'vente aux enchères', 'roadtrip', 'rassemblement', 'autre') NOT NULL,
   event_picture VARCHAR(255),
   date_start DATE NOT NULL,
   date_end DATE NOT NULL,
