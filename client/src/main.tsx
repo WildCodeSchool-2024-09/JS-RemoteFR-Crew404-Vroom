@@ -1,11 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { DataProvider } from "./contexts/DataContext";
 
 /**
  * Pages
- */
+*/
 import App from "./App";
 import About from "./pages/About/About";
 import Account from "./pages/Account/Account";
@@ -16,6 +15,8 @@ import Home from "./pages/Home/Home";
 import Maps from "./pages/Map/Map";
 import NotFound from "./pages/NotFound/NotFound";
 import Connexion from "./pages/connexion/Connexion";
+import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 
 const router = createBrowserRouter([
   {
@@ -73,12 +74,13 @@ if (rootElement == null) {
 
 // Render the app inside the root element
 createRoot(rootElement).render(
-  <DataProvider>
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>
-    ,
-  </DataProvider>,
+  <AuthProvider>
+    <DataProvider>
+      <StrictMode>
+        <RouterProvider router={router} />
+      </StrictMode>
+    </DataProvider>
+  </AuthProvider>,
 );
 
 /**
