@@ -1,27 +1,28 @@
 import type { RequestHandler } from "express";
 
-interface Event {
+type Event = {
   id: number;
   title: string;
-  event_picture: string | null;
+  event_picture?: string | null;
   type:
     | "salon"
     | "course"
     | "musée"
     | "vente aux enchères"
     | "roadtrip"
-    | "rassemblement";
-  date_start: string;
-  date_end: string;
+    | "rassemblement"
+    | "autre";
+  date_start: string | Date;
+  date_end: string | Date;
   location: {
     x: number;
     y: number;
   };
   address: string;
-  description: string | "Description...";
-  link: string | null;
+  description: string;
+  link?: string | null;
   user_id: number;
-}
+};
 
 // Import access to data
 import eventRepository from "./eventRepository";

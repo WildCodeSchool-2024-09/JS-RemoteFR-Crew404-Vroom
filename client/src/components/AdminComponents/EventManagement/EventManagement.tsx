@@ -8,7 +8,7 @@ import styles from "./EventManagement.module.css";
 type Event = {
   id: number;
   title: string;
-  event_picture: string | null;
+  event_picture?: string | null;
   type:
     | "type"
     | "salon"
@@ -16,16 +16,17 @@ type Event = {
     | "musée"
     | "vente aux enchères"
     | "roadtrip"
-    | "rassemblement";
-  date_start: string;
-  date_end: string;
+    | "rassemblement"
+    | "autre";
+  date_start: string | Date;
+  date_end: string | Date;
   location: {
     x: number;
     y: number;
   };
   address: string;
-  description: string | "Description...";
-  link: string | null;
+  description: string;
+  link?: string | null;
   user_id: number;
 };
 
@@ -68,8 +69,10 @@ function EventManagement() {
     const filtered = events.filter(
       (event) =>
         (event.title.toLowerCase().includes(searchTerm) ||
-          event.date_start.includes(searchTerm) ||
-          event.date_end.includes(searchTerm)) &&
+          (typeof event.date_start === "string" &&
+            event.date_start.includes(searchTerm)) ||
+          (typeof event.date_end === "string" &&
+            event.date_end.includes(searchTerm))) &&
         (filterType === "" || event.type === filterType),
     );
     setFilteredEvents(filtered);
@@ -157,8 +160,16 @@ function EventManagement() {
 
       const updatedEvent = {
         ...currentEvent,
-        date_start: formatDateForMySQL(currentEvent.date_start),
-        date_end: formatDateForMySQL(currentEvent.date_end),
+        date_start: formatDateForMySQL(
+          typeof currentEvent.date_start === "string"
+            ? currentEvent.date_start
+            : currentEvent.date_start.toISOString(),
+        ),
+        date_end: formatDateForMySQL(
+          typeof currentEvent.date_end === "string"
+            ? currentEvent.date_end
+            : currentEvent.date_end.toISOString(),
+        ),
       };
 
       try {
@@ -250,6 +261,14 @@ function EventManagement() {
           data={filteredEvents.map((event) => ({
             ...event,
             location: `${event.location.x}, ${event.location.y}`,
+            date_start:
+              typeof event.date_start === "string"
+                ? event.date_start
+                : event.date_start.toISOString(),
+            date_end:
+              typeof event.date_end === "string"
+                ? event.date_end
+                : event.date_end.toISOString(),
           }))}
           fileName="data_événements.csv"
         />
@@ -324,8 +343,20 @@ function EventManagement() {
                 <tr key={event.id}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
-                  <td>{formatDate(event.date_start)}</td>
-                  <td>{formatDate(event.date_end)}</td>
+                  <td>
+                    {formatDate(
+                      typeof event.date_start === "string"
+                        ? event.date_start
+                        : event.date_start.toISOString(),
+                    )}
+                  </td>
+                  <td>
+                    {formatDate(
+                      typeof event.date_end === "string"
+                        ? event.date_end
+                        : event.date_end.toISOString(),
+                    )}
+                  </td>
                   <td>{event.address}</td>
                   <td>
                     <button
