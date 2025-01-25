@@ -26,4 +26,53 @@ const login: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { register, login };
+const browse: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await authRepository.readAll();
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const read: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await authRepository.read(req.params.email);
+    if (user) {
+      const { password, ...safeUser } = user;
+      res.status(200).json(safeUser);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const editUser: RequestHandler = async (req, res, next) => {
+  try {
+    const updatedUser = await authRepository.update(req.body);
+    if (updatedUser) {
+      res.status(200).json({ message: "User updated successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteUser: RequestHandler = async (req, res, next) => {
+  try {
+    const deleted = await authRepository.delete(Number(req.params.id));
+    if (deleted) {
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { browse, read, editUser, deleteUser, register, login };
