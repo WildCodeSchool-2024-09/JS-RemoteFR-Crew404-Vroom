@@ -1,25 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import { useData } from "../../../contexts/DataContext";
+import type { User } from "../../../contexts/DataContext";
+import api from "../../../helpers/api";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./UserManagement.module.css";
-
-type User = {
-  id: number;
-  profile_picture: string | null;
-  username: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone_number: string;
-  birthday: string;
-  sold: number;
-};
 
 type SortOrder = "none" | "asc" | "desc";
 
 function UserManagement() {
-  const [users, setUsers] = useState<User[]>([]);
+  const { users, setUsers } = useData();
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
@@ -28,34 +19,18 @@ function UserManagement() {
 
   useEffect(() => {
     // Futur appel API ici
-    const users: User[] = [
-      {
-        id: 1,
-        profile_picture:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s",
-        username: "Aldup",
-        firstname: "Alice",
-        lastname: "Dupont",
-        birthday: "01-01-01",
-        email: "alice@example.com",
-        phone_number: "+33607080910",
-        sold: 403,
-      },
-      {
-        id: 2,
-        profile_picture: "https://gallerix.fr/gallery/4/5/9/2/36740-800.jpg",
-        username: "The B",
-        firstname: "Bob",
-        lastname: "Martin",
-        birthday: "01-01-01",
-        email: "bob@example.com",
-        phone_number: "+33607080911",
-        sold: 404,
-      },
-    ];
-    setUsers(users);
-    setFilteredUsers(users);
-  }, []);
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get("/api/users");
+        setUsers(response.data);
+        setFilteredUsers(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements:", error);
+      }
+    };
+
+    fetchUsers();
+  }, [setUsers]);
 
   // Fonction pour l'expension du tableau
   function toggleTableExpansion() {
@@ -129,16 +104,22 @@ function UserManagement() {
     }
   };
 
-  const updateUser = () => {
+  const updateUser = async () => {
     if (currentUser) {
-      const updatedUsers = users.map((user) =>
-        user.id === currentUser.id ? currentUser : user,
-      );
-      setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers);
+      try {
+        await api.put(`/api/users/${currentUser.id}`, currentUser);
+
+        const updatedUsers = users.map((user) =>
+          user.id === currentUser.id ? currentUser : user,
+        );
+        setUsers(updatedUsers);
+        setFilteredUsers(updatedUsers);
+        setIsModalOpen(false);
+        setCurrentUser(null);
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
+      }
     }
-    setIsModalOpen(false);
-    setCurrentUser(null);
   };
 
   function handleDeleteUser(id: number) {
@@ -146,9 +127,19 @@ function UserManagement() {
     if (
       window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
     ) {
-      const updatedUsers = users.filter((user) => user.id !== id);
-      setUsers(updatedUsers);
-      setFilteredUsers(updatedUsers);
+      api
+        .delete(`/api/users/${id}`)
+        .then(() => {
+          const updatedUsers = users.filter((user) => user.id !== id);
+          setUsers(updatedUsers);
+          setFilteredUsers(updatedUsers);
+        })
+        .catch((error) => {
+          console.error(
+            "Erreur lors de la suppression de l'utilisateur :",
+            error,
+          );
+        });
     }
   }
 
@@ -348,8 +339,8 @@ function UserManagement() {
                   className={styles.input}
                 />
                 <input
-                  type="number"
-                  value={currentUser.phone_number}
+                  type="text"
+                  value={currentUser.phone_number || "+33"}
                   onChange={(e) =>
                     setCurrentUser({
                       ...currentUser,

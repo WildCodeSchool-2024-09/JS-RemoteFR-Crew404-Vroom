@@ -8,7 +8,7 @@ CREATE TABLE user (
   lastname VARCHAR(255),
   birthdate DATE,
   phone_number VARCHAR(20),
-  sold INT,
+  sold INT DEFAULT 0,
   is_admin BOOLEAN DEFAULT FALSE
 );
 

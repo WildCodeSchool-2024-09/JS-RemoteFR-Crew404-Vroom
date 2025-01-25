@@ -32,11 +32,11 @@ class AuthRepository {
 
   // The Rs of CRUD - Read operations
 
-  async read(email: string) {
+  async read(id: string) {
     // Execute the SQL SELECT query to retrieve a specific user by its ID
     const [rows] = await databaseClient.query<Rows>(
       "select * from user where email = ?",
-      [email],
+      [id],
     );
 
     // Return the first row of the result, which represents the user
@@ -52,7 +52,7 @@ class AuthRepository {
   }
 
   // The U of CRUD - Update operation
-  async update(user: User) {
+  async update(id: string, user: User) {
     const [result] = await databaseClient.query<Result>(
       "UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, password = ?, profile_picture = ?, birthdate = ?, phone_number = ?, sold = ? WHERE id = ?",
       [

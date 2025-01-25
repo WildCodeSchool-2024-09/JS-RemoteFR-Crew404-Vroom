@@ -51,9 +51,9 @@ const read: RequestHandler = async (req, res, next) => {
 
 const editUser: RequestHandler = async (req, res, next) => {
   try {
-    const updatedUser = await authRepository.update(req.body);
+    const updatedUser = await authRepository.update(req.params.id, req.body);
     if (updatedUser) {
-      res.status(200).json({ message: "User updated successfully" });
+      res.status(200).json(updatedUser);
     } else {
       res.status(404).json({ message: "User not found" });
     }

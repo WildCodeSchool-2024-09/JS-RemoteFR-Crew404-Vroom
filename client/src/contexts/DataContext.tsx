@@ -9,6 +9,19 @@ const DataContext = createContext<dataType | null>(null);
 
 /* Déclarations des types */
 
+export type User = {
+  id: number;
+  profile_picture: string | null;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone_number: string;
+  birthday: string;
+  sold: number;
+  is_admin?: boolean;
+};
+
 export type Eventdata = {
   id: number;
   title: string;
@@ -39,20 +52,24 @@ type childrenType = {
 };
 
 type dataType = {
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   events: Eventdata[];
   setEvents: React.Dispatch<React.SetStateAction<Eventdata[]>>;
 };
 
 /* Déclaration des Value mise a disposition dans le context */
 
+const initialUsers: User[] = [];
 const initialEvents: Eventdata[] = [];
 
 /* Mise a disposition du contexte */
 export function DataProvider({ children }: childrenType) {
+  const [users, setUsers] = useState<User[]>(initialUsers);
   const [events, setEvents] = useState<Eventdata[]>(initialEvents);
 
   return (
-    <DataContext.Provider value={{ events, setEvents }}>
+    <DataContext.Provider value={{ users, setUsers, events, setEvents }}>
       {children}
     </DataContext.Provider>
   );

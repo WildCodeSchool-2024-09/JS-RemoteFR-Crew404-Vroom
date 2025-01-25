@@ -175,7 +175,10 @@ function EventManagement() {
           setFilteredEvents(updatedEvents);
         })
         .catch((error) => {
-          console.error("Erreur lors de la suppression de l'événement:", error);
+          console.error(
+            "Erreur lors de la suppression de l'événement :",
+            error,
+          );
         });
     }
   }
