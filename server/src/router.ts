@@ -24,19 +24,18 @@ router.get("/api/check", authMiddleware.checkToken);
 /** events */
 import eventActions from "./modules/event/eventActions";
 
-router.get("/api/events", authMiddleware.checkToken, eventActions.browse);
-router.get("/api/events/:id", authMiddleware.checkToken, eventActions.read);
+router.get("/api/events", eventActions.browse);
+router.get("/api/events/:id", eventActions.read);
 router.post("/api/events", authMiddleware.checkToken, eventActions.add);
 router.put(
   "/api/events/:id",
   authMiddleware.checkToken,
   eventActions.editEvent,
-  authMiddleware.checkToken,
 );
 router.delete(
   "/api/events/:id",
-  eventActions.deleteEvent,
   authMiddleware.checkToken,
+  eventActions.deleteEvent,
 );
 
 /* ************************************************************************* */
