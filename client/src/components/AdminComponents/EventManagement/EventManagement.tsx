@@ -1,43 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
+import { useData } from "../../../contexts/DataContext";
+import type { Eventdata } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
-type Event = {
-  id: number;
-  title: string;
-  event_picture?: string | null;
-  type:
-    | "type"
-    | "salon"
-    | "course"
-    | "musée"
-    | "vente aux enchères"
-    | "roadtrip"
-    | "rassemblement"
-    | "autre";
-  date_start: string | Date;
-  date_end: string | Date;
-  location: {
-    x: number;
-    y: number;
-  };
-  address: string;
-  description: string;
-  link?: string | null;
-  user_id: number;
-};
-
 type SortOrder = "none" | "asc" | "desc";
 
 function EventManagement() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const { events, setEvents } = useData();
+  const [filteredEvents, setFilteredEvents] = useState<Eventdata[]>(events);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
-  const [filterType, setFilterType] = useState<Event["type"] | "">("");
+  const [filterType, setFilterType] = useState<Eventdata["type"] | "">("");
   const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -54,7 +31,7 @@ function EventManagement() {
     };
 
     fetchEvents();
-  }, []);
+  }, [setEvents]);
 
   // Fonction pour l'expension du tableau
   function toggleTableExpansion() {
@@ -80,7 +57,7 @@ function EventManagement() {
 
   // Fonction pour trier les événements par type
   function handleFilterChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const newFilterType = event.target.value as Event["type"] | "";
+    const newFilterType = event.target.value as Eventdata["type"] | "";
     setFilterType(newFilterType);
 
     if (newFilterType === "" || newFilterType === "type") {
@@ -132,7 +109,7 @@ function EventManagement() {
 
   // Gestion des modales pour éditer un événement
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const [currentEvent, setCurrentEvent] = useState<Eventdata | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   function handleEditEvent(id: number) {
@@ -432,7 +409,7 @@ function EventManagement() {
                   onChange={(e) =>
                     setCurrentEvent({
                       ...currentEvent,
-                      type: e.target.value as Event["type"],
+                      type: e.target.value as Eventdata["type"],
                     })
                   }
                   className={styles.input}
