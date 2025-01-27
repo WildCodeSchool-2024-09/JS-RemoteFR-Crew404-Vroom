@@ -22,6 +22,7 @@ type Event = {
   description: string;
   link?: string | null;
   user_id: number;
+  creator_username?: string;
 };
 
 // Import access to data
@@ -46,7 +47,7 @@ const read: RequestHandler = async (req, res, next) => {
   try {
     // Fetch a specific event based on the provided ID
     const eventId = Number(req.params.id);
-    const event = await eventRepository.read(eventId);
+    const event = await eventRepository.getEventWithCreator(eventId);
 
     // If the event is not found, respond with HTTP 404 (Not Found)
     // Otherwise, respond with the event in JSON format

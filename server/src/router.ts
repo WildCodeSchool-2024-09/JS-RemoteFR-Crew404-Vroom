@@ -19,6 +19,15 @@ import authActions from "./modules/auth/authActions";
 
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
 router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
+router.get("/api/logout", authMiddleware.logout);
+router.get("/api/users", authMiddleware.checkToken, authActions.browse);
+router.get("/api/users/:id", authActions.read);
+router.put("/api/users/:id", authMiddleware.checkToken, authActions.editUser);
+router.delete(
+  "/api/users/:id",
+  authMiddleware.checkToken,
+  authActions.deleteUser,
+);
 router.get("/api/check", authMiddleware.checkToken);
 
 /** events */

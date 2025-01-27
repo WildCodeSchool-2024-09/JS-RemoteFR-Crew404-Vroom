@@ -46,17 +46,41 @@ const verifyPwd: RequestHandler = async (req, res, next) => {
   }
 };
 
-const checkToken: RequestHandler = async (req, res) => {
+const checkToken: RequestHandler = async (req, res, next) => {
   if (!req.cookies.user_token) {
-    res.sendStatus(401);
+    res.status(401).json({ message: "No token provided" });
     return;
   }
   try {
-    const decoded = jwt.verifyToken(req.cookies.user_token);
-    res.json({ message: "Token is valid", user: decoded });
+    const decoded = jwt.verifyToken(req.cookies.user_token) as {
+      id: number;
+      email: string;
+      password: string;
+    };
+    if (
+      typeof decoded !== "string" &&
+      decoded.id &&
+      decoded.email &&
+      decoded.password
+    ) {
+      req.user = decoded;
+      next();
+    } else {
+      res.status(401).json({ message: "Invalid token" });
+    }
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
   }
 };
 
-export default { hashPwd, verifyPwd, checkToken };
+const logout: RequestHandler = (req, res) => {
+  res.clearCookie("user_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+  res.status(200).json({ message: "Déconnexion réussie" });
+};
+
+export default { hashPwd, verifyPwd, checkToken, logout };
