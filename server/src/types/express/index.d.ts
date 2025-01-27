@@ -38,6 +38,7 @@ declare global {
         description: string;
         link?: string | null;
         user_id: number;
+        creator_username?: string;
       };
     }
   }

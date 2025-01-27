@@ -33,6 +33,19 @@ function EventManagement() {
     fetchEvents();
   }, [setEvents]);
 
+  //permet de récupérer le nom du créateur de l'événement
+  const fetchEventDetails = async (id: number) => {
+    try {
+      const response = await api.get(`/api/events/${id}`);
+      setCurrentEvent(response.data);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des détails de l'événement:",
+        error,
+      );
+    }
+  };
+
   // Fonction pour l'expension du tableau
   function toggleTableExpansion() {
     setIsTableExpanded(!isTableExpanded);
@@ -45,12 +58,13 @@ function EventManagement() {
 
     const filtered = events.filter(
       (event) =>
-        (event.title.toLowerCase().includes(searchTerm) ||
+        ((event.title.toLowerCase().includes(searchTerm) ||
           (typeof event.date_start === "string" &&
             event.date_start.includes(searchTerm)) ||
           (typeof event.date_end === "string" &&
             event.date_end.includes(searchTerm))) &&
-        (filterType === "" || event.type === filterType),
+          (filterType === "" || event.type === filterType)) ||
+        event.creator_username?.toLowerCase().includes(searchTerm),
     );
     setFilteredEvents(filtered);
   }
@@ -117,6 +131,7 @@ function EventManagement() {
     const eventToEdit = events.find((event) => event.id === id);
     if (eventToEdit) {
       setCurrentEvent(eventToEdit);
+      fetchEventDetails(id);
       setIsModalOpen(true);
     }
   }
@@ -249,6 +264,7 @@ function EventManagement() {
               typeof event.date_end === "string"
                 ? event.date_end
                 : event.date_end.toISOString(),
+            creator: event.creator_username || "",
           }))}
           fileName="data_événements.csv"
         />
@@ -315,6 +331,7 @@ function EventManagement() {
                 <th className={styles.tableContainer}>Début</th>
                 <th className={styles.tableContainer}>Fin</th>
                 <th className={styles.tableContainer}>Adresse</th>
+                <th className={styles.tableContainer}>Créateur</th>
                 <th className={styles.tableContainer}> </th>
               </tr>
             </thead>
@@ -338,6 +355,7 @@ function EventManagement() {
                     )}
                   </td>
                   <td>{event.address}</td>
+                  <td>{event.creator_username}</td>
                   <td>
                     <button
                       type="button"
@@ -487,6 +505,7 @@ function EventManagement() {
                   }
                   className={styles.input}
                 />
+                <span>Créateur : {currentEvent.creator_username}</span>
                 <div className={styles.modalButtons}>
                   <button
                     type="button"

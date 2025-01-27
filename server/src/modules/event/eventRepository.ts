@@ -67,10 +67,14 @@ class EventRepository {
 
   async readAll() {
     // Execute the SQL SELECT query to retrieve all events from the "event" table
-    const [rows] = await databaseClient.query<Rows>("select * from event");
+    const [rows] = await databaseClient.query<Rows>(`
+      SELECT e.*, u.username as creator_username
+      FROM event e
+      JOIN user u ON e.user_id = u.id
+    `);
 
     // Return the array of events
-    return rows as Event[];
+    return rows as (Event & { creator_username: string })[];
   }
 
   //   The U of CRUD - Update operation
@@ -104,6 +108,19 @@ class EventRepository {
     );
 
     return result.affectedRows > 0;
+  }
+
+  async getEventWithCreator(id: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      `
+      SELECT e.*, u.username as creator_username
+      FROM event e
+      JOIN user u ON e.user_id = u.id
+      WHERE e.id = ?
+    `,
+      [id],
+    );
+    return rows[0] as Event & { creator_username: string };
   }
 }
 
