@@ -73,4 +73,14 @@ const checkToken: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { hashPwd, verifyPwd, checkToken };
+const logout: RequestHandler = (req, res) => {
+  res.clearCookie("user_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+  res.status(200).json({ message: "Déconnexion réussie" });
+};
+
+export default { hashPwd, verifyPwd, checkToken, logout };

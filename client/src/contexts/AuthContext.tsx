@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { logout } from "../helpers/authService";
 
 type AuthContextType = {
   user: User | null;
@@ -18,9 +19,15 @@ export function AuthProvider({ children }: ChildrenType) {
   const handleLogin = (user: User) => {
     setUser(user);
   };
-  const handleLogout = () => {
-    setUser(null);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setUser(null);
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+    }
   };
+
   return (
     <AuthContext.Provider
       value={{
