@@ -17,17 +17,26 @@ router.post("/api/items", itemActions.add);
 import authMiddleware from "./middlewares/authMiddleware";
 import authActions from "./modules/auth/authActions";
 
-router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
+router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
+router.get("/api/check", authMiddleware.checkToken);
 
 /** events */
 import eventActions from "./modules/event/eventActions";
 
 router.get("/api/events", eventActions.browse);
 router.get("/api/events/:id", eventActions.read);
-router.post("/api/events", eventActions.add);
-router.put("/api/events/:id", eventActions.editEvent);
-router.delete("/api/events/:id", eventActions.deleteEvent);
+router.post("/api/events", authMiddleware.checkToken, eventActions.add);
+router.put(
+  "/api/events/:id",
+  authMiddleware.checkToken,
+  eventActions.editEvent,
+);
+router.delete(
+  "/api/events/:id",
+  authMiddleware.checkToken,
+  eventActions.deleteEvent,
+);
 
 /* ************************************************************************* */
 
