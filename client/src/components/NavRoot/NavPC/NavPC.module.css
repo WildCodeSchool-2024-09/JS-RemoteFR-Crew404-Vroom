@@ -201,7 +201,7 @@
   font-size: var(--h5);
   color: var(--textcolor);
   font-weight: bolt;
-  width: 70px;
+  width: 120px;
 }
 @media (min-width: 768px) and (max-width: 875px) {
   .SousMenuLinkPC {
