@@ -157,6 +157,21 @@
   color: var(--textcolor);
   font-weight: bold;
 }
+@media (min-width: 768px) and (max-width: 875px) {
+  .SousNavSpanPC {
+    font-size: var(--h5);
+  }
+}
+@media (min-width: 875px) and (max-width: 1500px) {
+  .SousNavSpanPC {
+    font-size: var(--h4);
+  }
+}
+@media (min-width: 1500px) {
+  .SousNavSpanPC {
+    font-size: var(--h3);
+  }
+}
 
 .SousMenuUlPC {
   display: flex;
