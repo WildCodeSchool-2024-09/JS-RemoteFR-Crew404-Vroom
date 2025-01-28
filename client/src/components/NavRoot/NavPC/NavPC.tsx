@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/Logos/Logo-model-3.svg";
-import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavPC.module.css";
 
@@ -12,15 +11,25 @@ function NavPC(Props: NavPCProps) {
   const { namePage } = Props;
   return (
     <nav className={css.NavPC}>
-      {/*Le style de ce composant est directement géré par le module CSS :
-        MenuNavRoot.module.css*/}
-      <MenuNavRoot
-        moduleMenuUl={style.MenuUlPC}
-        moduleMenuLi={style.MenuLiPC}
-        moduleMenuLink={style.MenuLinkPC}
-        moduleMenuLiNone={style.MenuLiNonePC}
-        moduleMenuNavRoot={style.MenuNavRootPC}
-      />
+      <div className={css.ContainerLogLogoNavPC}>
+        <div className={css.LogoNavPC}>
+          <img src={Logo} alt="Logo RoadAddict" />
+        </div>
+
+        <ul className={style.MenuUlPC}>
+          <li className={style.MenuLiPC}>
+            <Link to="/maps" className={style.MenuLinkPC}>
+              Maps
+            </Link>
+          </li>
+
+          <li className={style.MenuLiPC}>
+            <Link to="/contact" className={style.MenuLinkPC}>
+              Nous
+            </Link>
+          </li>
+        </ul>
+      </div>
 
       <div className={css.NamePageNavPC}>
         <Link to="/">
@@ -30,14 +39,16 @@ function NavPC(Props: NavPCProps) {
 
       <div className={css.ContainerLogLogoNavPC}>
         <li className={style.MenuLiPC}>
-          <Link to="/conne" className={style.MenuLinkPC}>
-            Connexion / Inscription
+          <Link to="/dashbord" className={style.MenuLinkPC}>
+            Tableau de bord
           </Link>
         </li>
 
-        <div className={css.LogoNavPC}>
-          <img src={Logo} alt="Logo RoadAddict" />
-        </div>
+        <li className={style.MenuLiPC}>
+          <Link to="/account" className={style.MenuLinkPC}>
+            Compte
+          </Link>
+        </li>
       </div>
     </nav>
   );
