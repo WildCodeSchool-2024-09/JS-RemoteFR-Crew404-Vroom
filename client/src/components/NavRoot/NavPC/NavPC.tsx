@@ -11,7 +11,7 @@ function NavPC(Props: NavPCProps) {
   const { namePage } = Props;
   return (
     <nav className={css.NavPC}>
-      <div className={css.ContainerLogLogoNavPC}>
+      <div className={css.ContainerLogNavPC}>
         <div className={css.LogoNavPC}>
           <img src={Logo} alt="Logo RoadAddict" />
         </div>
@@ -24,9 +24,7 @@ function NavPC(Props: NavPCProps) {
           </li>
 
           <li className={style.MenuLiPC}>
-            <Link to="/contact" className={style.MenuLinkPC}>
-              Nous
-            </Link>
+            <span className={style.MenuLinkPC}>Nous</span>
           </li>
         </ul>
       </div>
@@ -37,7 +35,7 @@ function NavPC(Props: NavPCProps) {
         </Link>
       </div>
 
-      <div className={css.ContainerLogLogoNavPC}>
+      <div className={css.ContainerLogNavPC}>
         <li className={style.MenuLiPC}>
           <Link to="/dashbord" className={style.MenuLinkPC}>
             Tableau de bord

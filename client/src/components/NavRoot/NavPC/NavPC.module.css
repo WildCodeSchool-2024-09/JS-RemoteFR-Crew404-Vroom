@@ -17,6 +17,12 @@
   }
 }
 
+.ContainerLogNavPC {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .NamePageNavPC {
   display: flex;
   justify-content: center;
@@ -28,21 +34,47 @@
   transform: translate(-50%, -50%);
 }
 
-.ContainerLogLogoNavPC {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .LogoNavPC {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .LogoNavPC > img {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
+}
+
+/*--------------------------------------------------*/
+/* Logique des Ul, Li, et a de la NavPC */
+
+.MenuUlPC {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.MenuLiPC:hover {
+  animation: rotateAndScale 1.0s ease-in-out forwards; /* Animation rapide et s'arrête après 1.5s */
+}
+
+/* Animation avec rotation gauche-droite-gauche et grossissement */
+@keyframes rotateAndScale {
+  0% {
+    transform: scale(1.1); /* Position initiale */
+  }
+  25% {
+    transform: scale(1.0); /* Rotation gauche avec grossissement */
+  }
+  50% {
+    transform: scale(1.1); /* Rotation droite avec grossissement */
+  }
+  75% {
+    transform: scale(1.0); /* Retour à gauche avec grossissement */
+  }
+  100% {
+    transform: scale(1.1); /* Retour à la position initiale sans grossissement */
+  }
 }
