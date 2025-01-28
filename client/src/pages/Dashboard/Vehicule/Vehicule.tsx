@@ -129,6 +129,18 @@ function Vehicule() {
     setIsModalOpen(true);
   };
 
+  const handleAddButtonClick = () => {
+    setFormData({
+      id: -1,
+      marque: "",
+      modele: "",
+      picture: null,
+      year: "",
+      city: "",
+    });
+    setIsModalOpen(true);
+  };
+
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setIsModalOpen(false);
@@ -186,7 +198,7 @@ function Vehicule() {
       <button
         type="button"
         className={styles.addButton}
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleAddButtonClick} // Même bail que Event.tsx
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
