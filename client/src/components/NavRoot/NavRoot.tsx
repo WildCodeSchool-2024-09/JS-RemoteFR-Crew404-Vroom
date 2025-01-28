@@ -1,11 +1,16 @@
 import NavMobile from "./NavMobile/NavMobile";
 import NavPC from "./NavPC/NavPC";
 
-function NavRoot() {
+interface NavRootProps {
+  namePage: string;
+}
+
+function NavRoot(Props: NavRootProps) {
+  const { namePage } = Props;
   return (
     <header className="headerRoot">
       <NavMobile />
-      <NavPC />
+      <NavPC namePage={namePage} />
     </header>
   );
 }
