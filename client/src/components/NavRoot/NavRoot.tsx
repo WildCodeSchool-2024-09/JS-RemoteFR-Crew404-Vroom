@@ -1,5 +1,6 @@
 import NavMobile from "./NavMobile/NavMobile";
 import NavPC from "./NavPC/NavPC";
+import "./NavRoot.css";
 
 interface NavRootProps {
   namePage: string;
