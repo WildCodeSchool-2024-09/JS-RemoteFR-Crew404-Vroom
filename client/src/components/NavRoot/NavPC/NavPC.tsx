@@ -3,7 +3,12 @@ import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavPC.module.css";
 
-function NavPC() {
+interface NavPCProps {
+  namePage: string;
+}
+
+function NavPC(Props: NavPCProps) {
+  const { namePage } = Props;
   return (
     <nav className={css.NavPC}>
       <div className={css.NavTopPC}>
@@ -26,7 +31,7 @@ function NavPC() {
 
       <section className={css.NavBottomPC}>
         <Link to="/">
-          <h1>BIENVENUE SUR RoadAddict</h1>
+          <h1>{namePage}</h1>
         </Link>
       </section>
     </nav>
