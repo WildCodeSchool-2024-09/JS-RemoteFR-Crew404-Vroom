@@ -29,13 +29,13 @@ function NavPC(Props: NavPCProps) {
 
               <ul className={css.SousMenuUlPC}>
                 <li className={css.SousMenuLiPC}>
-                  <Link to="" className={css.SousMenuLinkPC}>
+                  <Link to="/contact" className={css.SousMenuLinkPC}>
                     Contact
                   </Link>
                 </li>
 
                 <li className={css.SousMenuLiPC}>
-                  <Link to="" className={css.SousMenuLinkPC}>
+                  <Link to="/about" className={css.SousMenuLinkPC}>
                     A Propos
                   </Link>
                 </li>
