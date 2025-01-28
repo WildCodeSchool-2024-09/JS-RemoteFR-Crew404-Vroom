@@ -45,9 +45,7 @@ function NavPC(Props: NavPCProps) {
         </div>
 
         <div className={css.NamePageNavPC}>
-          <Link to="/">
-            <h1>{namePage}</h1>
-          </Link>
+          <h1>{namePage}</h1>
         </div>
 
         <div className={css.ContainerLogNavPC}>
