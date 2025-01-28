@@ -10,6 +10,7 @@
   top: 0;
   left: 0;
   z-index: 6;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 }
 @media (max-width: 767.99px) {
   .NavPC {
@@ -29,9 +30,23 @@
   align-items: center;
   width: auto;
   position: fixed;
-  top: 10px; /* A revoir */
+  top: 40px; /* A revoir */
   left: 50%;
   transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 7;
+}
+
+.NamePageNavPC > a {
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+
+.NamePageNavPC > a > h1 {
+  margin: 0;
+  padding: 0;
+  font-size: var(--h2);
 }
 
 .LogoNavPC {
@@ -53,9 +68,16 @@
 .MenuUlPC {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0;
+  list-style-type: none;
 }
 
+.MenuLiPC {
+  list-style: none;
+  margin: 1em;
+  transition: transform 0.3s ease-in-out;
+}
 .MenuLiPC:hover {
   animation: rotateAndScale 1.0s ease-in-out forwards; /* Animation rapide et s'arrête après 1.5s */
 }
@@ -77,4 +99,72 @@
   100% {
     transform: scale(1.1); /* Retour à la position initiale sans grossissement */
   }
+}
+
+.MenuLinkPC {
+  text-decoration: none;
+  color: var(--textcolor);
+  font-weight: bold;
+}
+@media (min-width: 768px) and (max-width: 875px) {
+  .MenuLinkPC {
+    font-size: var(--h5);
+  }
+}
+@media (min-width: 875px) and (max-width: 1500px) {
+  .MenuLinkPC {
+    font-size: var(--h4);
+  }
+}
+@media (min-width: 1500px) {
+  .MenuLinkPC {
+    font-size: var(--h3);
+  }
+}
+
+/*--------------------------------------------------*/
+/* Sous Menu Nous*/
+
+.SousNavLiPC {
+  position: relative;
+}
+.SousNavLiPC:hover .SousMenuUlPC {
+  display: block;
+}
+
+.SousNavSpanPC {
+  font-size: var(--h5);
+  color: var(--textcolor);
+  font-weight: bold;
+}
+
+.SousMenuUlPC {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  list-style-type: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  padding: 5px 0px 0px 5px;
+  background-color: var(--light);
+  border-radius: 0rem 0rem 0.5rem 0.5rem;
+}
+
+.SousMenuLiPC {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3px 0px 3px 0px;
+}
+
+.SousMenuLinkPC {
+  text-decoration: none;
+  display: block;
+  font-size: var(--h5);
+  color: var(--textcolor);
+  font-weight: bolt;
+  width: 70px;
 }

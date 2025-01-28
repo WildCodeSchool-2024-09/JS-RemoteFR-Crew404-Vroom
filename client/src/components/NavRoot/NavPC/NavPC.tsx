@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/Logos/Logo-model-3.svg";
-import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavPC.module.css";
 
 interface NavPCProps {
@@ -16,15 +15,29 @@ function NavPC(Props: NavPCProps) {
           <img src={Logo} alt="Logo RoadAddict" />
         </div>
 
-        <ul className={style.MenuUlPC}>
-          <li className={style.MenuLiPC}>
-            <Link to="/maps" className={style.MenuLinkPC}>
+        <ul className={css.MenuUlPC}>
+          <li className={css.MenuLiPC}>
+            <Link to="/maps" className={css.MenuLinkPC}>
               Maps
             </Link>
           </li>
 
-          <li className={style.MenuLiPC}>
-            <span className={style.MenuLinkPC}>Nous</span>
+          <li className={css.SousNavLiPC}>
+            <span className={css.SousNavSpanPC}>Nous ↓</span>
+
+            <ul className={css.SousMenuUlPC}>
+              <li className={css.SousMenuLiPC}>
+                <Link to="" className={css.SousMenuLinkPC}>
+                  Contact
+                </Link>
+              </li>
+
+              <li className={css.SousMenuLiPC}>
+                <Link to="" className={css.SousMenuLinkPC}>
+                  A Propos
+                </Link>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -36,14 +49,14 @@ function NavPC(Props: NavPCProps) {
       </div>
 
       <div className={css.ContainerLogNavPC}>
-        <li className={style.MenuLiPC}>
-          <Link to="/dashbord" className={style.MenuLinkPC}>
+        <li className={css.MenuLiPC}>
+          <Link to="/dashbord" className={css.MenuLinkPC}>
             Tableau de bord
           </Link>
         </li>
 
-        <li className={style.MenuLiPC}>
-          <Link to="/account" className={style.MenuLinkPC}>
+        <li className={css.MenuLiPC}>
+          <Link to="/account" className={css.MenuLinkPC}>
             Compte
           </Link>
         </li>
