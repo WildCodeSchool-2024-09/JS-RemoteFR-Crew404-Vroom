@@ -72,7 +72,12 @@
   height: 80px;
 }
 
-.LogoNavPC > img {
+.LinkLogoNavPC > a {
+  width: 80px;
+  height: 80px;
+}
+
+.LogoNavPC > a > img {
   width: 80px;
   height: 80px;
 }

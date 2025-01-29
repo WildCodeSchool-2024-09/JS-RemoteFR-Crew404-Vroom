@@ -14,7 +14,9 @@ function NavPC(Props: NavPCProps) {
       <nav className={css.NavPC}>
         <div className={css.ContainerLogNavPC}>
           <div className={css.LogoNavPC}>
-            <img src={Logo} alt="Logo RoadAddict" />
+            <Link to="/" className={css.LinkLogoNavPC}>
+              <img src={Logo} alt="Logo RoadAddict" />
+            </Link>
           </div>
 
           <ul className={css.MenuUlPC}>
