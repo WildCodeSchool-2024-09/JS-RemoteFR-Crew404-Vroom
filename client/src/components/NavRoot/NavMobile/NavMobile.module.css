@@ -60,19 +60,14 @@
   font-size: var(--h2);
   color: var(--textcolor);
 }
-@media (min-width: 768px) and (max-width: 875px) {
+@media (min-width: 0px) and (max-width: 350px) {
+  .NamePageNavMobile > h1 {
+    font-size: var(--h3);
+  }
+}
+@media (min-width: 350px) and (max-width: 768px) {
   .NamePageNavMobile > h1 {
     font-size: var(--h2);
-  }
-}
-@media (min-width: 875px) and (max-width: 1500px) {
-  .NamePageNavMobile > h1 {
-    font-size: var(--h1);
-  }
-}
-@media (min-width: 1500px) {
-  .NamePageNavMobile > h1 {
-    font-size: var(--h1);
   }
 }
 
