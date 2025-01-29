@@ -2,11 +2,12 @@ import EventManagement from "../../components/AdminComponents/EventManagement/Ev
 import UserManagement from "../../components/AdminComponents/UserManagement/UserManagement";
 import VehicleManagement from "../../components/AdminComponents/VehicleManagement/VehicleManagement";
 import Header from "../../components/Header/Header";
+import NavRoot from "../../components/NavRoot/NavRoot";
 
 function BackofficeMain() {
   return (
     <div>
-      <Header title="BACK-OFFICE" />
+      <NavRoot namePage="Back-office" />
       <main>
         <UserManagement />
         <EventManagement />
