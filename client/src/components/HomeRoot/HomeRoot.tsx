@@ -1,7 +1,15 @@
-
+import Button from "../button/Button";
+import Caroussel from "../caroussel/Caroussel";
+import Intro from "../intro/Intro";
 
 function HomeRoot() {
-    return ()
+  return (
+    <>
+      <Caroussel />
+      <Button />
+      <Intro />
+    </>
+  );
 }
 
 export default HomeRoot;
