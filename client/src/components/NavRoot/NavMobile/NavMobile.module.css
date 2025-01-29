@@ -5,56 +5,69 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  @media (min-width: 768.02px) {
+    display: none;
+  }
 }
 
-.NavMobile > a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.NavMobile > h3 {
-  margin-top: 0.5rem;
-  margin-bottom: 1.25rem;
-  color: var(--textColorWhite);
-}
-
-/*-----------------------------------------------*/
-/*Logique du Logo qui tourne*/
-
-.LogoMobile {
-  display: inline-block; /* Ajuste la largeur et la hauteur au contenu */
-  position: relative; /* Nécessaire pour positionner les faces */
-  transform-style: preserve-3d; /* Active l'effet 3D */
-  animation: flip 2s infinite ease-in-out; /* Animation de rotation */
-}
-
-.LogoMobile .front,
-.LogoMobile .back {
-  position: absolute; /* Superpose les deux faces */
+.ContainerNavMobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: var(--light);
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* La largeur suit le contenu */
-  height: 100%; /* La hauteur suit le contenu */
+  z-index: 6;
+  box-shadow: var(--box-shadow);
+}
+
+.LogoNavMobile {
   display: flex;
   justify-content: center;
   align-items: center;
-  backface-visibility: hidden; /* Cache la face non visible */
-  font-size: inherit; /* Conserve la taille de police du parent */
-  margin: 0; /* Supprime les marges par défaut des h1 */
+  width: 80px;
+  height: 80px;
 }
 
-.LogoMobile .back {
-  transform: rotateY(180deg); /* Retourne la face arrière */
+.LogoNavMobile > a {
+  width: 80px;
+  height: 80px;
 }
 
-/* Animation */
-@keyframes flip {
-  0%,
-  100% {
-    transform: rotateY(0deg);
+.LogoNavMobile > a > img {
+  width: 80px;
+  height: 80px;
+}
+
+.NamePageNavMobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  position: fixed;
+  top: 40px; /* A revoir */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 7;
+}
+
+.NamePageNavMobile > h1 {
+  margin: 0;
+  padding: 0;
+  font-size: var(--h2);
+  color: var(--textcolor);
+}
+@media (min-width: 0px) and (max-width: 350px) {
+  .NamePageNavMobile > h1 {
+    font-size: var(--h3);
   }
-  50% {
-    transform: rotateY(180deg);
+}
+@media (min-width: 350px) and (max-width: 768px) {
+  .NamePageNavMobile > h1 {
+    font-size: var(--h2);
   }
 }
 
@@ -62,103 +75,49 @@
 /*Menu Burger*/
 
 /*Position du Menu Burger*/
-@media (max-width: 768px) {
-  .sideNav {
-    width: 250px;
-    height: 100%;
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    right: -250px;
-    background-color: var(--BackgroudMenuBurger);
-    transition: right 0.5s ease;
-  }
-}
-@media (min-width: 769px) {
-  .sideNav {
-    width: 250px;
-    height: 100%;
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: -250px;
-    background-color: var(--BackgroudMenuBurger);
-    transition: right 0.5s ease;
-  }
+.sideNav {
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: -250px;
+  background-color: var(--BackgroudMenuBurger);
+  transition: right 0.5s ease;
 }
 
-@media (max-width: 768px) {
-  .sideNav.active {
-    right: 0;
-  }
-}
-@media (min-width: 769px) {
-  .sideNav.active {
-    left: 0;
-  }
+.sideNav.active {
+  right: 0;
+  box-shadow: var(--box-shadow);
 }
 
 /*-----------------------------------------------*/
 /*Logique de fermeture du MenuBurger par la div*/
 
-@media (max-width: 768px) {
-  .subSideNav {
-    all: unset;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    z-index: 8;
-    top: 0;
-    left: -100vw;
-    background-color: inherit;
-  }
+.subSideNav {
+  all: unset;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 8;
+  top: 0;
+  left: -100vw;
+  background-color: inherit;
 }
 
-@media (min-width: 769px) {
-  .subSideNav {
-    all: unset;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    z-index: 8;
-    top: 0;
-    right: -100vw;
-    background-color: inherit;
-  }
+.subSideNav.active {
+  left: 0;
 }
 
-@media (max-width: 768px) {
-  .subSideNav.active {
-    left: 0;
-  }
-}
-
-@media (min-width: 769px) {
-  .subSideNav.active {
-    right: 0;
-  }
-}
 /*-----------------------------------------------*/
 /*Logique ouverture et fermeture MenuBurger*/
-@media (max-width: 768px) {
-  .openBtn {
-    position: fixed;
-    z-index: 9;
-    top: 0.7rem;
-    right: 1rem;
-    background-color: var(--noColor);
-    cursor: pointer;
-  }
-}
-@media (min-width: 769px) {
-  .openBtn {
-    position: fixed;
-    z-index: 9;
-    top: 1rem;
-    left: 1rem;
-    background-color: var(--noColor);
-    cursor: pointer;
-  }
+.openBtn {
+  position: fixed;
+  z-index: 9;
+  top: 0.7rem;
+  right: 1rem;
+  background-color: var(--noColor);
+  cursor: pointer;
 }
 
 .menuBurger > span {
@@ -190,20 +149,11 @@
 }
 
 /*Container du bouton close MenuBurger*/
-@media (max-width: 768px) {
-  .logCloseBtn {
-    display: flex;
-    justify-content: start;
-    width: 250px;
-    padding: 0rem 0rem 3rem 0rem;
-  }
-}
-@media (min-width: 769px) {
-  .logCloseBtn {
-    display: flex;
-    justify-content: end;
-    padding: 0rem 2rem 3rem 0rem;
-  }
+.logCloseBtn {
+  display: flex;
+  justify-content: start;
+  width: 250px;
+  padding: 0rem 0rem 3rem 0rem;
 }
 
 /*Logique 1*/

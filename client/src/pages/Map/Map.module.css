@@ -11,6 +11,16 @@
 .innerContainer {
   position: relative;
   width: 100%;
+  height: 90vh;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  box-shadow: 17px 17px 34px #566762, -17px -17px 34px #d0d7d4;
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
   height: 100%;
   display: flex;
   flex-direction: column;

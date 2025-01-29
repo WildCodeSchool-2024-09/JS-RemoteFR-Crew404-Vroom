@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import Logo from "../../../assets/Logos/Logo-model-3.svg";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavMobile.module.css";
@@ -9,7 +11,13 @@ import Closebtn1 from "../../../assets/Icons/CloseBtn1.svg";
 import Closebtn2 from "../../../assets/Icons/CloseBtn2.svg";
 import Closebtn3 from "../../../assets/Icons/CloseBtn3.svg";
 
-function NavMobile() {
+interface NavMobileProps {
+  namePage: string;
+}
+
+function NavMobile(Props: NavMobileProps) {
+  const { namePage } = Props;
+
   const [active, setActive] = useState(false); /*Open Close MenuBurger*/
   const [count, setCount] = useState(() => Math.floor(Math.random() * 4) + 1);
 
@@ -24,6 +32,24 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
+        {/*lvl 1*/}
+        <div className={css.ContainerNavMobile}>
+          {/*lvl 2*/}
+          <div className={css.LogoNavMobile}>
+            {/*lvl 3*/}
+            <Link to="/" className={css.LinkLogoNavMobile}>
+              {/*lvl 4*/}
+              <img src={Logo} alt="Logo RoadAddict" />
+            </Link>
+          </div>
+
+          {/*lvl 2*/}
+          <div className={css.NamePageNavMobile}>
+            {/*lvl 3*/}
+            <h1>{namePage}</h1>
+          </div>
+        </div>
+
         {/*lvl 1*/}
         <div className={`${css.sideNav} ${active ? css.active : ""}`}>
           {/*lvl 2*/}
