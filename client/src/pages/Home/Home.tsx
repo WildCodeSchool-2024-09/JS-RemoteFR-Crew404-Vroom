@@ -1,9 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Footer from "../../components/Footer/Footer";
 import NavRoot from "../../components/NavRoot/NavRoot";
-import Button from "../../components/button/Button";
-import Caroussel from "../../components/caroussel/Caroussel";
-import Intro from "../../components/intro/Intro";
 
 function Home() {
   const SEO = {
@@ -85,9 +82,6 @@ function Home() {
       {/* Balise Header présent dans NavRoot */}
       <NavRoot namePage="RoadAddict" />
 
-      <Caroussel />
-      <Button />
-      <Intro />
       <main />
       <Footer />
     </>
