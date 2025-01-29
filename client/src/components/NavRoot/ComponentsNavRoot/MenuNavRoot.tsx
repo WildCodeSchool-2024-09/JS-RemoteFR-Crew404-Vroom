@@ -57,12 +57,6 @@ function MenuNavRoot(Props: MenuNavRootProps) {
             A propos
           </Link>
         </li>
-
-        <li className={`${moduleMenuLi} ${moduleMenuLiNone}`}>
-          <Link to="/conne" className={moduleMenuLink}>
-            Connexion / Inscription
-          </Link>
-        </li>
       </ul>
     </div>
   );
