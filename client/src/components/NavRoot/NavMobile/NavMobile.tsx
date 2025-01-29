@@ -26,9 +26,13 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
+        {/*lvl 1*/}
         <div className={css.ContainerNavMobile}>
+          {/*lvl 2*/}
           <div className={css.LogoNavMobile}>
+            {/*lvl 3*/}
             <Link to="/">
+              {/*lvl 4*/}
               <img src={Logo} alt="Logo RoadAddict" />
             </Link>
           </div>
