@@ -3,16 +3,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-bottom: 40%;
-  margin-top: -30%;
-  margin-left: 30%;
-  margin-right: 30%; */
+  width: 100%;
   padding: 10px;
   border-radius: 10px;
   text-decoration: none;
   color: black;
-  /* z-index: 2; */
   position: relative;
+}
+@media (max-width: 768px) {
+  .Button {
+    width: 100px;
+  }
 }
 
 .Button:hover {
@@ -20,11 +21,3 @@
   color: white;
   transform: scale(1.1);
 }
-/* @media (min-width: 600px) {
-  .Button {
-    margin-top: 1%;
-    margin-bottom: -5%;
-    margin-left: 40%;
-    margin-right: 40%;
-  }
-} */
