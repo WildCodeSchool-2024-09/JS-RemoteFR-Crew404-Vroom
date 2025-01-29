@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Footer from "../../components/Footer/Footer";
+import HomeRoot from "../../components/HomeRoot/HomeRoot";
 import NavRoot from "../../components/NavRoot/NavRoot";
 
 function Home() {
@@ -82,7 +83,10 @@ function Home() {
       {/* Balise Header présent dans NavRoot */}
       <NavRoot namePage="RoadAddict" />
 
-      <main />
+      <main>
+        <HomeRoot />
+      </main>
+
       <Footer />
     </>
   );
