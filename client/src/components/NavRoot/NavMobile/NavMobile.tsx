@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import Logo from "../../../assets/Logos/Logo-model-3.svg";
 import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
 import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
 import css from "./NavMobile.module.css";
@@ -24,6 +26,14 @@ function NavMobile() {
   return (
     <>
       <nav className={css.NavMobile}>
+        <div className={css.ContainerNavMobile}>
+          <div className={css.LogoNavMobile}>
+            <Link to="/">
+              <img src={Logo} alt="Logo RoadAddict" />
+            </Link>
+          </div>
+        </div>
+
         {/*lvl 1*/}
         <div className={`${css.sideNav} ${active ? css.active : ""}`}>
           {/*lvl 2*/}
