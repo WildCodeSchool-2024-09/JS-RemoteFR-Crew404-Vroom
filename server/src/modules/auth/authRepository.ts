@@ -13,6 +13,7 @@ type User = {
   birthdate: string;
   phone_number: number;
   sold: number;
+  is_admin: boolean;
 };
 
 class AuthRepository {
@@ -31,11 +32,11 @@ class AuthRepository {
 
   // The Rs of CRUD - Read operations
 
-  async read(email: string) {
+  async read(id: string) {
     // Execute the SQL SELECT query to retrieve a specific user by its ID
     const [rows] = await databaseClient.query<Rows>(
       "select * from user where email = ?",
-      [email],
+      [id],
     );
 
     // Return the first row of the result, which represents the user
@@ -44,25 +45,40 @@ class AuthRepository {
 
   async readAll() {
     // Execute the SQL SELECT query to retrieve all users from the "user" table
-    const [rows] = await databaseClient.query<Rows>("select * from item");
+    const [rows] = await databaseClient.query<Rows>("select * from user");
 
     // Return the array of users
     return rows as User[];
   }
 
   // The U of CRUD - Update operation
-  // TODO: Implement the update operation to modify an existing user
-
-  // async update(user: User) {
-  //   ...
-  // }
+  async update(id: string, user: User) {
+    const [result] = await databaseClient.query<Result>(
+      "UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, password = ?, profile_picture = ?, birthdate = ?, phone_number = ?, sold = ? WHERE id = ?",
+      [
+        user.username,
+        user.firstname,
+        user.lastname,
+        user.email,
+        user.password,
+        user.profile_picture,
+        user.birthdate,
+        user.phone_number,
+        user.sold,
+        user.id,
+      ],
+    );
+    return result.affectedRows > 0;
+  }
 
   // The D of CRUD - Delete operation
-  // TODO: Implement the delete operation to remove an user by its ID
-
-  // async delete(id: number) {
-  //   ...
-  // }
+  async delete(id: number) {
+    const [result] = await databaseClient.query<Result>(
+      "DELETE FROM user WHERE id = ?",
+      [id],
+    );
+    return result.affectedRows > 0;
+  }
 }
 
 export default new AuthRepository();
