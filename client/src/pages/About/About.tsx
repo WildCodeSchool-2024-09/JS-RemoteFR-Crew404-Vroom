@@ -1,6 +1,5 @@
 import aboutCar from "../../assets/matiere/about1.jpg";
 import aboutCarGathering from "../../assets/matiere/about2.jpg";
-import Header from "../../components/Header/Header";
 import NavRoot from "../../components/NavRoot/NavRoot";
 import styles from "./About.module.css";
 
