@@ -10,15 +10,65 @@
   }
 }
 
-.NavMobile > a {
-  text-decoration: none;
-  color: inherit;
+.ContainerNavMobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: var(--light);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  box-shadow: var(--box-shadow);
 }
 
-.NavMobile > h3 {
-  margin-top: 0.5rem;
-  margin-bottom: 1.25rem;
-  color: var(--textColorWhite);
+.LogoNavMobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+}
+
+.LogoNavMobile > a {
+  width: 80px;
+  height: 80px;
+}
+
+.LogoNavMobile > a > img {
+  width: 80px;
+  height: 80px;
+}
+
+.NamePageNavMobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  position: fixed;
+  top: 40px; /* A revoir */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 7;
+}
+
+.NamePageNavMobile > h1 {
+  margin: 0;
+  padding: 0;
+  font-size: var(--h2);
+  color: var(--textcolor);
+}
+@media (min-width: 0px) and (max-width: 350px) {
+  .NamePageNavMobile > h1 {
+    font-size: var(--h3);
+  }
+}
+@media (min-width: 350px) and (max-width: 768px) {
+  .NamePageNavMobile > h1 {
+    font-size: var(--h2);
+  }
 }
 
 /*-----------------------------------------------*/
