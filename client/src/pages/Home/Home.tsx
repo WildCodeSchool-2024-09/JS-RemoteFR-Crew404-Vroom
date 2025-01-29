@@ -81,6 +81,7 @@ function Home() {
         {/* Canonical URL (évite le contenu dupliqué pour les moteurs de recherche) */}
         <link rel="canonical" href={SEO.url} />
       </Helmet>
+
       <NavRoot namePage="RoadAddict" />
       <Caroussel />
       <Button />
