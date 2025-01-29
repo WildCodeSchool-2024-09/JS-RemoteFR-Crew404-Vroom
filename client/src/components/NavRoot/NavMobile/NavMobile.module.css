@@ -88,6 +88,7 @@
 
 .sideNav.active {
   right: 0;
+  box-shadow: var(--box-shadow);
 }
 
 /*-----------------------------------------------*/
