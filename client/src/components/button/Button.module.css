@@ -11,7 +11,7 @@
   border-radius: 10px;
   text-decoration: none;
   color: black;
-  z-index: 2;
+  /* z-index: 2; */
   position: relative;
 }
 
@@ -20,11 +20,11 @@
   color: white;
   transform: scale(1.1);
 }
-@media (min-width: 600px) {
+/* @media (min-width: 600px) {
   .Button {
     margin-top: 1%;
     margin-bottom: -5%;
     margin-left: 40%;
     margin-right: 40%;
   }
-}
+} */
