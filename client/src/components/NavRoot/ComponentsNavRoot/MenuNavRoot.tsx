@@ -29,7 +29,7 @@ function MenuNavRoot(Props: MenuNavRootProps) {
         </li>
 
         <li className={moduleMenuLi}>
-          <Link to="/dashbord" className={moduleMenuLink}>
+          <Link to="/dashboard" className={moduleMenuLink}>
             Tableau de bord
           </Link>
         </li>
