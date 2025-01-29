@@ -52,7 +52,7 @@ function NavPC(Props: NavPCProps) {
 
         <div className={css.ContainerLogNavPC}>
           <li className={css.MenuLiPC}>
-            <Link to="/dashbord" className={css.MenuLinkPC}>
+            <Link to="/dashboard" className={css.MenuLinkPC}>
               Tableau de bord
             </Link>
           </li>
