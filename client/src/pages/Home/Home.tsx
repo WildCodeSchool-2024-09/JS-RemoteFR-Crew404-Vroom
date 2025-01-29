@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import Footer from "../../components/Footer/Footer";
 import HomeRoot from "../../components/HomeRoot/HomeRoot";
 import NavRoot from "../../components/NavRoot/NavRoot";
+import css from "./Home.module.css";
 
 function Home() {
   const SEO = {
@@ -83,7 +84,7 @@ function Home() {
       {/* Balise Header présent dans NavRoot */}
       <NavRoot namePage="RoadAddict" />
 
-      <main>
+      <main className={css.MainHome}>
         <HomeRoot />
       </main>
 
