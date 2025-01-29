@@ -1,35 +1,68 @@
 import { Link } from "react-router-dom";
-import MenuNavRoot from "../ComponentsNavRoot/MenuNavRoot";
-import style from "../ComponentsNavRoot/MenuNavRoot.module.css";
+import Logo from "../../../assets/Logos/Logo-model-3.svg";
 import css from "./NavPC.module.css";
 
-function NavPC() {
+interface NavPCProps {
+  namePage: string;
+}
+
+function NavPC(Props: NavPCProps) {
+  const { namePage } = Props;
   return (
-    <nav className={css.NavPC}>
-      <div className={css.NavTopPC}>
-        {/*Le style de ce composant est directement géré par le module CSS :
-                 MenuNavRoot.module.css*/}
-        <MenuNavRoot
-          moduleMenuUl={style.MenuUlPC}
-          moduleMenuLi={style.MenuLiPC}
-          moduleMenuLink={style.MenuLinkPC}
-          moduleMenuLiNone={style.MenuLiNonePC}
-          moduleMenuNavRoot={style.MenuNavRootPC}
-        />
+    <>
+      <div className={css.CaleNavPC} />
+      <nav className={css.NavPC}>
+        <div className={css.ContainerLogNavPC}>
+          <div className={css.LogoNavPC}>
+            <img src={Logo} alt="Logo RoadAddict" />
+          </div>
 
-        <li className={style.MenuLiPC}>
-          <Link to="/conne" className={style.MenuLinkPC}>
-            Connexion / Inscription
-          </Link>
-        </li>
-      </div>
+          <ul className={css.MenuUlPC}>
+            <li className={css.MenuLiPC}>
+              <Link to="/maps" className={css.MenuLinkPC}>
+                Maps
+              </Link>
+            </li>
 
-      <section className={css.NavBottomPC}>
-        <Link to="/">
-          <h1>BIENVENUE SUR RoadAddict</h1>
-        </Link>
-      </section>
-    </nav>
+            <li className={css.SousNavLiPC}>
+              <span className={css.SousNavSpanPC}>Nous ↓</span>
+
+              <ul className={css.SousMenuUlPC}>
+                <li className={css.SousMenuLiPC}>
+                  <Link to="/contact" className={css.SousMenuLinkPC}>
+                    Contact
+                  </Link>
+                </li>
+
+                <li className={css.SousMenuLiPC}>
+                  <Link to="/about" className={css.SousMenuLinkPC}>
+                    A Propos
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div className={css.NamePageNavPC}>
+          <h1>{namePage}</h1>
+        </div>
+
+        <div className={css.ContainerLogNavPC}>
+          <li className={css.MenuLiPC}>
+            <Link to="/dashbord" className={css.MenuLinkPC}>
+              Tableau de bord
+            </Link>
+          </li>
+
+          <li className={css.MenuLiPC}>
+            <Link to="/account" className={css.MenuLinkPC}>
+              Compte
+            </Link>
+          </li>
+        </div>
+      </nav>
+    </>
   );
 }
 

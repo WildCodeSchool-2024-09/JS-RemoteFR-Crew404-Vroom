@@ -13,6 +13,11 @@
   --BackgroudMenuBurger: var(--light);
   --textColorWhite: var(--secondary-color);
 
+  --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+
+  /* Logique NavRoot */
+  --textcolor: #000000;
+
   /*Logique taille police d'écriture site*/
   --font-size-root: 16px; /*Ref size, dimensionne tout le site*/
   --p: var(--font-size-root); /*16px*/

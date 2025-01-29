@@ -9,7 +9,7 @@ import Intro from "../../components/intro/Intro";
 function Home() {
   return (
     <>
-      <NavRoot />
+      <NavRoot namePage="RoadAddict" />
       {/* <img className={Styles.logo} src={LogoVroom} alt="Logo" />
       <h1 className={Styles.welcome}>BIENVENUE SUR RoadAddict</h1> */}
       <Caroussel />
