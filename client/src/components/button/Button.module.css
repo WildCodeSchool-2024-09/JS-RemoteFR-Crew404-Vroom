@@ -1,3 +1,15 @@
+.ContainerButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+}
+@media (max-width: 768px) {
+  .Button {
+    width: 100px;
+  }
+}
+
 .Button {
   background-color: #ff7d00;
   display: flex;
@@ -9,11 +21,6 @@
   text-decoration: none;
   color: black;
   position: relative;
-}
-@media (max-width: 768px) {
-  .Button {
-    width: 100px;
-  }
 }
 
 .Button:hover {
