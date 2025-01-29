@@ -9,7 +9,7 @@ function Home() {
   const SEO = {
     title: "Accueil - RoadAddict",
     autor: "Benjamin DELAHAYE",
-    description: "",
+    description: "Le site de voiture en France",
     url: "" /*URL de la page*/,
     img: "",
     twitterUrlImg: "" /*Lien URL de l'image*/,
