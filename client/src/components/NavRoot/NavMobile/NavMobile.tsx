@@ -11,7 +11,13 @@ import Closebtn1 from "../../../assets/Icons/CloseBtn1.svg";
 import Closebtn2 from "../../../assets/Icons/CloseBtn2.svg";
 import Closebtn3 from "../../../assets/Icons/CloseBtn3.svg";
 
-function NavMobile() {
+interface NavMobileProps {
+  namePage: string;
+}
+
+function NavMobile(Props: NavMobileProps) {
+  const { namePage } = Props;
+
   const [active, setActive] = useState(false); /*Open Close MenuBurger*/
   const [count, setCount] = useState(() => Math.floor(Math.random() * 4) + 1);
 
@@ -31,10 +37,16 @@ function NavMobile() {
           {/*lvl 2*/}
           <div className={css.LogoNavMobile}>
             {/*lvl 3*/}
-            <Link to="/">
+            <Link to="/" className={css.LinkLogoNavMobile}>
               {/*lvl 4*/}
               <img src={Logo} alt="Logo RoadAddict" />
             </Link>
+          </div>
+
+          {/*lvl 2*/}
+          <div className={css.NamePageNavMobile}>
+            {/*lvl 3*/}
+            <h1>{namePage}</h1>
           </div>
         </div>
 

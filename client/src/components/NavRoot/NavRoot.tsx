@@ -10,7 +10,7 @@ function NavRoot(Props: NavRootProps) {
   const { namePage } = Props;
   return (
     <header className="headerRoot">
-      <NavMobile />
+      <NavMobile namePage={namePage} />
       <NavPC namePage={namePage} />
     </header>
   );
