@@ -3,7 +3,6 @@ import contactSideImage from "../../assets/images/pictures/contactSideImage.png"
 import envelopeIcon from "../../assets/images/social/envelope.png";
 import facebookIcon from "../../assets/images/social/facebook.png";
 import instagramIcon from "../../assets/images/social/instagram.png";
-import Header from "../../components/Header/Header";
 import NavRoot from "../../components/NavRoot/NavRoot";
 import styles from "./Contact.module.css";
 
