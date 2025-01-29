@@ -7,8 +7,8 @@ import Intro from "../../components/intro/Intro";
 
 function Home() {
   const SEO = {
-    title: "Accueil - ",
-    autor: "Anne SAUNIER",
+    title: "Accueil - RoadAddict",
+    autor: "Benjamin DELAHAYE",
     description: "",
     url: "" /*URL de la page*/,
     img: "",
@@ -16,8 +16,8 @@ function Home() {
     twitterCompte:
       "" /*@MonCompteTwitter*/ /*Permet d'identifier le compte officiel*/,
     keywords: {
-      1: "Anne SAUNIER" /* 1 mot clés */,
-      2: "Photographe" /* 2 mots clés */,
+      1: "" /* 1 mot clés */,
+      2: "" /* 2 mots clés */,
       3: "" /* 3 mots clés */,
       4: "" /* 4 mots clés */,
       5: "" /* 5 mots clés */,
