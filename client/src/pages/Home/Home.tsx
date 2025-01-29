@@ -82,7 +82,9 @@ function Home() {
         <link rel="canonical" href={SEO.url} />
       </Helmet>
 
+      {/* Balise Header présent dans NavRoot */}
       <NavRoot namePage="RoadAddict" />
+
       <Caroussel />
       <Button />
       <Intro />
