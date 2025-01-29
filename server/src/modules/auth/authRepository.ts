@@ -10,7 +10,7 @@ type User = {
   profile_picture: string;
   firstname: string;
   lastname: string;
-  birthdate: string;
+  birthdate: string | Date;
   phone_number: number;
   sold: number;
   is_admin: boolean;
@@ -22,8 +22,15 @@ class AuthRepository {
   async create(user: Omit<User, "id">) {
     // Execute the SQL INSERT query to add a new user to the "user" table
     const [result] = await databaseClient.query<Result>(
-      "insert into user (username, firstname, lastname, email, password) values (?, ?, ?, ?, ?)",
-      [user.username, user.firstname, user.lastname, user.email, user.password],
+      "insert into user (profile_picture, username, firstname, lastname, email, password) values (?, ?, ?, ?, ?, ?)",
+      [
+        "person_15439869.png",
+        user.username,
+        user.firstname,
+        user.lastname,
+        user.email,
+        user.password,
+      ],
     );
 
     // Return the ID of the newly inserted user
@@ -32,14 +39,22 @@ class AuthRepository {
 
   // The Rs of CRUD - Read operations
 
-  async read(id: string) {
+  async read(email: string) {
     // Execute the SQL SELECT query to retrieve a specific user by its ID
     const [rows] = await databaseClient.query<Rows>(
       "select * from user where email = ?",
-      [id],
+      [email],
     );
 
     // Return the first row of the result, which represents the user
+    return rows[0] as User;
+  }
+
+  async readById(id: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "select * from user where id = ?",
+      [id],
+    );
     return rows[0] as User;
   }
 
@@ -52,21 +67,16 @@ class AuthRepository {
   }
 
   // The U of CRUD - Update operation
-  async update(id: string, user: User) {
+  async update(id: number, userUpdate: Partial<User>) {
+    const updateFields = Object.keys(userUpdate)
+      .map((key) => `${key} = ?`)
+      .join(", ");
+    const updateValues = Object.values(userUpdate);
+    updateValues.push(id);
+
     const [result] = await databaseClient.query<Result>(
-      "UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, password = ?, profile_picture = ?, birthdate = ?, phone_number = ?, sold = ? WHERE id = ?",
-      [
-        user.username,
-        user.firstname,
-        user.lastname,
-        user.email,
-        user.password,
-        user.profile_picture,
-        user.birthdate,
-        user.phone_number,
-        user.sold,
-        user.id,
-      ],
+      `UPDATE user SET ${updateFields} WHERE id = ?`,
+      updateValues,
     );
     return result.affectedRows > 0;
   }

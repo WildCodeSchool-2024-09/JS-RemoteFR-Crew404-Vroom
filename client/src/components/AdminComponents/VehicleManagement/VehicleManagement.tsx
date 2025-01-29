@@ -284,7 +284,7 @@ function VehicleManagement() {
               <>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg"
                   onChange={handleFileUpload}
                   className={styles.input}
                 />

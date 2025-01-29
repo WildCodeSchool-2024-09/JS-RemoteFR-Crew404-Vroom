@@ -1,7 +1,23 @@
+import path from "node:path";
 import * as argon2 from "argon2";
 import type { RequestHandler } from "express";
+import multer from "multer";
 import authRepository from "../modules/auth/authRepository";
 import jwt from "./jwtMiddleware";
+
+const configMulter = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(
+      Math.random() * 99999999,
+    )}`;
+    req.body.profile_picture = uniqueSuffix + path.extname(file.originalname);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+const uploads = multer({ storage: configMulter });
 
 const hashPwd: RequestHandler = async (req, res, next) => {
   try {
@@ -83,4 +99,4 @@ const logout: RequestHandler = (req, res) => {
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 
-export default { hashPwd, verifyPwd, checkToken, logout };
+export default { hashPwd, verifyPwd, checkToken, logout, uploads };

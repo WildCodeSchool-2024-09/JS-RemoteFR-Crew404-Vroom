@@ -87,6 +87,13 @@ const publicFolderPath = path.join(__dirname, "../../server/public");
 if (fs.existsSync(publicFolderPath)) {
   app.use(express.static(publicFolderPath));
 }
+// Serve uploads img
+
+const uploadsFolder = path.join(__dirname, "../../server/uploads");
+
+if (fs.existsSync(uploadsFolder)) {
+  app.use("/uploads/", express.static(uploadsFolder));
+}
 
 // Serve client resources
 

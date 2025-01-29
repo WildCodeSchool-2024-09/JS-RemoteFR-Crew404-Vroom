@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import { useData } from "../../../contexts/DataContext";
-import type { Eventdata } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
+import type { Eventdata } from "../../../types/events";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
@@ -397,7 +397,7 @@ function EventManagement() {
               <>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg"
                   onChange={handleFileUpload}
                   className={styles.input}
                 />
