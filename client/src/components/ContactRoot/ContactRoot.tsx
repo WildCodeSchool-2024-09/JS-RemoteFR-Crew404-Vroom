@@ -6,9 +6,14 @@ import instagramIcon from "../../assets/images/social/instagram.png";
 import styles from "./ContactRoot.module.css";
 
 const contacts = [
-  { id: 1, icon: envelopeIcon, alt: "Email icon", text: "vroom@vroom.vroom" },
-  { id: 2, icon: instagramIcon, alt: "Instagram icon", text: "@vroom" },
-  { id: 3, icon: facebookIcon, alt: "Facebook icon", text: "@vroom" },
+  {
+    id: 1,
+    icon: envelopeIcon,
+    alt: "Email icon",
+    text: "contact@roadaddict.fr",
+  },
+  { id: 2, icon: instagramIcon, alt: "Instagram icon", text: "@roadaddict" },
+  { id: 3, icon: facebookIcon, alt: "Facebook icon", text: "@roadaddict" },
 ];
 
 function ContactRoot() {
