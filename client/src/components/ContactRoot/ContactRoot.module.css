@@ -82,15 +82,32 @@
   cursor: pointer;
 }
 
-.contactItem:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+/* Suppression du soulignement des liens */
+.contactItem a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.2s ease;
 }
 
+/* Ajout d'un effet hover sur le lien */
+.contactItem a:hover {
+  color: #6a11cb;
+}
+
+/* Icône des éléments */
 .icon {
   width: 30px;
   height: 30px;
   margin-right: 1rem;
+}
+
+/* Effet hover global */
+.contactItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive */

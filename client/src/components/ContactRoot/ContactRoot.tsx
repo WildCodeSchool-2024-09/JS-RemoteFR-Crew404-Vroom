@@ -11,9 +11,22 @@ const contacts = [
     icon: envelopeIcon,
     alt: "Email icon",
     text: "contact@roadaddict.fr",
+    lien: "mailto:contact@roadaddict.fr",
   },
-  { id: 2, icon: instagramIcon, alt: "Instagram icon", text: "@roadaddict" },
-  { id: 3, icon: facebookIcon, alt: "Facebook icon", text: "@roadaddict" },
+  {
+    id: 2,
+    icon: instagramIcon,
+    alt: "Instagram icon",
+    text: "@roadaddict",
+    lien: "https://www.instagram.com/",
+  },
+  {
+    id: 3,
+    icon: facebookIcon,
+    alt: "Facebook icon",
+    text: "@roadaddict",
+    lien: "https://www.facebook.com/",
+  },
 ];
 
 function ContactRoot() {
@@ -45,7 +58,9 @@ function ContactRoot() {
                     alt={contact.alt}
                     className={styles.icon}
                   />
-                  <span>{contact.text}</span>
+                  <a href={contact.lien}>
+                    <span>{contact.text}</span>
+                  </a>
                 </div>
               ))}
             </div>
