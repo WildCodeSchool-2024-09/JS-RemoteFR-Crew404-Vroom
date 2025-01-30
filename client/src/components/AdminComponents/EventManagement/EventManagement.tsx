@@ -254,8 +254,9 @@ function EventManagement() {
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
         <ExportCSV
           data={filteredEvents.map((event) => ({
-            ...event,
-            location: `${event.location.x}, ${event.location.y}`,
+            title: event.title,
+            type: event.type,
+            location: event.address,
             date_start:
               typeof event.date_start === "string"
                 ? event.date_start

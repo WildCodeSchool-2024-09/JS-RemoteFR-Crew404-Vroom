@@ -221,8 +221,9 @@ function UserManagement() {
         <p className={styles.eventCounter}>Total : {totalUsers}</p>
         <ExportCSV
           data={filteredUsers.map((user) => ({
-            ...user,
+            username: user.username,
             birthdate: formatDate(user.birthdate),
+            sold: user.sold,
           }))}
           fileName="data_utilisateurs.csv"
         />
