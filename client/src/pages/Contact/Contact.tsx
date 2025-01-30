@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import ContactRoot from "../../components/ContactRoot/ContactRoot";
 import NavRoot from "../../components/NavRoot/NavRoot";
 import css from "./Contact.module.css";
