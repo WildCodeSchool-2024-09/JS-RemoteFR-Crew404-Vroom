@@ -20,6 +20,7 @@ import authActions from "./modules/auth/authActions";
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
 router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
 router.get("/api/logout", authMiddleware.logout);
+router.get("/api/check", authMiddleware.checkToken); // pour vérifier le token
 
 /* ************************************************************************* */
 
@@ -47,7 +48,6 @@ router.delete(
   authMiddleware.checkToken,
   authActions.deleteProfilePicture,
 ); // pour supprimer une photo de profil
-router.get("/api/check", authMiddleware.checkToken); // pour vérifier le token
 
 /* ************************************************************************* */
 
