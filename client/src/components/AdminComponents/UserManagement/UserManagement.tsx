@@ -108,20 +108,21 @@ function UserManagement() {
     }
   };
 
+  const formatDate = (date: string | Date | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
   const updateUser = async () => {
     if (currentUser) {
-      const formatDateForMySQL = (date: Date | string): string => {
-        if (date instanceof Date) {
-          return date.toISOString().split("T")[0];
-        }
-        return new Date(date).toISOString().split("T")[0];
-      };
-
       try {
         const formData = new FormData();
         for (const [key, value] of Object.entries(currentUser)) {
           if (key === "birthdate" && value) {
-            formData.append(key, formatDateForMySQL(value as Date | string));
+            formData.append(key, formatDate(value as string | Date));
           } else if (value !== null && value !== undefined) {
             formData.append(key, value.toString());
           }
@@ -139,8 +140,9 @@ function UserManagement() {
           },
         );
 
+        const updatedUser = { ...currentUser, ...response.data };
         const updatedUsers = users.map((user) =>
-          user.id === currentUser.id ? response.data : user,
+          user.id === currentUser.id ? updatedUser : user,
         );
         setUsers(updatedUsers);
         setFilteredUsers(updatedUsers);
@@ -220,10 +222,7 @@ function UserManagement() {
         <ExportCSV
           data={filteredUsers.map((user) => ({
             ...user,
-            birthdate:
-              user.birthdate instanceof Date
-                ? user.birthdate.toISOString()
-                : user.birthdate,
+            birthdate: formatDate(user.birthdate),
           }))}
           fileName="data_utilisateurs.csv"
         />
@@ -398,10 +397,8 @@ function UserManagement() {
                 <input
                   type="date"
                   value={
-                    currentUser?.birthdate
-                      ? new Date(currentUser.birthdate)
-                          .toISOString()
-                          .split("T")[0]
+                    currentUser.birthdate
+                      ? formatDate(currentUser.birthdate)
                       : ""
                   }
                   onChange={(e) =>

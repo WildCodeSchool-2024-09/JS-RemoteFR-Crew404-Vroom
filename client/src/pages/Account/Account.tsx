@@ -69,24 +69,22 @@ function Account() {
     }
   };
 
+  const formatDate = (date: string | Date | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
   // Fonction pour sauvegarder les modifications
   const handleSaveChanges = async () => {
     if (currentUser) {
-      const formatDateForMySQL = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toISOString().split("T")[0];
-      };
-
       const updatedFields = {
         profile_picture: currentUser.profile_picture,
-        birthdate: formatDateForMySQL(
-          typeof currentUser.birthdate === "string"
-            ? currentUser.birthdate
-            : currentUser.birthdate.toISOString(),
-        ),
+        birthdate: formatDate(currentUser.birthdate),
         phone_number: currentUser.phone_number,
       };
-
       try {
         const response = await api.put(
           `/api/users/${currentUser.id}`,
@@ -160,17 +158,10 @@ function Account() {
             <input
               type="date"
               value={
-                currentUser?.birthdate
-                  ? new Date(currentUser.birthdate).toISOString().split("T")[0]
-                  : ""
+                currentUser.birthdate ? formatDate(currentUser.birthdate) : ""
               }
               onChange={(e) => {
-                if (currentUser) {
-                  setCurrentUser({
-                    ...currentUser,
-                    birthdate: e.target.value,
-                  });
-                }
+                setCurrentUser({ ...currentUser, birthdate: e.target.value });
               }}
             />
           </span>

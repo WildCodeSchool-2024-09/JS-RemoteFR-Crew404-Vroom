@@ -10,7 +10,7 @@ type User = {
   profile_picture: string;
   firstname: string;
   lastname: string;
-  birthdate: string | Date;
+  birthdate: string | Date | undefined;
   phone_number: number;
   sold: number;
   is_admin: boolean;
@@ -68,10 +68,13 @@ class AuthRepository {
 
   // The U of CRUD - Update operation
   async update(id: number, userUpdate: Partial<User>) {
-    const updateFields = Object.keys(userUpdate)
-      .map((key) => `${key} = ?`)
+    const updateFields = Object.entries(userUpdate)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, _]) => `${key} = ?`)
       .join(", ");
-    const updateValues = Object.values(userUpdate);
+    const updateValues = Object.entries(userUpdate)
+      .filter(([_, value]) => value !== undefined)
+      .map(([_, value]) => value);
     updateValues.push(id);
 
     const [result] = await databaseClient.query<Result>(

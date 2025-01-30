@@ -1,7 +1,7 @@
 import { MdFileDownload } from "react-icons/md";
 import styles from "./ExportCSV.module.css";
 
-type DataType = Record<string, string | number | boolean | null>;
+type DataType = Record<string, string | number | boolean | null | undefined>;
 
 interface ExportCSVProps {
   data: DataType[];

@@ -6,7 +6,7 @@ export type User = {
   lastname: string;
   email: string;
   phone_number: string;
-  birthdate: string | Date;
+  birthdate: string | Date | undefined;
   sold: number;
   is_admin?: boolean;
 };

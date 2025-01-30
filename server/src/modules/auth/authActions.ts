@@ -54,10 +54,14 @@ const read: RequestHandler = async (req, res, next) => {
 const editUser: RequestHandler = async (req, res, next) => {
   try {
     const userId = Number(req.params.id);
-    const updateData = req.body;
+    const updateData = { ...req.body };
 
     if (req.file) {
       updateData.profile_picture = req.file.filename;
+    }
+
+    if (updateData.birthdate === "") {
+      updateData.birthdate = undefined;
     }
 
     const updatedUser = await authRepository.update(userId, updateData);
@@ -65,6 +69,7 @@ const editUser: RequestHandler = async (req, res, next) => {
       res.status(200).json({
         message: "User updated successfully",
         profile_picture: updateData.profile_picture,
+        ...updateData,
       });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -121,6 +126,7 @@ const deleteProfilePicture: RequestHandler = async (req, res, next) => {
     if (user.profile_picture && user.profile_picture !== "cancel-img.png") {
       const filePath = path.join(
         __dirname,
+        "..",
         "..",
         "..",
         "uploads",
