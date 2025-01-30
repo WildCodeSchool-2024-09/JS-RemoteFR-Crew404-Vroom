@@ -1,6 +1,6 @@
+@import "../../root.css";
+
 .contact-container {
-  margin: 2em;
-  margin-bottom: 4em;
   background-color: azure;
   border-radius: 30px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
@@ -50,8 +50,6 @@
 @media screen and (min-width: 768px) {
   .contact-container {
     max-width: 35%;
-    margin-left: 33%;
-    margin-bottom: 4em;
     background-color: azure;
     border-radius: 30px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
