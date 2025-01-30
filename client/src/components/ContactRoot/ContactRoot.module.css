@@ -9,7 +9,7 @@
 
 /* Conteneur principal */
 .contactContainer {
-  background: white;
+  background: var(--light);
   border-radius: 20px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
   overflow: hidden;
@@ -52,13 +52,13 @@
 
 .contactInfo h2 {
   font-size: 1.8rem;
-  color: #333;
+  color: var(--textcolorgrey1);
   margin-bottom: 0.5rem;
 }
 
 .contactInfo p {
   font-size: 1rem;
-  color: #666;
+  color: var(--textcolorgrey2);
   margin-bottom: 1.5rem;
 }
 
@@ -87,14 +87,14 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #333;
+  color: var(--textcolorgrey1);
   font-weight: bold;
   transition: color 0.2s ease;
 }
 
 /* Ajout d'un effet hover sur le lien */
 .contactItem a:hover {
-  color: #6a11cb;
+  color: var(--textcolorviolet);
 }
 
 /* Icône des éléments */
