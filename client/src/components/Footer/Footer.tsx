@@ -6,8 +6,8 @@ import styles from "./Footer.module.css";
 
 function Footer() {
   return (
-    <section className={styles.sectionFooter}>
-      <footer className={styles.footer}>
+    <footer className={styles.sectionFooter}>
+      <section className={styles.footer}>
         <div className={styles.containerIcon}>
           <a href="_" aria-label="Instagram">
             <img
@@ -39,8 +39,8 @@ function Footer() {
           </a>
         </div>
         <p className={styles.creators}>Mentions légales - Vroom @2025</p>
-      </footer>
-    </section>
+      </section>
+    </footer>
   );
 }
 
