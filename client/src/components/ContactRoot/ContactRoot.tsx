@@ -5,48 +5,49 @@ import facebookIcon from "../../assets/images/social/facebook.png";
 import instagramIcon from "../../assets/images/social/instagram.png";
 import styles from "./ContactRoot.module.css";
 
+const contacts = [
+  { id: 1, icon: envelopeIcon, alt: "Email icon", text: "vroom@vroom.vroom" },
+  { id: 2, icon: instagramIcon, alt: "Instagram icon", text: "@vroom" },
+  { id: 3, icon: facebookIcon, alt: "Facebook icon", text: "@vroom" },
+];
+
 function ContactRoot() {
   return (
-    <div className={styles["contact-container"]}>
-      <img
-        src={contactHeroBanner}
-        alt="Hero banner for contact page"
-        className={styles["contact-hero"]}
-      />
-      <div className={styles["contact-lower-content"]}>
+    <section className={styles.contactSection}>
+      <div className={styles.contactContainer}>
         <img
-          src={contactSideImage}
-          alt="Contact side pic"
-          className={styles["contact-side-image"]}
+          src={contactHeroBanner}
+          alt="Hero banner"
+          className={styles.heroImage}
         />
-        <div className={styles["contact-info"]}>
-          <div className={styles["contact-item"]}>
-            <img
-              src={envelopeIcon}
-              alt="Envelope icon"
-              className={styles.icon}
-            />
-            <span>vroom@vroom.vroom</span>
-          </div>
-          <div className={styles["contact-item"]}>
-            <img
-              src={instagramIcon}
-              alt="Instagram icon"
-              className={styles.icon}
-            />
-            <span>@vroom</span>
-          </div>
-          <div className={styles["contact-item"]}>
-            <img
-              src={facebookIcon}
-              alt="Facebook icon"
-              className={styles.icon}
-            />
-            <span>@vroom</span>
+        <div className={styles.contactContent}>
+          <img
+            src={contactSideImage}
+            alt="Side banner"
+            className={styles.sideImage}
+          />
+          <div className={styles.contactInfo}>
+            <h2>Contactez-nous</h2>
+            <p>
+              Besoin d’informations ? Retrouvez-nous sur nos réseaux ou par
+              e-mail.
+            </p>
+            <div className={styles.contactList}>
+              {contacts.map((contact) => (
+                <div key={contact.id} className={styles.contactItem}>
+                  <img
+                    src={contact.icon}
+                    alt={contact.alt}
+                    className={styles.icon}
+                  />
+                  <span>{contact.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
