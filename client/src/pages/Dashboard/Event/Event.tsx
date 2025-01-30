@@ -232,7 +232,18 @@ function Dashboard() {
         <button
           type="button"
           className={styles.addButton}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            // Reset form data to indicate a new event, coucou Anthony
+            setFormData({
+              id: -1,
+              name: "",
+              picture: null,
+              startDate: "",
+              endDate: "",
+              location: "",
+            });
+            setIsModalOpen(true);
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

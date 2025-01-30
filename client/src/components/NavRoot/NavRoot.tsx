@@ -1,10 +1,18 @@
 import NavMobile from "./NavMobile/NavMobile";
+import NavPC from "./NavPC/NavPC";
+import "./NavRoot.css";
 
-function NavRoot() {
+interface NavRootProps {
+  namePage: string;
+}
+
+function NavRoot(Props: NavRootProps) {
+  const { namePage } = Props;
   return (
-    <>
-      <NavMobile />
-    </>
+    <header className="headerRoot">
+      <NavMobile namePage={namePage} />
+      <NavPC namePage={namePage} />
+    </header>
   );
 }
 

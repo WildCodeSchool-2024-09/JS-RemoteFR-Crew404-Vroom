@@ -12,15 +12,28 @@
 
   --BackgroudMenuBurger: var(--light);
   --textColorWhite: var(--secondary-color);
+
+  --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+
+  /* Logique NavRoot */
+  --textcolor: #000000;
+
+  /*Logique taille police d'écriture site*/
+  --font-size-root: 16px; /*Ref size, dimensionne tout le site*/
+  --p: var(--font-size-root); /*16px*/
+  --h1: calc(var(--font-size-root) * 2); /*32px*/
+  --h2: calc(var(--font-size-root) * 1.5); /*24px*/
+  --h3: calc(var(--font-size-root) + 2px); /*18px*/
+  --h4: var(--font-size-root); /*16px*/
+  --h5: calc(var(--font-size-root) - 2px); /*14px*/
+  --h6: calc(var(--font-size-root) - 5px); /*11px*/
+  --h7: calc(var(--font-size-root) - 7px); /*9px*/
 }
 
 body {
   font-family: "Montserrat", sans-serif;
   background-color: #15616d;
-  margin-top: 4em;
+  margin: 0;
   padding: 1em;
-
-  @media (min-width: 769px) {
-    margin-top: 5em;
-  }
+  width: calc(100vw - 2em);
 }

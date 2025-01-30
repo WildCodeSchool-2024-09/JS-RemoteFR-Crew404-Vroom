@@ -4,6 +4,7 @@
   border-radius: 8px;
   margin-top: 2em;
   overflow: hidden;
+  margin-bottom: 30000px; /*pour tester la sticky navbar*/
 }
 
 .title {
@@ -66,12 +67,6 @@
   cursor: not-allowed;
 }
 
-.favoriteList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .advertItem {
   display: flex;
   align-items: center;
@@ -82,21 +77,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.picture {
-  width: 80px;
-  height: 80px;
-  background-color: green;
-  border-radius: 8px;
-}
-
 .info {
   flex: 1;
-}
-
-.checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
 }
 
 .arrowContainer {
@@ -111,4 +93,63 @@
   border: none;
   cursor: pointer;
   color: #d61bf3;
+}
+
+/* Ajustement du client */
+
+.stickyHeader {
+  background-color: var(--light);
+  padding: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.favoriteList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.advertCard {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.picture {
+  width: 80px;
+  height: 80px;
+  background-color: green;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+.advertDetails {
+  flex-grow: 1;
+}
+
+.checkbox {
+  position: absolute;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }

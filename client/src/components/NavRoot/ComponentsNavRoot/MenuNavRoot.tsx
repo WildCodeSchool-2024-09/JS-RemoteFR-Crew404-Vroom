@@ -7,21 +7,29 @@ interface MenuNavRootProps {
   moduleMenuUl: string;
   moduleMenuLi: string;
   moduleMenuLink: string;
+  moduleMenuLiNone?: string;
+  moduleMenuNavRoot?: string;
 }
 
 function MenuNavRoot(Props: MenuNavRootProps) {
-  const { moduleMenuUl, moduleMenuLi, moduleMenuLink } = Props;
+  const {
+    moduleMenuUl,
+    moduleMenuLi,
+    moduleMenuLink,
+    moduleMenuLiNone,
+    moduleMenuNavRoot,
+  } = Props;
   return (
-    <>
+    <div className={moduleMenuNavRoot}>
       <ul className={moduleMenuUl}>
-        <li className={moduleMenuLi}>
+        <li className={`${moduleMenuLi} ${moduleMenuLiNone}`}>
           <Link to="/home" className={moduleMenuLink}>
             Accueil
           </Link>
         </li>
 
         <li className={moduleMenuLi}>
-          <Link to="/dashbord" className={moduleMenuLink}>
+          <Link to="/dashboard" className={moduleMenuLink}>
             Tableau de bord
           </Link>
         </li>
@@ -50,7 +58,7 @@ function MenuNavRoot(Props: MenuNavRootProps) {
           </Link>
         </li>
       </ul>
-    </>
+    </div>
   );
 }
 
