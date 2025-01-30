@@ -1,3 +1,5 @@
+@import "../../root.css";
+
 .ContainerButton {
   display: flex;
   justify-content: center;
@@ -6,7 +8,7 @@
 }
 
 .Button {
-  background-color: #ff7d00;
+  background-color: var(--tertiary-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +21,7 @@
 }
 
 .Button:hover {
-  background-color: #ff7d00;
+  background-color: var(--tertiary-color);
   color: white;
   transform: scale(1.1);
 }
