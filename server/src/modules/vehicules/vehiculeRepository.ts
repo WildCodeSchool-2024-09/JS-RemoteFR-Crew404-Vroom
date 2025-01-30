@@ -5,17 +5,9 @@ import type { Result, Rows } from "../../../database/client";
 type Vehicule = {
   id: number;
   vehicule_picture?: string | null;
-  type: 
-    | "moto"
-    | "voiture";
-  status:
-    | "vente"
-    | "essai"
-    | "indisponible";
-  energy: 
-    | "essence"
-    | "diesel"
-    | "electrique";
+  type: "moto" | "voiture";
+  status: "vente" | "essai" | "indisponible";
+  energy: "essence" | "diesel" | "electrique";
   user_id: string;
   model_id: number;
 };
@@ -70,7 +62,7 @@ class VehiculeRepository {
         vehicule.type,
         vehicule.status,
         vehicule.energy,
-        vehicule. vehicule_picture,
+        vehicule.vehicule_picture,
         vehicule.model_id,
         vehicule.user_id,
         vehicule.id,

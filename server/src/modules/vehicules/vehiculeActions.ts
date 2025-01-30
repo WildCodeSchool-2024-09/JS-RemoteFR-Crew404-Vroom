@@ -1,25 +1,17 @@
 import type { RequestHandler } from "express";
 
 type Vehicule = {
-    id: number;
-    vehicule_picture?: string | null;
-    type: 
-      | "moto"
-      | "voiture";
-    status:
-      | "vente"
-      | "essai"
-      | "indisponible";
-    energy: 
-      | "essence"
-      | "diesel"
-      | "electrique";
-    user_id: string;
-    model_id: number;
-  };
+  id: number;
+  vehicule_picture?: string | null;
+  type: "moto" | "voiture";
+  status: "vente" | "essai" | "indisponible";
+  energy: "essence" | "diesel" | "electrique";
+  user_id: string;
+  model_id: number;
+};
 
 // Import access to data
-import vehiculeRepository from"./vehiculeRepository";
+import vehiculeRepository from "./vehiculeRepository";
 
 // The B of BREAD - Browse (Read All) operation
 const browse: RequestHandler = async (req, res, next) => {
@@ -65,7 +57,7 @@ const editVehicule: RequestHandler = async (req, res, next) => {
       energy: req.body.energy,
       model_id: req.body.model_id,
       status: req.body.status,
-     type: req.body.type,
+      type: req.body.type,
       user_id: req.body.user_id,
     };
 
@@ -89,12 +81,12 @@ const add: RequestHandler = async (req, res, next) => {
   try {
     // Extract the vehicle data from the request body
     const newVehicule = {
-        vehicule_picture: req.body.vehicule_picture,
-        energy: req.body.energy,
-        model_id: req.body.model_id,
-        status: req.body.status,
-       type: req.body.type,
-        user_id: req.body.user_id,
+      vehicule_picture: req.body.vehicule_picture,
+      energy: req.body.energy,
+      model_id: req.body.model_id,
+      status: req.body.status,
+      type: req.body.type,
+      user_id: req.body.user_id,
     };
 
     // Create the vehicule
