@@ -6,9 +6,9 @@ import css from "./Contact.module.css";
 
 function Contact() {
   const SEO = {
-    title: "Accueil - RoadAddict",
+    title: "Contact - RoadAddict",
     autor: "Benjamin DELAHAYE",
-    description: "Le site de voiture en France",
+    description: "RoadAddict - Vous avez une question, contactez nous ici !",
     url: "" /*URL de la page*/,
     img: "",
     twitterUrlImg: "" /*Lien URL de l'image*/,
