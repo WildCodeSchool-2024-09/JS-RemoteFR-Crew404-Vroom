@@ -1,5 +1,6 @@
 import ContactRoot from "../../components/ContactRoot/ContactRoot";
 import NavRoot from "../../components/NavRoot/NavRoot";
+import css from "./Contact.module.css";
 
 function Contact() {
   return (
@@ -7,7 +8,7 @@ function Contact() {
       {/* Balise Header présent dans NavRoot */}
       <NavRoot namePage="CONTACT" />
 
-      <main>
+      <main className={css.MainContact}>
         <ContactRoot />
       </main>
     </>
