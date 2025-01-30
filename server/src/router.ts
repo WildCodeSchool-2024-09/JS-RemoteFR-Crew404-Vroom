@@ -49,4 +49,22 @@ router.delete(
 
 /* ************************************************************************* */
 
+/** vehicules */
+import vehiculeActions from "./modules/vehicules/vehiculeActions";
+
+router.get("/api/vehicules", vehiculeActions.browse);
+router.get("/api/vehicules/:id", vehiculeActions.read);
+router.post("/api/vehicules", authMiddleware.checkToken, vehiculeActions.add);
+router.put(
+  "/api/vehicules/:id",
+  authMiddleware.checkToken,
+  vehiculeActions.editVehicule,
+);
+router.delete(
+  "/api/vehicules/:id",
+  authMiddleware.checkToken,
+  vehiculeActions.deleteVehicule,
+);
+
+/* ************************************************************************* */
 export default router;
