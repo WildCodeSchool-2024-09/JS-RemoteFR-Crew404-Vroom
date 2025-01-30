@@ -2,12 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
-}
-@media (max-width: 768px) {
-  .Button {
-    width: 100px;
-  }
+  width: 100%;
 }
 
 .Button {
@@ -15,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 120px;
   padding: 10px;
   border-radius: 10px;
   text-decoration: none;

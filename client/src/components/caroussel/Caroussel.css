@@ -134,7 +134,8 @@
 
   .slide.prev,
   .slide.next {
-    display: none;
+    display: flex; /* Ou block, selon ton besoin */
+    opacity: 0.5; /* Pour qu'elles soient visibles mais moins prononcées */
   }
 
   .carousel-controls {
