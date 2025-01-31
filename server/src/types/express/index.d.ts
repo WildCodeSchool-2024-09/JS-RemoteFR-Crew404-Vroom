@@ -10,7 +10,7 @@ declare global {
       // user?: { ... }
       /* ************************************************************************* */
 
-      user?: {
+      user: {
         id: number;
         email: string;
         password: string;

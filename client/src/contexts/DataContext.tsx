@@ -1,63 +1,30 @@
-import { createContext, useContext } from "react";
-import { useState } from "react";
-
-/* Création du context */
-
-const DataContext = createContext<dataType | null>(null);
+import { createContext, useContext, useState } from "react";
+import type { Eventdata } from "../types/events";
+import type { User } from "../types/users";
 
 /* Import des différents composants ou img */
 
 /* Déclarations des types */
-
-export type User = {
-  id: number;
-  profile_picture: string | null;
-  username: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone_number: string;
-  birthday: string;
-  sold: number;
-  is_admin?: boolean;
-};
-
-export type Eventdata = {
-  id: number;
-  title: string;
-  event_picture?: string | null;
-  type:
-    | "type"
-    | "salon"
-    | "course"
-    | "musée"
-    | "vente aux enchères"
-    | "roadtrip"
-    | "rassemblement"
-    | "autre";
-  date_start: string | Date;
-  date_end: string | Date;
-  location: {
-    x: number;
-    y: number;
-  };
-  address: string;
-  description: string;
-  link?: string | null;
-  user_id: number;
-  creator_username?: string;
-};
 
 type childrenType = {
   children: React.ReactNode;
 };
 
 type dataType = {
+  //tous les utilisateurs
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  //tous les événements
   events: Eventdata[];
   setEvents: React.Dispatch<React.SetStateAction<Eventdata[]>>;
+  //utilisateur connecté
+  currentUser: User | null;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
+
+/* Création du context */
+
+const DataContext = createContext<dataType | null>(null);
 
 /* Déclaration des Value mise a disposition dans le context */
 
@@ -68,9 +35,19 @@ const initialEvents: Eventdata[] = [];
 export function DataProvider({ children }: childrenType) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [events, setEvents] = useState<Eventdata[]>(initialEvents);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   return (
-    <DataContext.Provider value={{ users, setUsers, events, setEvents }}>
+    <DataContext.Provider
+      value={{
+        users,
+        setUsers,
+        events,
+        setEvents,
+        currentUser,
+        setCurrentUser,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

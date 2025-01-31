@@ -17,9 +17,11 @@ const register: RequestHandler = async (req, res, next) => {
 
 const login: RequestHandler = async (req, res, next) => {
   try {
-    if (req.user) {
-      const { password, ...safeUser } = req.user;
+    if (req.body.user) {
+      const { password, ...safeUser } = req.body.user;
       res.status(200).json(safeUser);
+    } else {
+      res.status(401).json({ message: "Authentication failed" });
     }
   } catch (err) {
     next(err);
@@ -37,7 +39,7 @@ const browse: RequestHandler = async (req, res, next) => {
 
 const read: RequestHandler = async (req, res, next) => {
   try {
-    const user = await authRepository.read(req.params.email);
+    const user = await authRepository.read(req.params.id);
     if (user) {
       const { password, ...safeUser } = user;
       res.status(200).json(safeUser);
@@ -51,13 +53,29 @@ const read: RequestHandler = async (req, res, next) => {
 
 const editUser: RequestHandler = async (req, res, next) => {
   try {
-    const updatedUser = await authRepository.update(req.params.id, req.body);
+    const userId = Number(req.params.id);
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      updateData.profile_picture = req.file.filename;
+    }
+
+    if (updateData.birthdate === "") {
+      updateData.birthdate = undefined;
+    }
+
+    const updatedUser = await authRepository.update(userId, updateData);
     if (updatedUser) {
-      res.status(200).json(updatedUser);
+      res.status(200).json({
+        message: "User updated successfully",
+        profile_picture: updateData.profile_picture,
+        ...updateData,
+      });
     } else {
       res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
+    console.error("Error updating user:", err);
     next(err);
   }
 };
@@ -75,4 +93,69 @@ const deleteUser: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, editUser, deleteUser, register, login };
+const getCurrentUser: RequestHandler = async (req, res, next) => {
+  try {
+    const userEmail = req.user.email;
+    const user = await authRepository.read(userEmail);
+    if (user) {
+      const { password, ...safeUser } = user;
+      res.json(safeUser);
+    } else {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const fs = require("node:fs");
+const path = require("node:path");
+
+const deleteProfilePicture: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = Number(req.params.id);
+
+    // Récupérer l'utilisateur
+    const user = await authRepository.readById(userId);
+    if (!user) {
+      res.status(404).json({ message: "Utilisateur non trouvé" });
+      return;
+    }
+
+    // Supprimer le fichier si ce n'est pas l'image par défaut
+    if (user.profile_picture && user.profile_picture !== "cancel-img.png") {
+      const filePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "uploads",
+        user.profile_picture,
+      );
+      try {
+        fs.unlinkSync(filePath); // Supprime physiquement le fichier
+      } catch (err) {
+        console.error("Erreur lors de la suppression du fichier :", err);
+      }
+    }
+
+    // Mettre à jour le profil avec l'image par défaut
+    await authRepository.update(userId, { profile_picture: "cancel-img.png" });
+
+    res.status(200).json({ message: "Image supprimée avec succès" });
+  } catch (err) {
+    console.error("Erreur lors de la suppression de l'image :", err);
+    next(err);
+  }
+};
+
+export default {
+  browse,
+  read,
+  editUser,
+  deleteUser,
+  register,
+  login,
+  getCurrentUser,
+  deleteProfilePicture,
+};

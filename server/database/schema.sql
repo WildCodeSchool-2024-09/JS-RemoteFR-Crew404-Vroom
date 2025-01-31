@@ -3,7 +3,7 @@ CREATE TABLE user (
   username VARCHAR(255) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  profile_picture VARCHAR(255) DEFAULT '../src/assets/images/person_15439869.png',
+  profile_picture VARCHAR(255),
   firstname VARCHAR(255),
   lastname VARCHAR(255),
   birthdate DATE,
@@ -70,9 +70,9 @@ CREATE TABLE `like` (
 );
 
 insert into user (id, username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin) values 
-(1, 'admin', 'admin@vroom.com', 'azerty', 'https://static.wikia.nocookie.net/avatar-ldmdla/images/8/86/Avatar_Aang.png/revision/latest/scale-to-width/360?cb=20220523181440&path-prefix=fr', 'admin', 'admin', '1990-01-01', '+33601020304', 100  , true),
-(2, 'Aldup', 'alice@example.com', 'azerty', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb2y-6Ul5enAPZ-iVCVQcdivNjxvqa5bfobg&s', 'Alice', 'Dupont', '2001-01-01', '+33601020304', 2, false),
-(3, 'The B', 'bob@example.com', 'azerty', 'https://gallerix.fr/gallery/4/5/9/2/36740-800.jpg', 'Bob', 'Martin', '2001-01-01', '+33601020311', 1, false);
+(1, 'admin', 'admin@vroom.com', '$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y', 'person_15439869.png', 'admin', 'admin', '1990-01-01', '+33601020304', 100  , true),
+(2, 'Aldup', 'alice@example.com', '$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y', 'person_15439869.png', 'Alice', 'Dupont', '2001-01-01', '+33601020304', 2, false),
+(3, 'The B', 'bob@example.com', '$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y', 'person_15439869.png', 'Bob', 'Martin', '2001-01-01', '+33601020311', 1, false);
 
 insert into motor (id, name) values 
 (1, 'V8'),

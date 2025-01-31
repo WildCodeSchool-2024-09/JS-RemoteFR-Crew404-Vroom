@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import { useData } from "../../../contexts/DataContext";
-import type { User } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
+import type { User } from "../../../types/users";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./UserManagement.module.css";
 
@@ -16,6 +16,7 @@ function UserManagement() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     // Futur appel API ici
@@ -25,7 +26,10 @@ function UserManagement() {
         setUsers(response.data);
         setFilteredUsers(response.data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des événements:", error);
+        console.error(
+          "Erreur lors de la récupération des utilisateurs:",
+          error,
+        );
       }
     };
 
@@ -104,18 +108,48 @@ function UserManagement() {
     }
   };
 
+  const formatDate = (date: string | Date | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
   const updateUser = async () => {
     if (currentUser) {
       try {
-        await api.put(`/api/users/${currentUser.id}`, currentUser);
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(currentUser)) {
+          if (key === "birthdate" && value) {
+            formData.append(key, formatDate(value as string | Date));
+          } else if (value !== null && value !== undefined) {
+            formData.append(key, value.toString());
+          }
+        }
 
+        if (file) {
+          formData.append("profile_picture", file);
+        }
+
+        const response = await api.put(
+          `/api/users/${currentUser.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
+
+        const updatedUser = { ...currentUser, ...response.data };
         const updatedUsers = users.map((user) =>
-          user.id === currentUser.id ? currentUser : user,
+          user.id === currentUser.id ? updatedUser : user,
         );
         setUsers(updatedUsers);
         setFilteredUsers(updatedUsers);
         setIsModalOpen(false);
         setCurrentUser(null);
+        setFile(null);
+        setPreviewImage(null);
       } catch (error) {
         console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
       }
@@ -143,37 +177,35 @@ function UserManagement() {
     }
   }
 
-  // Fonction pour uploader une image
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPreviewImage(reader.result);
-          if (currentUser) {
-            setCurrentUser({
-              ...currentUser,
-              profile_picture: reader.result,
-            });
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   //supression de l'image
-  const handleImageDelete = () => {
-    const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
+  const handleImageDelete = async () => {
+    if (currentUser) {
+      const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
 
-    if (window.confirm(confirmMessage)) {
-      if (currentUser) {
-        setCurrentUser({
-          ...currentUser,
-          profile_picture: null,
-        });
-        setPreviewImage(null);
+      if (window.confirm(confirmMessage)) {
+        try {
+          // Appel API pour supprimer l'image
+          await api.delete(`/api/users/${currentUser.id}/profile-picture`, {
+            withCredentials: true,
+          });
+
+          // Mettre à jour l'utilisateur avec l'image par défaut
+          setCurrentUser({
+            ...currentUser,
+            profile_picture: "cancel-img.png",
+          });
+
+          // Mettre à jour la liste des utilisateurs
+          const updatedUsers = users.map((user) =>
+            user.id === currentUser.id
+              ? { ...user, profile_picture: "cancel-img.png" }
+              : user,
+          );
+          setUsers(updatedUsers);
+          setFilteredUsers(updatedUsers);
+        } catch (error) {
+          console.error("Erreur lors de la suppression de l'image :", error);
+        }
       }
     }
   };
@@ -187,7 +219,14 @@ function UserManagement() {
 
       <div className={styles.tableHeader}>
         <p className={styles.eventCounter}>Total : {totalUsers}</p>
-        <ExportCSV data={filteredUsers} fileName="data_utilisateurs.csv" />
+        <ExportCSV
+          data={filteredUsers.map((user) => ({
+            username: user.username,
+            birthdate: formatDate(user.birthdate),
+            sold: user.sold,
+          }))}
+          fileName="data_utilisateurs.csv"
+        />
         <button
           type="button"
           onClick={toggleTableExpansion}
@@ -281,16 +320,23 @@ function UserManagement() {
             <h3>Modifier l'utilisateur</h3>
             {currentUser && (
               <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className={styles.input}
-                />
-                {(previewImage || currentUser.profile_picture) && (
+                {currentUser.profile_picture && (
                   <div className={styles.imageContainer}>
                     <img
-                      src={previewImage || currentUser.profile_picture || ""}
+                      src={`${import.meta.env.VITE_API_URL}/uploads/${currentUser.profile_picture}`}
+                      alt="Avatar utilisateur"
+                      className={styles.previewImage}
+                      onClick={handleImageDelete}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleImageDelete();
+                      }}
+                    />
+                  </div>
+                )}
+                {previewImage && (
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={previewImage}
                       alt="Avatar utilisateur"
                       className={styles.previewImage}
                       onClick={handleImageDelete}
@@ -351,9 +397,16 @@ function UserManagement() {
                 />
                 <input
                   type="date"
-                  value={currentUser.birthday}
+                  value={
+                    currentUser.birthdate
+                      ? formatDate(currentUser.birthdate)
+                      : ""
+                  }
                   onChange={(e) =>
-                    setCurrentUser({ ...currentUser, birthday: e.target.value })
+                    setCurrentUser({
+                      ...currentUser,
+                      birthdate: e.target.value,
+                    })
                   }
                   className={styles.input}
                 />

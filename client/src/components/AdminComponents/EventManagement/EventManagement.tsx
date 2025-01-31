@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 import { useData } from "../../../contexts/DataContext";
-import type { Eventdata } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
+import type { Eventdata } from "../../../types/events";
 import ExportCSV from "../ExportCSV/ExportCSV";
 import styles from "./EventManagement.module.css";
 
@@ -254,8 +254,9 @@ function EventManagement() {
         <p className={styles.eventCounter}>Total : {totalEvents}</p>
         <ExportCSV
           data={filteredEvents.map((event) => ({
-            ...event,
-            location: `${event.location.x}, ${event.location.y}`,
+            title: event.title,
+            type: event.type,
+            location: event.address,
             date_start:
               typeof event.date_start === "string"
                 ? event.date_start
@@ -397,7 +398,7 @@ function EventManagement() {
               <>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg"
                   onChange={handleFileUpload}
                   className={styles.input}
                 />
