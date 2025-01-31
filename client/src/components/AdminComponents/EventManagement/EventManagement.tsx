@@ -143,34 +143,46 @@ function EventManagement() {
     }
   };
 
+  // Formate une date en chaîne de caractères au format 'YYYY-MM-DD'
+  const formatDate = (date: string | Date | undefined): string => {
+    if (!date) return ""; // Si aucune date n'est fournie, on retourne une chaîne vide
+    const d = new Date(date); // On crée un nouvel objet Date à partir de la date fournie
+
+    // On ajuste la date pour le fuseau horaire local et on la convertit en format ISO
+    // Puis on ne garde que la partie date (YYYY-MM-DD) en supprimant l'heure
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
+  // Mise à jour d'un événement
   const updateEvent = async () => {
     if (currentEvent) {
-      const formatDateForMySQL = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toISOString().split("T")[0];
-      };
-
+      // On vérifie si un événement est actuellement sélectionné
+      // On crée un nouvel objet avec les données de l'événement actuel
+      // et on met à jour les dates de début et de fin en les formatant correctement
       const updatedEvent = {
         ...currentEvent,
-        date_start: formatDateForMySQL(
-          typeof currentEvent.date_start === "string"
-            ? currentEvent.date_start
-            : currentEvent.date_start.toISOString(),
-        ),
-        date_end: formatDateForMySQL(
-          typeof currentEvent.date_end === "string"
-            ? currentEvent.date_end
-            : currentEvent.date_end.toISOString(),
-        ),
+        date_start: formatDate(currentEvent.date_start),
+        date_end: formatDate(currentEvent.date_end),
       };
 
       try {
-        await api.put(`/api/events/${currentEvent.id}`, updatedEvent);
-        const updatedEvents = events.map((event) =>
-          event.id === currentEvent.id ? currentEvent : event,
+        // On envoie une requête PUT à l'API pour mettre à jour l'événement
+        const response = await api.put(
+          `/api/events/${currentEvent.id}`,
+          updatedEvent,
         );
+
+        // On met à jour la liste des événements avec le nouvel événement
+        const updatedEvents = events.map((event) =>
+          event.id === currentEvent.id ? response.data.event : event,
+        );
+
+        // On met à jour l'état de l'application avec les nouvelles données
         setEvents(updatedEvents);
         setFilteredEvents(updatedEvents);
+        // On ferme la modal et on réinitialise l'événement actuel
         setIsModalOpen(false);
         setCurrentEvent(null);
       } catch (error) {
@@ -198,27 +210,7 @@ function EventManagement() {
     }
   }
 
-  // Fonction pour uploader une image
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPreviewImage(reader.result);
-          if (currentEvent) {
-            setCurrentEvent({
-              ...currentEvent,
-              event_picture: reader.result,
-            });
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  //supression de l'image
+  //suppression de l'image
   const handleImageDelete = () => {
     const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
 
@@ -236,16 +228,6 @@ function EventManagement() {
   // Calcule le nombre total d'événements filtrés
   const totalEvents = filteredEvents.length;
 
-  //formatage de la date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
   return (
     <div className={styles.eventManagementContainer}>
       <h2>Gestion des Événements</h2>
@@ -257,14 +239,8 @@ function EventManagement() {
             title: event.title,
             type: event.type,
             location: event.address,
-            date_start:
-              typeof event.date_start === "string"
-                ? event.date_start
-                : event.date_start.toISOString(),
-            date_end:
-              typeof event.date_end === "string"
-                ? event.date_end
-                : event.date_end.toISOString(),
+            date_start: formatDate(event.date_start),
+            date_end: formatDate(event.date_end),
             creator: event.creator_username || "",
           }))}
           fileName="data_événements.csv"
@@ -338,23 +314,11 @@ function EventManagement() {
             </thead>
             <tbody>
               {filteredEvents.map((event) => (
-                <tr key={event.id}>
+                <tr key={`event-${event.id}`}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
-                  <td>
-                    {formatDate(
-                      typeof event.date_start === "string"
-                        ? event.date_start
-                        : event.date_start.toISOString(),
-                    )}
-                  </td>
-                  <td>
-                    {formatDate(
-                      typeof event.date_end === "string"
-                        ? event.date_end
-                        : event.date_end.toISOString(),
-                    )}
-                  </td>
+                  <td>{formatDate(event.date_start)}</td>
+                  <td>{formatDate(event.date_end)}</td>
                   <td>{event.address}</td>
                   <td>{event.creator_username}</td>
                   <td>
@@ -396,12 +360,6 @@ function EventManagement() {
             <h3>Modifier l'événement</h3>
             {currentEvent && (
               <>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={handleFileUpload}
-                  className={styles.input}
-                />
                 {(previewImage || currentEvent.event_picture) && (
                   <div className={styles.imageContainer}>
                     <img
@@ -447,9 +405,7 @@ function EventManagement() {
                   type="date"
                   value={
                     currentEvent.date_start
-                      ? new Date(currentEvent.date_start)
-                          .toISOString()
-                          .split("T")[0]
+                      ? formatDate(currentEvent.date_start)
                       : ""
                   }
                   onChange={(e) =>
@@ -464,9 +420,7 @@ function EventManagement() {
                   type="date"
                   value={
                     currentEvent.date_end
-                      ? new Date(currentEvent.date_end)
-                          .toISOString()
-                          .split("T")[0]
+                      ? formatDate(currentEvent.date_end)
                       : ""
                   }
                   onChange={(e) =>

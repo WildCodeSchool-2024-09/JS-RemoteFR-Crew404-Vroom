@@ -68,6 +68,7 @@ class AuthRepository {
 
   // The U of CRUD - Update operation
   async update(id: number, userUpdate: Partial<User>) {
+    // Construit dynamiquement la requête SQL en fonction des champs à mettre à jour
     const updateFields = Object.entries(userUpdate)
       .filter(([_, value]) => value !== undefined)
       .map(([key, _]) => `${key} = ?`)

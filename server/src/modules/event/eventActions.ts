@@ -62,29 +62,43 @@ const read: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Modifie un événement existant
 const editEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);
-    const updatedEvent: Event = {
-      id: eventId,
+
+    // Prépare les données de mise à jour
+    const eventUpdateData: Partial<Event> = {
       title: req.body.title,
       event_picture: req.body.event_picture,
       type: req.body.type,
       date_start: req.body.date_start,
       date_end: req.body.date_end,
-      location: {
-        x: req.body.location.x,
-        y: req.body.location.y,
-      },
       address: req.body.address,
       description: req.body.description,
       link: req.body.link,
       user_id: req.body.user_id,
     };
 
-    const result = await eventRepository.update(updatedEvent);
+    // Ajoute la location seulement si elle est présente dans req.body
+    if (req.body.location) {
+      eventUpdateData.location = {
+        x: Number.parseFloat(req.body.location.x),
+        y: Number.parseFloat(req.body.location.y),
+      };
+    }
+
+    // Filtre les champs undefined pour ne pas écraser les données existantes
+    const filteredUpdateData = Object.fromEntries(
+      Object.entries(eventUpdateData).filter(([_, v]) => v !== undefined),
+    );
+
+    const result = await eventRepository.update(eventId, filteredUpdateData);
 
     if (result) {
+      // Récupére l'événement mis à jour
+      const updatedEvent = await eventRepository.read(eventId);
+
       res.status(200).json({
         message: "Événement mis à jour avec succès",
         event: updatedEvent,
@@ -130,6 +144,7 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Supprime un événement
 const deleteEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);

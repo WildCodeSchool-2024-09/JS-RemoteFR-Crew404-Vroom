@@ -57,44 +57,57 @@ class EventRepository {
   async read(id: number) {
     // Execute the SQL SELECT query to retrieve a specific event by its ID
     const [rows] = await databaseClient.query<Rows>(
-      "select * from item where id = ?",
+      `SELECT e.*, u.username as creator_username
+       FROM event e
+       JOIN user u ON e.user_id = u.id
+       WHERE e.id = ?`,
       [id],
     );
 
     // Return the first row of the result, which represents the event
-    return rows[0] as Event;
+    return rows[0] as Event & { creator_username: string };
   }
 
   async readAll() {
-    // Execute the SQL SELECT query to retrieve all events from the "event" table
+    // Execute the SQL SELECT query to retrieve all events from the "event" table and join with the "user" table
     const [rows] = await databaseClient.query<Rows>(`
       SELECT e.*, u.username as creator_username
       FROM event e
       JOIN user u ON e.user_id = u.id
     `);
 
-    // Return the array of events
+    // Return the array of events with the creator's username
     return rows as (Event & { creator_username: string })[];
   }
 
   //   The U of CRUD - Update operation
 
-  async update(event: Event) {
+  async update(id: number, eventUpdate: Partial<Event>) {
+    // Filter out undefined values and the location field
+    let updateFields = Object.entries(eventUpdate)
+      .filter(([key, value]) => value !== undefined && key !== "location")
+      .map(([key, _]) => `${key} = ?`)
+      .join(", ");
+
+    // Filter out undefined values
+    const updateValues = Object.entries(eventUpdate)
+      .filter(([key, value]) => value !== undefined && key !== "location")
+      .map(([_, value]) => value);
+
+    // Update the location field if it is provided
+    if (eventUpdate.location) {
+      updateFields += ", location = ST_GeomFromText(?)";
+      updateValues.push(
+        `POINT(${eventUpdate.location.x} ${eventUpdate.location.y})`,
+      );
+    }
+
+    updateValues.push(id);
+
+    // Execute the SQL UPDATE query to modify the event in the "event" table
     const [result] = await databaseClient.query<Result>(
-      `UPDATE event 
-       SET event_picture = ?, title = ?, type = ?, date_start = ?, date_end = ?, address = ?, description = ?, link = ? 
-       WHERE id = ?`,
-      [
-        event.event_picture,
-        event.title,
-        event.type,
-        event.date_start,
-        event.date_end,
-        event.address,
-        event.description,
-        event.link,
-        event.id,
-      ],
+      `UPDATE event SET ${updateFields} WHERE id = ?`,
+      updateValues,
     );
 
     return result.affectedRows > 0;
@@ -110,6 +123,7 @@ class EventRepository {
     return result.affectedRows > 0;
   }
 
+  // Custom method to get an event with the creator's username
   async getEventWithCreator(id: number) {
     const [rows] = await databaseClient.query<Rows>(
       `

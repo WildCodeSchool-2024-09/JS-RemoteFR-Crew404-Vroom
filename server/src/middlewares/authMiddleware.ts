@@ -5,11 +5,13 @@ import multer from "multer";
 import authRepository from "../modules/auth/authRepository";
 import jwt from "./jwtMiddleware";
 
+// Configuration de Multer pour le stockage des fichiers uploadés
 const configMulter = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./uploads");
   },
   filename: (req, file, cb) => {
+    // Génère un nom de fichier unique basé sur la date et un nombre aléatoire
     const uniqueSuffix = `${Date.now()}-${Math.round(
       Math.random() * 99999999,
     )}`;
@@ -19,8 +21,10 @@ const configMulter = multer.diskStorage({
 });
 const uploads = multer({ storage: configMulter });
 
+// Middleware pour hacher le mot de passe avant de l'enregistrer
 const hashPwd: RequestHandler = async (req, res, next) => {
   try {
+    // Utilise argon2 pour hacher le mot de passe de manière sécurisée
     const hash = await argon2.hash(req.body.password);
     req.body.password = hash;
     next();
@@ -30,6 +34,7 @@ const hashPwd: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Middleware pour vérifier le mot de passe lors de la connexion
 const verifyPwd: RequestHandler = async (req, res, next) => {
   try {
     const user = await authRepository.read(req.body.email);
@@ -39,11 +44,14 @@ const verifyPwd: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    // Vérifie si le mot de passe fourni correspond au hash stocké
     if (await argon2.verify(user.password, req.body.password)) {
       console.info("Password is correct");
 
+      // Crée un token JWT pour l'authentification
       const token = jwt.createToken(user);
 
+      // Envoie le token dans un cookie sécurisé et la réponse JSON
       res
         .cookie("user_token", token, {
           httpOnly: true,
@@ -62,12 +70,14 @@ const verifyPwd: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Middleware pour vérifier la validité du token JWT
 const checkToken: RequestHandler = async (req, res, next) => {
   if (!req.cookies.user_token) {
     res.status(401).json({ message: "No token provided" });
     return;
   }
   try {
+    // Décode et vérifie le token JWT
     const decoded = jwt.verifyToken(req.cookies.user_token) as {
       id: number;
       email: string;
@@ -89,7 +99,9 @@ const checkToken: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Middleware pour gérer la déconnexion
 const logout: RequestHandler = (req, res) => {
+  // Supprime le cookie contenant le token JWT
   res.clearCookie("user_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
