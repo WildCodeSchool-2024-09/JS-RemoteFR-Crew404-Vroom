@@ -15,8 +15,11 @@
 
   --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 
-  /* Logique NavRoot */
+  /* Couleur de text */
   --textcolor: #000000;
+  --textcolorgrey1: #333;
+  --textcolorgrey2: #666;
+  --textcolorviolet: #6a11cb;
 
   /*Logique taille police d'écriture site*/
   --font-size-root: 16px; /*Ref size, dimensionne tout le site*/

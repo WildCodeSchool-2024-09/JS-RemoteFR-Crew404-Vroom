@@ -88,6 +88,7 @@ function Home() {
         <HomeRoot />
       </main>
 
+      {/* Balise Footer présent dans Footer*/}
       <Footer />
     </>
   );
