@@ -164,9 +164,11 @@ function EventManagement() {
           `/api/events/${currentEvent.id}`,
           updatedEvent,
         );
+
         const updatedEvents = events.map((event) =>
-          event.id === currentEvent.id ? response.data : event,
+          event.id === currentEvent.id ? response.data.event : event,
         );
+
         setEvents(updatedEvents);
         setFilteredEvents(updatedEvents);
         setIsModalOpen(false);
@@ -300,7 +302,7 @@ function EventManagement() {
             </thead>
             <tbody>
               {filteredEvents.map((event) => (
-                <tr key={event.id}>
+                <tr key={`event-${event.id}`}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
                   <td>{formatDate(event.date_start)}</td>

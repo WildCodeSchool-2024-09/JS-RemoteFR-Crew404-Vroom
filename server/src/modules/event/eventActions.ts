@@ -65,6 +65,7 @@ const read: RequestHandler = async (req, res, next) => {
 const editEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);
+
     const eventUpdateData: Partial<Event> = {
       title: req.body.title,
       event_picture: req.body.event_picture,
@@ -95,6 +96,7 @@ const editEvent: RequestHandler = async (req, res, next) => {
     if (result) {
       // Récupére l'événement mis à jour
       const updatedEvent = await eventRepository.read(eventId);
+
       res.status(200).json({
         message: "Événement mis à jour avec succès",
         event: updatedEvent,

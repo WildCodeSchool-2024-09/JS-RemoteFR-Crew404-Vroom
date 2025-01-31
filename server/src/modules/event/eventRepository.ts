@@ -57,12 +57,15 @@ class EventRepository {
   async read(id: number) {
     // Execute the SQL SELECT query to retrieve a specific event by its ID
     const [rows] = await databaseClient.query<Rows>(
-      "select * from event where id = ?",
+      `SELECT e.*, u.username as creator_username
+       FROM event e
+       JOIN user u ON e.user_id = u.id
+       WHERE e.id = ?`,
       [id],
     );
 
     // Return the first row of the result, which represents the event
-    return rows[0] as Event;
+    return rows[0] as Event & { creator_username: string };
   }
 
   async readAll() {
