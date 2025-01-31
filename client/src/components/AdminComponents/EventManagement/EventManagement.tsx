@@ -143,31 +143,29 @@ function EventManagement() {
     }
   };
 
+  const formatDate = (date: string | Date | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
+  };
+
   const updateEvent = async () => {
     if (currentEvent) {
-      const formatDateForMySQL = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toISOString().split("T")[0];
-      };
-
       const updatedEvent = {
         ...currentEvent,
-        date_start: formatDateForMySQL(
-          typeof currentEvent.date_start === "string"
-            ? currentEvent.date_start
-            : currentEvent.date_start.toISOString(),
-        ),
-        date_end: formatDateForMySQL(
-          typeof currentEvent.date_end === "string"
-            ? currentEvent.date_end
-            : currentEvent.date_end.toISOString(),
-        ),
+        date_start: formatDate(currentEvent.date_start),
+        date_end: formatDate(currentEvent.date_end),
       };
 
       try {
-        await api.put(`/api/events/${currentEvent.id}`, updatedEvent);
+        const response = await api.put(
+          `/api/events/${currentEvent.id}`,
+          updatedEvent,
+        );
         const updatedEvents = events.map((event) =>
-          event.id === currentEvent.id ? currentEvent : event,
+          event.id === currentEvent.id ? response.data : event,
         );
         setEvents(updatedEvents);
         setFilteredEvents(updatedEvents);
@@ -198,27 +196,7 @@ function EventManagement() {
     }
   }
 
-  // Fonction pour uploader une image
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPreviewImage(reader.result);
-          if (currentEvent) {
-            setCurrentEvent({
-              ...currentEvent,
-              event_picture: reader.result,
-            });
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  //supression de l'image
+  //suppression de l'image
   const handleImageDelete = () => {
     const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
 
@@ -236,16 +214,6 @@ function EventManagement() {
   // Calcule le nombre total d'événements filtrés
   const totalEvents = filteredEvents.length;
 
-  //formatage de la date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
   return (
     <div className={styles.eventManagementContainer}>
       <h2>Gestion des Événements</h2>
@@ -257,14 +225,8 @@ function EventManagement() {
             title: event.title,
             type: event.type,
             location: event.address,
-            date_start:
-              typeof event.date_start === "string"
-                ? event.date_start
-                : event.date_start.toISOString(),
-            date_end:
-              typeof event.date_end === "string"
-                ? event.date_end
-                : event.date_end.toISOString(),
+            date_start: formatDate(event.date_start),
+            date_end: formatDate(event.date_end),
             creator: event.creator_username || "",
           }))}
           fileName="data_événements.csv"
@@ -341,20 +303,8 @@ function EventManagement() {
                 <tr key={event.id}>
                   <td>{event.title}</td>
                   <td>{event.type}</td>
-                  <td>
-                    {formatDate(
-                      typeof event.date_start === "string"
-                        ? event.date_start
-                        : event.date_start.toISOString(),
-                    )}
-                  </td>
-                  <td>
-                    {formatDate(
-                      typeof event.date_end === "string"
-                        ? event.date_end
-                        : event.date_end.toISOString(),
-                    )}
-                  </td>
+                  <td>{formatDate(event.date_start)}</td>
+                  <td>{formatDate(event.date_end)}</td>
                   <td>{event.address}</td>
                   <td>{event.creator_username}</td>
                   <td>
@@ -396,12 +346,6 @@ function EventManagement() {
             <h3>Modifier l'événement</h3>
             {currentEvent && (
               <>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={handleFileUpload}
-                  className={styles.input}
-                />
                 {(previewImage || currentEvent.event_picture) && (
                   <div className={styles.imageContainer}>
                     <img
@@ -447,9 +391,7 @@ function EventManagement() {
                   type="date"
                   value={
                     currentEvent.date_start
-                      ? new Date(currentEvent.date_start)
-                          .toISOString()
-                          .split("T")[0]
+                      ? formatDate(currentEvent.date_start)
                       : ""
                   }
                   onChange={(e) =>
@@ -464,9 +406,7 @@ function EventManagement() {
                   type="date"
                   value={
                     currentEvent.date_end
-                      ? new Date(currentEvent.date_end)
-                          .toISOString()
-                          .split("T")[0]
+                      ? formatDate(currentEvent.date_end)
                       : ""
                   }
                   onChange={(e) =>

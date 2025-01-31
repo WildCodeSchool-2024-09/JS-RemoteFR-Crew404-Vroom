@@ -177,7 +177,7 @@ function UserManagement() {
     }
   }
 
-  //supression de l'image
+  //suppression de l'image
   const handleImageDelete = async () => {
     if (currentUser) {
       const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";

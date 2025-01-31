@@ -57,7 +57,7 @@ class EventRepository {
   async read(id: number) {
     // Execute the SQL SELECT query to retrieve a specific event by its ID
     const [rows] = await databaseClient.query<Rows>(
-      "select * from item where id = ?",
+      "select * from event where id = ?",
       [id],
     );
 
@@ -79,22 +79,28 @@ class EventRepository {
 
   //   The U of CRUD - Update operation
 
-  async update(event: Event) {
+  async update(id: number, eventUpdate: Partial<Event>) {
+    let updateFields = Object.entries(eventUpdate)
+      .filter(([key, value]) => value !== undefined && key !== "location")
+      .map(([key, _]) => `${key} = ?`)
+      .join(", ");
+
+    const updateValues = Object.entries(eventUpdate)
+      .filter(([key, value]) => value !== undefined && key !== "location")
+      .map(([_, value]) => value);
+
+    if (eventUpdate.location) {
+      updateFields += ", location = ST_GeomFromText(?)";
+      updateValues.push(
+        `POINT(${eventUpdate.location.x} ${eventUpdate.location.y})`,
+      );
+    }
+
+    updateValues.push(id);
+
     const [result] = await databaseClient.query<Result>(
-      `UPDATE event 
-       SET event_picture = ?, title = ?, type = ?, date_start = ?, date_end = ?, address = ?, description = ?, link = ? 
-       WHERE id = ?`,
-      [
-        event.event_picture,
-        event.title,
-        event.type,
-        event.date_start,
-        event.date_end,
-        event.address,
-        event.description,
-        event.link,
-        event.id,
-      ],
+      `UPDATE event SET ${updateFields} WHERE id = ?`,
+      updateValues,
     );
 
     return result.affectedRows > 0;
