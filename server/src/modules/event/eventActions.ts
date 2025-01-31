@@ -62,10 +62,12 @@ const read: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Modifie un événement existant
 const editEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);
 
+    // Prépare les données de mise à jour
     const eventUpdateData: Partial<Event> = {
       title: req.body.title,
       event_picture: req.body.event_picture,
@@ -86,7 +88,7 @@ const editEvent: RequestHandler = async (req, res, next) => {
       };
     }
 
-    // Filtre les champs undefined
+    // Filtre les champs undefined pour ne pas écraser les données existantes
     const filteredUpdateData = Object.fromEntries(
       Object.entries(eventUpdateData).filter(([_, v]) => v !== undefined),
     );
@@ -142,6 +144,7 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Supprime un événement
 const deleteEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);

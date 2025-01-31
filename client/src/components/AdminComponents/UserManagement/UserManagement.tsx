@@ -108,31 +108,46 @@ function UserManagement() {
     }
   };
 
+  // Formate une date en chaîne de caractères au format 'YYYY-MM-DD'
   const formatDate = (date: string | Date | undefined): string => {
+    // Si aucune date n'est fournie, on retourne une chaîne vide
     if (!date) return "";
+
+    // On crée un nouvel objet Date à partir de la date fournie
     const d = new Date(date);
+
+    // On ajuste la date pour le fuseau horaire local et on la convertit en format ISO
+    // Puis on ne garde que la partie date (YYYY-MM-DD) en supprimant l'heure
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
       .toISOString()
       .split("T")[0];
   };
 
+  // Cette fonction met à jour un utilisateur
   const updateUser = async () => {
     if (currentUser) {
+      // On vérifie si un utilisateur est actuellement sélectionné
+
       try {
-        const formData = new FormData();
+        const formData = new FormData(); // On crée un nouvel objet FormData pour envoyer les données, y compris les fichiers
         for (const [key, value] of Object.entries(currentUser)) {
+          // On parcourt toutes les propriétés de l'utilisateur actuel
           if (key === "birthdate" && value) {
+            // Si la clé est "birthdate" et qu'une valeur existe, on la formate
             formData.append(key, formatDate(value as string | Date));
           } else if (value !== null && value !== undefined) {
+            // Pour les autres propriétés non nulles et non undefined, on les ajoute telles quelles
             formData.append(key, value.toString());
           }
         }
 
         if (file) {
+          // Si un fichier (nouvelle image de profil) a été sélectionné, on l'ajoute au formData
           formData.append("profile_picture", file);
         }
 
         const response = await api.put(
+          // On envoie une requête PUT à l'API pour mettre à jour l'utilisateur
           `/api/users/${currentUser.id}`,
           formData,
           {
@@ -140,12 +155,17 @@ function UserManagement() {
           },
         );
 
-        const updatedUser = { ...currentUser, ...response.data };
-        const updatedUsers = users.map((user) =>
-          user.id === currentUser.id ? updatedUser : user,
+        const updatedUser = { ...currentUser, ...response.data }; // On crée un nouvel objet utilisateur avec les données mises à jour
+        const updatedUsers = users.map(
+          (
+            user, // On met à jour la liste des utilisateurs avec le nouvel utilisateur
+          ) => (user.id === currentUser.id ? updatedUser : user),
         );
+
+        // On met à jour l'état de l'application avec les nouvelles données
         setUsers(updatedUsers);
         setFilteredUsers(updatedUsers);
+        // On réinitialise divers états
         setIsModalOpen(false);
         setCurrentUser(null);
         setFile(null);

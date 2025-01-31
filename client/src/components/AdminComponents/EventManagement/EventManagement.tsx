@@ -143,16 +143,24 @@ function EventManagement() {
     }
   };
 
+  // Formate une date en chaîne de caractères au format 'YYYY-MM-DD'
   const formatDate = (date: string | Date | undefined): string => {
-    if (!date) return "";
-    const d = new Date(date);
+    if (!date) return ""; // Si aucune date n'est fournie, on retourne une chaîne vide
+    const d = new Date(date); // On crée un nouvel objet Date à partir de la date fournie
+
+    // On ajuste la date pour le fuseau horaire local et on la convertit en format ISO
+    // Puis on ne garde que la partie date (YYYY-MM-DD) en supprimant l'heure
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
       .toISOString()
       .split("T")[0];
   };
 
+  // Mise à jour d'un événement
   const updateEvent = async () => {
     if (currentEvent) {
+      // On vérifie si un événement est actuellement sélectionné
+      // On crée un nouvel objet avec les données de l'événement actuel
+      // et on met à jour les dates de début et de fin en les formatant correctement
       const updatedEvent = {
         ...currentEvent,
         date_start: formatDate(currentEvent.date_start),
@@ -160,17 +168,21 @@ function EventManagement() {
       };
 
       try {
+        // On envoie une requête PUT à l'API pour mettre à jour l'événement
         const response = await api.put(
           `/api/events/${currentEvent.id}`,
           updatedEvent,
         );
 
+        // On met à jour la liste des événements avec le nouvel événement
         const updatedEvents = events.map((event) =>
           event.id === currentEvent.id ? response.data.event : event,
         );
 
+        // On met à jour l'état de l'application avec les nouvelles données
         setEvents(updatedEvents);
         setFilteredEvents(updatedEvents);
+        // On ferme la modal et on réinitialise l'événement actuel
         setIsModalOpen(false);
         setCurrentEvent(null);
       } catch (error) {

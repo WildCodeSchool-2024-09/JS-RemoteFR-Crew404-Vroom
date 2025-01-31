@@ -3,6 +3,7 @@ import type { RequestHandler } from "express";
 // Import access to data
 import authRepository from "./authRepository";
 
+// Gère l'inscription d'un nouvel utilisateur
 const register: RequestHandler = async (req, res, next) => {
   try {
     const user = await authRepository.create(req.body);
@@ -15,9 +16,11 @@ const register: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Gère la connexion d'un utilisateur
 const login: RequestHandler = async (req, res, next) => {
   try {
     if (req.body.user) {
+      // Exclut le mot de passe de la réponse pour des raisons de sécurité
       const { password, ...safeUser } = req.body.user;
       res.status(200).json(safeUser);
     } else {
@@ -28,6 +31,7 @@ const login: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Récupère tous les utilisateurs
 const browse: RequestHandler = async (req, res, next) => {
   try {
     const users = await authRepository.readAll();
@@ -37,10 +41,12 @@ const browse: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Récupère un utilisateur spécifique
 const read: RequestHandler = async (req, res, next) => {
   try {
     const user = await authRepository.read(req.params.id);
     if (user) {
+      // Exclut le mot de passe de la réponse pour des raisons de sécurité
       const { password, ...safeUser } = user;
       res.status(200).json(safeUser);
     } else {
@@ -51,15 +57,17 @@ const read: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Modifie les informations d'un utilisateur
 const editUser: RequestHandler = async (req, res, next) => {
   try {
     const userId = Number(req.params.id);
     const updateData = { ...req.body };
 
+    // Gère le téléchargement d'une nouvelle image de profil
     if (req.file) {
       updateData.profile_picture = req.file.filename;
     }
-
+    // Gère le cas où la date de naissance est une chaîne vide
     if (updateData.birthdate === "") {
       updateData.birthdate = undefined;
     }
@@ -80,6 +88,7 @@ const editUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Supprime un utilisateur
 const deleteUser: RequestHandler = async (req, res, next) => {
   try {
     const deleted = await authRepository.delete(Number(req.params.id));
@@ -93,11 +102,13 @@ const deleteUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Récupère l'utilisateur actuellement connecté
 const getCurrentUser: RequestHandler = async (req, res, next) => {
   try {
     const userEmail = req.user.email;
     const user = await authRepository.read(userEmail);
     if (user) {
+      // Exclut le mot de passe de la réponse pour des raisons de sécurité
       const { password, ...safeUser } = user;
       res.json(safeUser);
     } else {
@@ -110,7 +121,7 @@ const getCurrentUser: RequestHandler = async (req, res, next) => {
 
 const fs = require("node:fs");
 const path = require("node:path");
-
+// Supprime l'image de profil d'un utilisateur
 const deleteProfilePicture: RequestHandler = async (req, res, next) => {
   try {
     const userId = Number(req.params.id);
