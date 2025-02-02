@@ -67,6 +67,11 @@ router.delete(
   authMiddleware.checkToken,
   eventActions.deleteEvent,
 ); // pour supprimer un événement
+router.get(
+  "/api/users/me/events",
+  authMiddleware.checkToken,
+  eventActions.getUserEvents,
+); // pour recupérer les événements d'un utilisateur
 
 /* ************************************************************************* */
 

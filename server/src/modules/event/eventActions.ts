@@ -134,10 +134,14 @@ const add: RequestHandler = async (req, res, next) => {
     // Create the event
     const insertId = await eventRepository.create(newEvent);
 
+    // Récupérer l'événement complet après sa création
+    const createdEvent = await eventRepository.getEventWithCreator(insertId);
+
     // Respond with HTTP 201 (Created) and the ID of the newly inserted event
-    res
-      .status(201)
-      .json({ insertId, message: "Événement créé, en route ! 🚗" });
+    res.status(201).json({
+      message: "Événement créé, en route ! 🚗",
+      event: createdEvent,
+    });
   } catch (err) {
     // Pass any errors to the error-handling middleware
     next(err);
@@ -161,4 +165,15 @@ const deleteEvent: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, editEvent, add, deleteEvent };
+// Récupère les événements d'un utilisateur
+const getUserEvents: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // Assurez-vous que l'ID de l'utilisateur est disponible dans req.user après l'authentification
+    const events = await eventRepository.readAllByUserId(userId);
+    res.json(events);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { browse, read, editEvent, add, deleteEvent, getUserEvents };

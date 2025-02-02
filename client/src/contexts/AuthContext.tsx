@@ -1,10 +1,11 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { logout } from "../helpers/authService";
 
 type AuthContextType = {
   user: User | null;
   handleLogin: (user: User) => void;
   handleLogout: () => void;
+  isAuthenticated: () => boolean;
 };
 const AuthContext = createContext<AuthContextType | null>(null);
 type ChildrenType = {
@@ -13,20 +14,37 @@ type ChildrenType = {
 type User = {
   id: number;
   email: string;
+  username: string;
 };
 export function AuthProvider({ children }: ChildrenType) {
   const [user, setUser] = useState<User | null>(null);
+
   const handleLogin = (user: User) => {
     setUser(user);
+    localStorage.setItem("user", JSON.stringify(user)); // Ajoute l'utilisateur dans le localStorage
   };
+
   const handleLogout = async () => {
     try {
       await logout();
       setUser(null);
+      localStorage.removeItem("user"); // Supprime l'utilisateur du localStorage
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
     }
   };
+
+  const isAuthenticated = () => {
+    return user !== null;
+  };
+
+  // Vérifier le localStorage au chargement
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -34,6 +52,7 @@ export function AuthProvider({ children }: ChildrenType) {
         user,
         handleLogin,
         handleLogout,
+        isAuthenticated,
       }}
     >
       {children}

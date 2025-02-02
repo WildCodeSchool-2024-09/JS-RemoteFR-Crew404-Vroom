@@ -136,6 +136,18 @@ class EventRepository {
     );
     return rows[0] as Event & { creator_username: string };
   }
+
+  // Custom method to get all events created by a specific user
+  async readAllByUserId(userId: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      `SELECT e.*, u.username as creator_username
+      FROM event e
+      JOIN user u ON e.user_id = u.id
+      WHERE e.user_id = ?`,
+      [userId],
+    );
+    return rows as (Event & { creator_username: string })[];
+  }
 }
 
 export default new EventRepository();
