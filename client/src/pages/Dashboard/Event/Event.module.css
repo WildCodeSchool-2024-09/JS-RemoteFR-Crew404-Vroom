@@ -130,14 +130,14 @@
 .modalOverlay {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  width: 90%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .modalContent {
@@ -156,6 +156,19 @@
 .modalButtons {
   display: flex;
   justify-content: space-between;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
+}
+
+.previewImage {
+  justify-content: center;
+  max-width: 30vh;
+  max-height: 30vh;
 }
 
 .capitalize {

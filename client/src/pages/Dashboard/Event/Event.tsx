@@ -92,6 +92,16 @@ function Dashboard() {
       .split("T")[0];
   };
 
+  const formatDateForDisplay = (date: string | Date | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    return d.toLocaleDateString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   const addOrUpdateEvent = async () => {
     if (!validateForm()) return;
 
@@ -249,7 +259,7 @@ function Dashboard() {
                   <p>Nom: {event.title}</p>
                   <p>
                     Date:{" "}
-                    {`Du ${formatDate(event.date_start)} au ${formatDate(event.date_end)}`}
+                    {`Du ${formatDateForDisplay(event.date_start)} au ${formatDateForDisplay(event.date_end)}`}
                   </p>
                   <p className={styles.locationText}>
                     Localisation: {event.address.toUpperCase()}
