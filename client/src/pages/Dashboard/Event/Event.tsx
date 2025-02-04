@@ -58,10 +58,31 @@ function Dashboard() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setCurrentEvent((prev) => ({
-        ...prev,
-        event_picture: URL.createObjectURL(file),
-      }));
+      const formData = new FormData();
+      formData.append("event_picture", file);
+
+      // Crée un URL local pour la prévisualisation
+      const localPreviewUrl = URL.createObjectURL(file);
+      setPreviewImage(localPreviewUrl);
+
+      api
+        .put(`/api/events/${currentEvent.id}/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setCurrentEvent((prev) => ({
+              ...prev,
+              event_picture: response.data.event_picture,
+            }));
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'upload de l'image :", error);
+          setPreviewImage(null);
+        });
     }
   };
 
@@ -156,6 +177,7 @@ function Dashboard() {
 
   const handleEventClick = (event: Eventdata) => {
     setCurrentEvent(event);
+    setPreviewImage(null);
     setIsModalOpen(true);
   };
 
@@ -208,13 +230,11 @@ function Dashboard() {
     const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
 
     if (window.confirm(confirmMessage)) {
-      if (currentEvent) {
-        setCurrentEvent({
-          ...currentEvent,
-          event_picture: null,
-        });
-        setPreviewImage(null);
-      }
+      setCurrentEvent((prev) => ({
+        ...prev,
+        event_picture: null,
+      }));
+      setPreviewImage(null);
     }
   };
 
@@ -346,7 +366,13 @@ function Dashboard() {
             {(previewImage || currentEvent.event_picture) && (
               <div className={styles.imageContainer}>
                 <img
-                  src={previewImage || currentEvent.event_picture || ""}
+                  src={
+                    previewImage
+                      ? previewImage
+                      : currentEvent.event_picture
+                        ? `${import.meta.env.VITE_API_URL}${currentEvent.event_picture}`
+                        : defaultEventImg
+                  }
                   alt="Aperçu de l'événement"
                   className={styles.previewImage}
                   onClick={handleImageDelete}

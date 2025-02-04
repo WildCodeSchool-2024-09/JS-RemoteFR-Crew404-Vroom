@@ -8,18 +8,22 @@ import jwt from "./jwtMiddleware";
 // Configuration de Multer pour le stockage des fichiers uploadés
 const configMulter = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads");
+    const uploadDir =
+      file.fieldname === "event_picture" ? "./uploads/events" : "./uploads";
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // Génère un nom de fichier unique basé sur la date et un nombre aléatoire
-    const uniqueSuffix = `${Date.now()}-${Math.round(
-      Math.random() * 99999999,
-    )}`;
-    req.body.profile_picture = uniqueSuffix + path.extname(file.originalname);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 99999999)}`;
+    const filename = `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`;
+
+    // Stocke le nom du fichier dans req.body pour un accès facile
+    req.body[file.fieldname] = filename;
+
+    cb(null, filename);
   },
 });
-const uploads = multer({ storage: configMulter });
+
+export const uploads = multer({ storage: configMulter });
 
 // Middleware pour hacher le mot de passe avant de l'enregistrer
 const hashPwd: RequestHandler = async (req, res, next) => {

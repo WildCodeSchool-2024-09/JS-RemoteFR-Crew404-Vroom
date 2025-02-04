@@ -62,6 +62,12 @@ router.put(
   authMiddleware.checkToken,
   eventActions.editEvent,
 ); // pour modifier un événement
+router.put(
+  "/api/events/:id/upload",
+  authMiddleware.checkToken,
+  authMiddleware.uploads.single("event_picture"),
+  eventActions.uploadEventImage, // pour télécharger une image
+);
 router.delete(
   "/api/events/:id",
   authMiddleware.checkToken,

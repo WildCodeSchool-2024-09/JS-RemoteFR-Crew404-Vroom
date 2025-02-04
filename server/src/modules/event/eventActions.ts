@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import { uploads } from "../../middlewares/authMiddleware";
 
 type Event = {
   id: number;
@@ -168,7 +169,7 @@ const deleteEvent: RequestHandler = async (req, res, next) => {
 // Récupère les événements d'un utilisateur
 const getUserEvents: RequestHandler = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Assurez-vous que l'ID de l'utilisateur est disponible dans req.user après l'authentification
+    const userId = req.user.id;
     const events = await eventRepository.readAllByUserId(userId);
     res.json(events);
   } catch (err) {
@@ -176,4 +177,39 @@ const getUserEvents: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, editEvent, add, deleteEvent, getUserEvents };
+// Action pour l'upload d'image
+const uploadEventImage: RequestHandler = async (req, res, next) => {
+  try {
+    const eventId = Number(req.params.id);
+    if (!req.file) {
+      res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
+      return;
+    }
+
+    const imagePath = `/uploads/events/${req.file.filename}`;
+    const result = await eventRepository.update(eventId, {
+      event_picture: imagePath,
+    });
+
+    if (result) {
+      res.status(200).json({
+        message: "Image uploadée avec succès",
+        event_picture: imagePath,
+      });
+    } else {
+      res.status(404).json({ message: "Événement non trouvé" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default {
+  browse,
+  read,
+  editEvent,
+  add,
+  deleteEvent,
+  getUserEvents,
+  uploadEventImage,
+};

@@ -102,6 +102,11 @@ class EventRepository {
       );
     }
 
+    if (eventUpdate.event_picture !== undefined) {
+      updateFields += ", event_picture = ?";
+      updateValues.push(eventUpdate.event_picture);
+    }
+
     updateValues.push(id);
 
     // Execute the SQL UPDATE query to modify the event in the "event" table
