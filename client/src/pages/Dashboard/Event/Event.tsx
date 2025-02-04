@@ -216,14 +216,20 @@ function Dashboard() {
   };
 
   const filteredEvents =
-    events?.filter((event) =>
-      event?.[searchCriterion as keyof Eventdata]
-        ? event?.[searchCriterion as keyof Eventdata]
-            ?.toString()
+    events?.filter((event) => {
+      switch (searchCriterion) {
+        case "title":
+          return event.title.toLowerCase().includes(searchQuery.toLowerCase());
+        case "date_start":
+          return formatDateForDisplay(event.date_start).includes(searchQuery);
+        case "address":
+          return event.address
             .toLowerCase()
-            .includes(searchQuery.toLowerCase())
-        : false,
-    ) ?? [];
+            .includes(searchQuery.toLowerCase());
+        default:
+          return false;
+      }
+    }) ?? [];
 
   //suppression de l'image
   const handleImageDelete = async () => {
@@ -253,14 +259,14 @@ function Dashboard() {
           value={searchCriterion}
           onChange={(e) => setSearchCriterion(e.target.value)}
         >
-          <option value="name">Nom</option>
-          <option value="date">Date</option>
-          <option value="location">Localisation</option>
+          <option value="title">Nom</option>
+          <option value="date_start">Date</option>
+          <option value="address">Localisation</option>
         </select>
         <input
           type="text"
           className={styles.search}
-          placeholder={`Rechercher par ${searchCriterion}`}
+          placeholder="Rechercher"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
