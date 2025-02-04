@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import defaultEventImg from "../../../assets/images/pictures/default-event-img.png";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useData } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
@@ -6,7 +7,7 @@ import type { Eventdata } from "../../../types/events";
 import styles from "./Event.module.css";
 
 function Dashboard() {
-  const [formData, setFormData] = useState<Eventdata>({
+  const [currentEvent, setCurrentEvent] = useState<Eventdata>({
     id: -1,
     title: "",
     event_picture: null,
@@ -57,7 +58,7 @@ function Dashboard() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setFormData((prev) => ({
+      setCurrentEvent((prev) => ({
         ...prev,
         event_picture: URL.createObjectURL(file),
       }));
@@ -66,16 +67,16 @@ function Dashboard() {
 
   const validateForm = () => {
     const newErrors = [];
-    if (!formData.title.trim())
+    if (!currentEvent.title.trim())
       newErrors.push("Veuillez donner un nom à l'événement.");
     if (
-      typeof formData.date_start !== "string" ||
-      !formData.date_start.trim() ||
-      typeof formData.date_end !== "string" ||
-      !formData.date_end.trim()
+      typeof currentEvent.date_start !== "string" ||
+      !currentEvent.date_start.trim() ||
+      typeof currentEvent.date_end !== "string" ||
+      !currentEvent.date_end.trim()
     )
       newErrors.push("Veuillez choisir une plage de dates.");
-    if (!formData.address.trim())
+    if (!currentEvent.address.trim())
       newErrors.push("Veuillez renseigner une localisation.");
     setErrors(newErrors);
     return newErrors.length === 0;
@@ -106,19 +107,22 @@ function Dashboard() {
     if (!validateForm()) return;
 
     const eventData = {
-      ...formData,
+      ...currentEvent,
       type: eventType,
-      date_start: formatDate(formData.date_start),
-      date_end: formatDate(formData.date_end),
+      date_start: formatDate(currentEvent.date_start),
+      date_end: formatDate(currentEvent.date_end),
       user_id: getCurrentUserId(),
     };
 
     try {
-      if (formData.id !== -1) {
-        const response = await api.put(`/api/events/${formData.id}`, eventData);
+      if (currentEvent.id !== -1) {
+        const response = await api.put(
+          `/api/events/${currentEvent.id}`,
+          eventData,
+        );
         setEvents((prevEvents) =>
           prevEvents.map((event) =>
-            event.id === formData.id ? response.data.event : event,
+            event.id === currentEvent.id ? response.data.event : event,
           ),
         );
       } else {
@@ -128,7 +132,7 @@ function Dashboard() {
         setEvents(response.data || []);
       }
 
-      setFormData({
+      setCurrentEvent({
         id: -1,
         title: "",
         event_picture: null,
@@ -151,7 +155,7 @@ function Dashboard() {
   };
 
   const handleEventClick = (event: Eventdata) => {
-    setFormData(event);
+    setCurrentEvent(event);
     setIsModalOpen(true);
   };
 
@@ -204,9 +208,9 @@ function Dashboard() {
     const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
 
     if (window.confirm(confirmMessage)) {
-      if (formData) {
-        setFormData({
-          ...formData,
+      if (currentEvent) {
+        setCurrentEvent({
+          ...currentEvent,
           event_picture: null,
         });
         setPreviewImage(null);
@@ -246,14 +250,15 @@ function Dashboard() {
                 className={styles.event}
                 onClick={() => handleEventClick(event)}
               >
-                <div
+                <img
                   className={styles.image}
-                  style={{
-                    backgroundImage: event.event_picture
-                      ? `url(${event.event_picture})`
-                      : "url(/default-placeholder.png)",
-                    backgroundSize: "cover",
-                  }}
+                  alt="pas d'image"
+                  src={
+                    event.event_picture
+                      ? `${import.meta.env.VITE_API_URL}${event.event_picture}`
+                      : defaultEventImg
+                  }
+                  style={{ backgroundSize: "cover" }}
                 />
                 <div>
                   <p>Nom: {event.title}</p>
@@ -287,7 +292,7 @@ function Dashboard() {
           className={styles.addButton}
           onClick={() => {
             // Reset form data to indicate a new event, coucou Anthony
-            setFormData({
+            setCurrentEvent({
               id: -1,
               title: "",
               event_picture: null,
@@ -328,7 +333,7 @@ function Dashboard() {
         >
           <div className={styles.modalContent} ref={modalRef}>
             <h3 id="modal-title">
-              {formData.id !== -1
+              {currentEvent.id !== -1
                 ? "Modifier l'événement"
                 : "Ajouter un événement"}
             </h3>
@@ -338,10 +343,10 @@ function Dashboard() {
               </p>
             ))}
 
-            {(previewImage || formData.event_picture) && (
+            {(previewImage || currentEvent.event_picture) && (
               <div className={styles.imageContainer}>
                 <img
-                  src={previewImage || formData.event_picture || ""}
+                  src={previewImage || currentEvent.event_picture || ""}
                   alt="Aperçu de l'événement"
                   className={styles.previewImage}
                   onClick={handleImageDelete}
@@ -362,11 +367,11 @@ function Dashboard() {
             />
             <input
               type="text"
-              value={formData.title}
+              value={currentEvent.title}
               placeholder="Titre de l'événement"
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setCurrentEvent({
+                  ...currentEvent,
                   title: e.target.value,
                 })
               }
@@ -390,10 +395,14 @@ function Dashboard() {
             <input
               id="startDate"
               type="date"
-              value={formData.date_start ? formatDate(formData.date_start) : ""}
+              value={
+                currentEvent.date_start
+                  ? formatDate(currentEvent.date_start)
+                  : ""
+              }
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setCurrentEvent({
+                  ...currentEvent,
                   date_start: e.target.value,
                 })
               }
@@ -403,10 +412,12 @@ function Dashboard() {
             <input
               id="endDate"
               type="date"
-              value={formData.date_end ? formatDate(formData.date_end) : ""}
+              value={
+                currentEvent.date_end ? formatDate(currentEvent.date_end) : ""
+              }
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setCurrentEvent({
+                  ...currentEvent,
                   date_end: e.target.value,
                 })
               }
@@ -415,11 +426,11 @@ function Dashboard() {
 
             <input
               type="text"
-              value={formData.address}
+              value={currentEvent.address}
               placeholder="Localisation"
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setCurrentEvent({
+                  ...currentEvent,
                   address: e.target.value,
                 })
               }
@@ -427,10 +438,10 @@ function Dashboard() {
             />
             <textarea
               placeholder="Description de l'événement"
-              value={formData.description}
+              value={currentEvent.description}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setCurrentEvent({
+                  ...currentEvent,
                   description: e.target.value,
                 })
               }
@@ -439,9 +450,9 @@ function Dashboard() {
             <input
               type="text"
               placeholder="Lien de l'événement"
-              value={formData.link || ""}
+              value={currentEvent.link || ""}
               onChange={(e) =>
-                setFormData({ ...formData, link: e.target.value })
+                setCurrentEvent({ ...currentEvent, link: e.target.value })
               }
               className={styles.input}
             />
@@ -452,7 +463,7 @@ function Dashboard() {
                 className={styles.submitButton}
                 onClick={addOrUpdateEvent}
               >
-                {formData.id !== -1 ? "Modifier" : "Ajouter"}
+                {currentEvent.id !== -1 ? "Modifier" : "Ajouter"}
               </button>
               <button
                 type="button"
