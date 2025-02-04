@@ -7,6 +7,7 @@ import type { Eventdata } from "../../../types/events";
 import styles from "./Event.module.css";
 
 function Dashboard() {
+  // État pour l'événement actuellement sélectionné ou en cours d'édition
   const [currentEvent, setCurrentEvent] = useState<Eventdata>({
     id: -1,
     title: "",
@@ -21,8 +22,11 @@ function Dashboard() {
     user_id: 0,
   });
 
+  // Utilisation des contextes pour accéder aux données globales
   const { events, setEvents } = useData();
   const { user } = useAuth();
+
+  // États pour gérer la sélection multiple, la recherche, et l'affichage des erreurs
   const [selectedEvents, setSelectedEvents] = useState<Set<number>>(new Set());
   const [searchCriterion, setSearchCriterion] = useState<string>("title");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -30,6 +34,8 @@ function Dashboard() {
   const [errors, setErrors] = useState<string[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [eventType, setEventType] = useState<Eventdata["type"]>("autre");
+
+  // Référence pour gérer le clic en dehors de la modale
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   // Récupération des événements de l'utilisateur
@@ -37,16 +43,17 @@ function Dashboard() {
     const fetchEvents = async () => {
       try {
         const response = await api.get("/api/users/me/events");
-        setEvents(response.data || []); // Assurez-vous que events est au moins un tableau vide
+        setEvents(response.data || []);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements:", error);
-        setEvents([]); // En cas d'erreur, initialisez events comme un tableau vide
+        setEvents([]);
       }
     };
 
     fetchEvents();
   }, [setEvents]);
 
+  // Fonction pour obtenir l'ID de l'utilisateur connecté
   const getCurrentUserId = () => {
     if (!user) {
       console.error("User not found in context");
@@ -55,6 +62,7 @@ function Dashboard() {
     return user.id;
   };
 
+  // Gestion de l'upload de fichier
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -65,6 +73,7 @@ function Dashboard() {
       const localPreviewUrl = URL.createObjectURL(file);
       setPreviewImage(localPreviewUrl);
 
+      // Envoie le fichier au serveur
       api
         .put(`/api/events/${currentEvent.id}/upload`, formData, {
           headers: {
@@ -86,6 +95,7 @@ function Dashboard() {
     }
   };
 
+  // Validation du formulaire
   const validateForm = () => {
     const newErrors = [];
     if (!currentEvent.title.trim())
@@ -103,6 +113,7 @@ function Dashboard() {
     return newErrors.length === 0;
   };
 
+  // Formatage de la date pour l'affichage et le stockage
   const formatDate = (date: string | Date | undefined): string => {
     if (!date) return ""; // Si aucune date n'est fournie, on retourne une chaîne vide
     const d = new Date(date); // On crée un nouvel objet Date à partir de la date fournie
@@ -124,6 +135,7 @@ function Dashboard() {
     });
   };
 
+  // Fonction pour ajouter ou mettre à jour un événement
   const addOrUpdateEvent = async () => {
     if (!validateForm()) return;
 
@@ -137,6 +149,7 @@ function Dashboard() {
 
     try {
       if (currentEvent.id !== -1) {
+        // Mise à jour d'un événement existant
         const response = await api.put(
           `/api/events/${currentEvent.id}`,
           eventData,
@@ -147,12 +160,14 @@ function Dashboard() {
           ),
         );
       } else {
+        // Création d'un nouvel événement
         await api.post("/api/events", eventData);
         // Refetch tous les événements
         const response = await api.get("/api/users/me/events");
         setEvents(response.data || []);
       }
 
+      // Réinitialisation du formulaire et fermeture de la modale
       setCurrentEvent({
         id: -1,
         title: "",
@@ -175,12 +190,14 @@ function Dashboard() {
     }
   };
 
+  // Gestion du clic sur un événement pour l'éditer
   const handleEventClick = (event: Eventdata) => {
     setCurrentEvent(event);
     setPreviewImage(null);
     setIsModalOpen(true);
   };
 
+  // Gestion du clic en dehors de la modale pour la fermer
   const handleOutsideClick = (
     event: React.MouseEvent | React.KeyboardEvent,
   ) => {
@@ -189,6 +206,7 @@ function Dashboard() {
     }
   };
 
+  // Suppression des événements sélectionnés
   const handleDeleteSelectedEvents = async () => {
     try {
       for (const eventId of selectedEvents) {
@@ -203,6 +221,7 @@ function Dashboard() {
     }
   };
 
+  // Gestion de la sélection/désélection des événements
   const handleCheckboxChange = (eventId: number) => {
     setSelectedEvents((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -215,6 +234,7 @@ function Dashboard() {
     });
   };
 
+  // Filtrage des événements en fonction des critères de recherche
   const filteredEvents =
     events?.filter((event) => {
       switch (searchCriterion) {
@@ -231,7 +251,7 @@ function Dashboard() {
       }
     }) ?? [];
 
-  //suppression de l'image
+  //suppression de l'image d'un événement
   const handleImageDelete = async () => {
     if (
       currentEvent &&

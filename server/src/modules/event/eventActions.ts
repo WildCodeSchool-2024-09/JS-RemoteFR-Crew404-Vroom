@@ -180,12 +180,15 @@ const getUserEvents: RequestHandler = async (req, res, next) => {
 const uploadEventImage: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number(req.params.id);
+    // Vérifie si un fichier a été uploadé
     if (!req.file) {
       res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
       return;
     }
+    // Récupère l'événement existant
     const event = await eventRepository.read(eventId);
 
+    // Si l'événement a déjà une image, on la supprime
     if (event?.event_picture) {
       const oldImagePath = path.join(
         __dirname,
@@ -204,7 +207,9 @@ const uploadEventImage: RequestHandler = async (req, res, next) => {
       });
     }
 
+    // Construit le chemin de la nouvelle image
     const imagePath = `/uploads/events/${req.file.filename}`;
+    // Met à jour l'événement avec le nouveau chemin d'image
     const result = await eventRepository.update(eventId, {
       event_picture: imagePath,
     });
@@ -228,9 +233,11 @@ const path = require("node:path");
 const deleteEventPicture: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number(req.params.id);
+    // Récupère l'événement
     const event = await eventRepository.read(eventId);
 
     if (event?.event_picture) {
+      // Construit le chemin complet de l'image
       const imagePath = path.join(
         __dirname,
         "..",
@@ -241,10 +248,12 @@ const deleteEventPicture: RequestHandler = async (req, res, next) => {
         path.basename(event.event_picture),
       );
 
+      // Supprime le fichier physiquement
       await fs.unlink(imagePath).catch((err: NodeJS.ErrnoException) => {
         console.error("Erreur lors de la suppression du fichier:", err);
       });
 
+      // Met à jour l'événement pour supprimer la référence à l'image
       await eventRepository.update(eventId, { event_picture: null });
 
       res.status(200).json({ message: "Image supprimée avec succès" });
