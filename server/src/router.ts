@@ -78,6 +78,11 @@ router.get(
   authMiddleware.checkToken,
   eventActions.getUserEvents,
 ); // pour recupérer les événements d'un utilisateur
+router.delete(
+  "/api/event/:id/event-picture",
+  authMiddleware.checkToken,
+  eventActions.deleteEventPicture,
+); // pour supprimer une photo d'événement
 
 /* ************************************************************************* */
 

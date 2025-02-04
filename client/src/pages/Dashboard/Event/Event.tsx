@@ -226,15 +226,20 @@ function Dashboard() {
     ) ?? [];
 
   //suppression de l'image
-  const handleImageDelete = () => {
-    const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
-
-    if (window.confirm(confirmMessage)) {
-      setCurrentEvent((prev) => ({
-        ...prev,
-        event_picture: null,
-      }));
-      setPreviewImage(null);
+  const handleImageDelete = async () => {
+    if (
+      currentEvent &&
+      window.confirm("Êtes-vous sûr de vouloir supprimer cette image ?")
+    ) {
+      try {
+        await api.delete(`/api/event/${currentEvent.id}/event-picture`);
+        setCurrentEvent({
+          ...currentEvent,
+          event_picture: null,
+        });
+      } catch (error) {
+        console.error("Erreur lors de la suppression de l'image:", error);
+      }
     }
   };
 

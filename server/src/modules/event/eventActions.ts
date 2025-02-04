@@ -1,5 +1,4 @@
 import type { RequestHandler } from "express";
-import { uploads } from "../../middlewares/authMiddleware";
 
 type Event = {
   id: number;
@@ -185,6 +184,25 @@ const uploadEventImage: RequestHandler = async (req, res, next) => {
       res.status(400).json({ message: "Aucun fichier n'a été uploadé." });
       return;
     }
+    const event = await eventRepository.read(eventId);
+
+    if (event?.event_picture) {
+      const oldImagePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "uploads",
+        "events",
+        path.basename(event.event_picture),
+      );
+      await fs.unlink(oldImagePath).catch((err: NodeJS.ErrnoException) => {
+        console.error(
+          "Erreur lors de la suppression de l'ancienne image:",
+          err,
+        );
+      });
+    }
 
     const imagePath = `/uploads/events/${req.file.filename}`;
     const result = await eventRepository.update(eventId, {
@@ -204,6 +222,40 @@ const uploadEventImage: RequestHandler = async (req, res, next) => {
   }
 };
 
+const fs = require("node:fs/promises");
+const path = require("node:path");
+//Action pour la suppression de l'image
+const deleteEventPicture: RequestHandler = async (req, res, next) => {
+  try {
+    const eventId = Number(req.params.id);
+    const event = await eventRepository.read(eventId);
+
+    if (event?.event_picture) {
+      const imagePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "uploads",
+        "events",
+        path.basename(event.event_picture),
+      );
+
+      await fs.unlink(imagePath).catch((err: NodeJS.ErrnoException) => {
+        console.error("Erreur lors de la suppression du fichier:", err);
+      });
+
+      await eventRepository.update(eventId, { event_picture: null });
+
+      res.status(200).json({ message: "Image supprimée avec succès" });
+    } else {
+      res.status(404).json({ message: "Événement ou image non trouvé" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   browse,
   read,
@@ -212,4 +264,5 @@ export default {
   deleteEvent,
   getUserEvents,
   uploadEventImage,
+  deleteEventPicture,
 };
