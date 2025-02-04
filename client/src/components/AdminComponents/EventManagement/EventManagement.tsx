@@ -360,10 +360,10 @@ function EventManagement() {
             <h3>Modifier l'événement</h3>
             {currentEvent && (
               <>
-                {(previewImage || currentEvent.event_picture) && (
+                {currentEvent.event_picture && (
                   <div className={styles.imageContainer}>
                     <img
-                      src={previewImage || currentEvent.event_picture || ""}
+                      src={`${import.meta.env.VITE_API_URL}${currentEvent.event_picture}`}
                       alt="Aperçu de l'événement"
                       className={styles.previewImage}
                       onClick={handleImageDelete}
