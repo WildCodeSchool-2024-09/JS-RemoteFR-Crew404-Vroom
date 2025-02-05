@@ -16,7 +16,6 @@ function EventManagement() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   const [filterType, setFilterType] = useState<Eventdata["type"] | "">("");
   const [isTableExpanded, setIsTableExpanded] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     // Appel API ici
@@ -211,16 +210,19 @@ function EventManagement() {
   }
 
   //suppression de l'image
-  const handleImageDelete = () => {
-    const confirmMessage = "Êtes-vous sûr de vouloir supprimer cette image ?";
-
-    if (window.confirm(confirmMessage)) {
-      if (currentEvent) {
+  const handleImageDelete = async () => {
+    if (
+      currentEvent &&
+      window.confirm("Êtes-vous sûr de vouloir supprimer cette image ?")
+    ) {
+      try {
+        await api.delete(`/api/event/${currentEvent.id}/event-picture`);
         setCurrentEvent({
           ...currentEvent,
           event_picture: null,
         });
-        setPreviewImage(null);
+      } catch (error) {
+        console.error("Erreur lors de la suppression de l'image:", error);
       }
     }
   };
@@ -360,10 +362,10 @@ function EventManagement() {
             <h3>Modifier l'événement</h3>
             {currentEvent && (
               <>
-                {(previewImage || currentEvent.event_picture) && (
+                {currentEvent.event_picture && (
                   <div className={styles.imageContainer}>
                     <img
-                      src={previewImage || currentEvent.event_picture || ""}
+                      src={`${import.meta.env.VITE_API_URL}${currentEvent.event_picture}`}
                       alt="Aperçu de l'événement"
                       className={styles.previewImage}
                       onClick={handleImageDelete}

@@ -62,11 +62,27 @@ router.put(
   authMiddleware.checkToken,
   eventActions.editEvent,
 ); // pour modifier un événement
+router.put(
+  "/api/events/:id/upload",
+  authMiddleware.checkToken,
+  authMiddleware.uploads.single("event_picture"),
+  eventActions.uploadEventImage, // pour télécharger une image
+);
 router.delete(
   "/api/events/:id",
   authMiddleware.checkToken,
   eventActions.deleteEvent,
 ); // pour supprimer un événement
+router.get(
+  "/api/users/me/events",
+  authMiddleware.checkToken,
+  eventActions.getUserEvents,
+); // pour recupérer les événements d'un utilisateur
+router.delete(
+  "/api/event/:id/event-picture",
+  authMiddleware.checkToken,
+  eventActions.deleteEventPicture,
+); // pour supprimer une photo d'événement
 
 /* ************************************************************************* */
 

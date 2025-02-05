@@ -27,9 +27,15 @@
   margin-bottom: 1rem;
 }
 
+.searchBar {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+}
+
 .search,
 .dropdown {
-  width: 100%;
+  max-width: 25em;
   background-color: whitesmoke;
   color: var(--secondary-color);
   border: none;
@@ -49,10 +55,13 @@
 }
 
 .image {
-  width: 3em;
-  height: 3em;
-  background-color: var(--secondary-color);
+  width: 4em;
+  height: 4em;
   border-radius: 10px;
+  @media screen and (min-width: 550px) {
+    width: 10em;
+    height: 10em;
+  }
 }
 
 .inputs {
@@ -138,6 +147,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .modalContent {
@@ -156,6 +166,21 @@
 .modalButtons {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  gap: 5em;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
+}
+
+.previewImage {
+  justify-content: center;
+  max-width: 30vh;
+  max-height: 30vh;
 }
 
 .capitalize {
@@ -202,7 +227,14 @@
 .eventDetails {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+}
+
+.eventDetails p {
+  display: flex;
+  text-align: start;
+  @media screen and (min-width: 550px) {
+    font-size: 18px;
+  }
 }
 
 .checkbox {

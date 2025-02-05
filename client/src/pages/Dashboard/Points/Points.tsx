@@ -1,8 +1,40 @@
-import type React from "react";
+import { useEffect, useState } from "react";
+import { useData } from "../../../contexts/DataContext";
+import api from "../../../helpers/api";
 import styles from "./Points.module.css";
 
-const Points: React.FC = () => {
-  const points = 420; // Example points balance
+function Points() {
+  const { currentUser, setCurrentUser } = useData();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // appel API
+    const fetchUser = async () => {
+      try {
+        const response = await api.get("/api/users/me");
+        setCurrentUser(response.data);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur:",
+          error,
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [setCurrentUser]);
+
+  if (isLoading) {
+    return <div className={styles.chargement}>Chargement...</div>;
+  }
+
+  if (!currentUser) {
+    return (
+      <div>Erreur: Impossible de charger les données de l'utilisateur</div>
+    );
+  }
 
   return (
     <div className={styles.pointsContainer}>
@@ -10,7 +42,7 @@ const Points: React.FC = () => {
       <div className={styles.pointsContent}>
         <div className={styles.pointsBox}>
           <p className={styles.pointsLabel}>Solde :</p>
-          <p className={styles.pointsValue}>{points}</p>
+          <p className={styles.pointsValue}>{currentUser.sold}</p>
         </div>
         <button type="button" className={styles.actionButton}>
           Faire un essai
@@ -24,6 +56,6 @@ const Points: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Points;

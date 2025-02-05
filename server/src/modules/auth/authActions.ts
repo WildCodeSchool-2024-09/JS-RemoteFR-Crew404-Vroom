@@ -61,7 +61,7 @@ const read: RequestHandler = async (req, res, next) => {
 const editUser: RequestHandler = async (req, res, next) => {
   try {
     const userId = Number(req.params.id);
-    const updateData = { ...req.body };
+    const { message, ...updateData } = req.body;
 
     // Gère le téléchargement d'une nouvelle image de profil
     if (req.file) {
