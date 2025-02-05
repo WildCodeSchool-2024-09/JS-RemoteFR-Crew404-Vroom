@@ -15,8 +15,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import React from "react";
-import type { Marker as MarkerType } from "../../../../server/src/types/index"; // Import Marker interface
 import pinMapIcon from "../../assets/images/svg/pinMap.svg";
+import type { Marker as MarkerType } from "../../types/marker"; // Import Marker interface
 // MarkerDetails, //stay there for clarification, will disappear
 
 // Create a custom icon
