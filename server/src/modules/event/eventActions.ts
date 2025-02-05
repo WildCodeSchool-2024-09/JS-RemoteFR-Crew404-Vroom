@@ -153,10 +153,36 @@ const deleteEvent: RequestHandler = async (req, res, next) => {
   try {
     const eventId = Number.parseInt(req.params.id, 10);
 
-    const result = await eventRepository.delete(eventId);
+    // Récupère l'événement avant de le supprimer
+    const event = await eventRepository.read(eventId);
 
-    if (result) {
-      res.status(200).json({ message: "Événement supprimé 💥" });
+    if (event) {
+      // Si l'événement a une image, on la supprime
+      if (event.event_picture) {
+        const imagePath = path.join(
+          __dirname,
+          "..",
+          "..",
+          "..",
+          "uploads",
+          "events",
+          path.basename(event.event_picture),
+        );
+        await fs.unlink(imagePath).catch((err: NodeJS.ErrnoException) => {
+          console.error("Erreur lors de la suppression de l'image:", err);
+        });
+      }
+
+      // Supprime l'événement de la base de données
+      const result = await eventRepository.delete(eventId);
+
+      if (result) {
+        res
+          .status(200)
+          .json({ message: "Événement et image associée supprimés 💥" });
+      } else {
+        res.status(404).json({ message: "Événement non trouvé 👀" });
+      }
     } else {
       res.status(404).json({ message: "Événement non trouvé 👀" });
     }

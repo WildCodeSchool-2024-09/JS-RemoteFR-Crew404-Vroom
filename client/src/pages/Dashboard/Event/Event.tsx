@@ -34,6 +34,8 @@ function Dashboard() {
   const [errors, setErrors] = useState<string[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [eventType, setEventType] = useState<Eventdata["type"]>("autre");
+  //Stockage de la photo avant envoi
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Référence pour gérer le clic en dehors de la modale
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -66,32 +68,10 @@ function Dashboard() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("event_picture", file);
-
+      setSelectedFile(file);
       // Crée un URL local pour la prévisualisation
       const localPreviewUrl = URL.createObjectURL(file);
       setPreviewImage(localPreviewUrl);
-
-      // Envoie le fichier au serveur
-      api
-        .put(`/api/events/${currentEvent.id}/upload`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            setCurrentEvent((prev) => ({
-              ...prev,
-              event_picture: response.data.event_picture,
-            }));
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de l'upload de l'image :", error);
-          setPreviewImage(null);
-        });
     }
   };
 
@@ -148,24 +128,35 @@ function Dashboard() {
     };
 
     try {
+      let response: { data: { event: Eventdata } };
       if (currentEvent.id !== -1) {
         // Mise à jour d'un événement existant
-        const response = await api.put(
-          `/api/events/${currentEvent.id}`,
-          eventData,
-        );
-        setEvents((prevEvents) =>
-          prevEvents.map((event) =>
-            event.id === currentEvent.id ? response.data.event : event,
-          ),
-        );
+        response = await api.put(`/api/events/${currentEvent.id}`, eventData);
       } else {
         // Création d'un nouvel événement
-        await api.post("/api/events", eventData);
-        // Refetch tous les événements
-        const response = await api.get("/api/users/me/events");
-        setEvents(response.data || []);
+        response = await api.post("/api/events", eventData);
       }
+
+      const updatedEvent = response.data.event;
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("event_picture", selectedFile);
+
+        const imageResponse = await api.put(
+          `/api/events/${updatedEvent.id}/upload`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
+
+        updatedEvent.event_picture = imageResponse.data.event_picture;
+      }
+
+      // Rafraîchissement de la liste des événements
+      const refreshResponse = await api.get("/api/users/me/events");
+      setEvents(refreshResponse.data || []);
 
       // Réinitialisation du formulaire et fermeture de la modale
       setCurrentEvent({
@@ -181,6 +172,8 @@ function Dashboard() {
         location: { x: 0, y: 0 },
         user_id: 0,
       });
+      setSelectedFile(null);
+      setPreviewImage(null);
       setIsModalOpen(false);
     } catch (error) {
       console.error(
@@ -311,14 +304,18 @@ function Dashboard() {
                   }
                   style={{ backgroundSize: "cover" }}
                 />
-                <div>
-                  <p>Nom: {event.title}</p>
+                <div className={styles.eventDetails}>
                   <p>
-                    Date:{" "}
+                    <strong>Nom :&nbsp;</strong>
+                    {event.title}
+                  </p>
+                  <p>
+                    <strong>Date :&nbsp;</strong>
                     {`Du ${formatDateForDisplay(event.date_start)} au ${formatDateForDisplay(event.date_end)}`}
                   </p>
                   <p className={styles.locationText}>
-                    Localisation: {event.address.toUpperCase()}
+                    <strong>Localisation :&nbsp;</strong>{" "}
+                    {event.address.toUpperCase()}
                   </p>
                 </div>
               </button>
