@@ -1,3 +1,5 @@
+@import "../../root.css";
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -22,6 +24,14 @@
   gap: 1.5em;
   text-align: justify;
 }
+@media (min-width: 768px) {
+  .content {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    justify-content: center;
+  }
+}
 
 .image {
   width: 100%;
@@ -29,11 +39,21 @@
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
+@media (min-width: 768px) {
+  .image {
+    max-width: 300px;
+  }
+}
 
 .text {
-  font-size: 1.1rem;
+  font-size: var(--h4);
   color: var(--dark);
   line-height: 1.6;
+}
+@media (min-width: 768px) {
+  .text {
+    max-width: 600px;
+  }
 }
 
 .imageGrid {
@@ -55,18 +75,8 @@
   transform: scale(1.05);
 }
 
-@media (min-width: 768px) {
-  .content {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-  }
-
-  .image {
-    max-width: 300px;
-  }
-
-  .text {
-    max-width: 600px;
-  }
+.ppp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

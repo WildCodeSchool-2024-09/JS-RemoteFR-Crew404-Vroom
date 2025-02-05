@@ -47,13 +47,15 @@ function AboutRoot() {
         />
       </div>
 
-      <p className={styles.text}>
-        <strong>Pourquoi rejoindre RoadAddict ?</strong>
-        <br />🚗 Testez des véhicules exclusifs.
-        <br />🏁 Rencontrez d'autres passionnés.
-        <br />💰 Économisez du temps et de l'argent avant un achat.
-        <br />🔎 Apprenez à repérer les bons véhicules.
-      </p>
+      <div className={styles.ppp}>
+        <p className={styles.text}>
+          <strong>Pourquoi rejoindre RoadAddict ?</strong>
+          <br />🚗 Testez des véhicules exclusifs.
+          <br />🏁 Rencontrez d'autres passionnés.
+          <br />💰 Économisez du temps et de l'argent avant un achat.
+          <br />🔎 Apprenez à repérer les bons véhicules.
+        </p>
+      </div>
     </section>
   );
 }
