@@ -44,7 +44,39 @@ function Dashboard() {
     .join(", ");
   return (
     <>
-      <Helmet />
+      <Helmet>
+        {/* Balises SEO */}
+        {/* Balise pour indexation général */}
+        <title>{SEO.title}</title>
+        <meta name="description" content={SEO.description} />
+        <meta name="author" content={SEO.autor} />
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {filterKeywords && <meta name="keywords" content={filterKeywords} />}
+
+        {/* Balises OpenGraph - Facebook, Linkedin, WhatsApp, Instagram*/}
+        <meta property="og:title" content={SEO.title} />
+        <meta property="og:description" content={SEO.description} />
+        <meta property="og:image" content="" />
+        <meta property="og:url" content={SEO.url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="fr_FR" />
+
+        {/* Balises Twitter Cards */}
+        <meta name="twitter:title" content={SEO.title} />
+        <meta name="twitter:description" content={SEO.description} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={SEO.twitterUrlImg} />
+        <meta name="twitter:site" content={SEO.twitterCompte} />
+
+        {/* Balises SEO pour Google */}
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+        <meta name="bingbot" content="index, follow" />
+
+        {/* Canonical URL (évite le contenu dupliqué pour les moteurs de recherche) */}
+        <link rel="canonical" href={SEO.url} />
+      </Helmet>
 
       <NavRoot namePage="Tableau de bord" />
 
