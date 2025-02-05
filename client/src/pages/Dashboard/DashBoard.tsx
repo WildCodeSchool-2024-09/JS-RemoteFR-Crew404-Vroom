@@ -4,17 +4,17 @@ import NavRoot from "../../components/NavRoot/NavRoot";
 
 function Dashboard() {
   const SEO = {
-    title: "Accueil - RoadAddict",
+    title: "Compte - RoadAddict",
     autor: "Benjamin DELAHAYE",
-    description: "Le site de voiture en France",
+    description: "Retrouvez toute l'actualité de votre compte RoadAddict",
     url: "" /*URL de la page*/,
     img: "",
     twitterUrlImg: "" /*Lien URL de l'image*/,
     twitterCompte:
       "" /*@MonCompteTwitter*/ /*Permet d'identifier le compte officiel*/,
     keywords: {
-      1: "" /* 1 mot clés */,
-      2: "" /* 2 mots clés */,
+      1: "RoadAddict" /* 1 mot clés */,
+      2: "Tableau de bord RoadAddict" /* 2 mots clés */,
       3: "" /* 3 mots clés */,
       4: "" /* 4 mots clés */,
       5: "" /* 5 mots clés */,
