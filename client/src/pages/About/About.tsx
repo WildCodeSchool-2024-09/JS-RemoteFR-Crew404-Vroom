@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import AboutRoot from "../../components/AboutRoot/AboutRoot";
+import Footer from "../../components/Footer/Footer";
 import NavRoot from "../../components/NavRoot/NavRoot";
 
 function About() {
@@ -83,7 +84,9 @@ function About() {
         <AboutRoot />
       </main>
 
-      <footer />
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 }
