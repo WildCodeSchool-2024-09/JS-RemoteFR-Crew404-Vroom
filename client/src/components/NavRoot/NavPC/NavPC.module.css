@@ -27,6 +27,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 1em;
 }
 
 .NamePageNavPC {
@@ -183,9 +184,10 @@
   top: 100%;
   left: 0;
   display: none;
-  padding: 5px 0px 0px 5px;
+  padding: 10px 0px 10px 5px;
   background-color: var(--light);
   border-radius: 0rem 0rem 0.5rem 0.5rem;
+  box-shadow: var(--box-shadow);
 }
 
 .SousMenuLiPC {
@@ -193,6 +195,7 @@
   justify-content: center;
   align-items: center;
   margin: 3px 0px 3px 0px;
+  padding: 0.2rem;
 }
 
 .SousMenuLinkPC {
@@ -217,4 +220,66 @@
   .SousMenuLinkPC {
     font-size: var(--h3);
   }
+}
+
+/*--------------------------------------------------*/
+/* Sous Menu Compte*/
+
+.CompteMenu {
+  position: relative;
+}
+
+.SousMenuWrapper {
+  position: absolute;
+  top: 0;
+  right: -20px;
+  display: none;
+}
+
+.CompteMenu:hover .SousMenuWrapper,
+.SousMenuWrapper:hover {
+  display: block;
+}
+
+.CompteMenu .SousMenuUlPC {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  background-color: var(--light);
+  border-radius: 0.5rem;
+  box-shadow: var(--box-shadow);
+  padding: 0.5rem;
+}
+
+.CompteMenu .SousMenuLiPC {
+  margin: 0.5rem 0;
+}
+
+.CompteMenu .AuthButton {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  font-weight: bold;
+}
+
+.login {
+  color: #029a07;
+}
+
+.login:hover {
+  color: #06700b;
+}
+
+.logout {
+  color: #f01000;
+}
+
+.logout:hover {
+  color: #880c03;
 }

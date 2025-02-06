@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
+import styles from "./MenuNavRoot.module.css";
 
 /* Le style de ce composant est directement géré par le 
 CSS du composant qui l'importe et l'utilise*/
@@ -19,6 +21,21 @@ function MenuNavRoot(Props: MenuNavRootProps) {
     moduleMenuLiNone,
     moduleMenuNavRoot,
   } = Props;
+
+  const { isAuthenticated, handleLogout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAuthAction = () => {
+    if (isAuthenticated()) {
+      handleLogout();
+      // Rediriger vers la page d'accueil après la déconnexion
+      navigate("/home");
+    } else {
+      // Rediriger vers la page de connexion
+      navigate("/connexion");
+    }
+  };
+
   return (
     <div className={moduleMenuNavRoot}>
       <ul className={moduleMenuUl}>
@@ -56,6 +73,16 @@ function MenuNavRoot(Props: MenuNavRootProps) {
           <Link to="/about" className={moduleMenuLink}>
             A propos
           </Link>
+        </li>
+
+        <li className={moduleMenuLi}>
+          <button
+            type="button"
+            onClick={handleAuthAction}
+            className={`${moduleMenuLink} ${styles["auth-button"]} ${isAuthenticated() ? styles.logout : styles.login}`}
+          >
+            {isAuthenticated() ? "Déconnexion" : "Connexion"}
+          </button>
         </li>
       </ul>
     </div>

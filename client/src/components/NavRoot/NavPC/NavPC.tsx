@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logos/Logo-model-3.svg";
+import { useAuth } from "../../../contexts/AuthContext";
 import css from "./NavPC.module.css";
 
 interface NavPCProps {
@@ -8,6 +9,18 @@ interface NavPCProps {
 
 function NavPC(Props: NavPCProps) {
   const { namePage } = Props;
+  const { isAuthenticated, handleLogout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAuthAction = () => {
+    if (isAuthenticated()) {
+      handleLogout();
+      navigate("/home");
+    } else {
+      navigate("/connexion");
+    }
+  };
+
   return (
     <>
       <div className={css.CaleNavPC} />
@@ -57,10 +70,27 @@ function NavPC(Props: NavPCProps) {
             </Link>
           </li>
 
-          <li className={css.MenuLiPC}>
-            <Link to="/account" className={css.MenuLinkPC}>
-              Compte
-            </Link>
+          <li className={`${css.SousNavLiPC} ${css.CompteMenu}`}>
+            <span className={css.SousNavSpanPC}>Compte</span>
+            <div className={css.SousMenuWrapper}>
+              <ul className={css.SousMenuUlPC}>
+                <li className={css.SousMenuLiPC}>
+                  <Link to="/account" className={css.SousMenuLinkPC}>
+                    Mon profil
+                  </Link>
+                </li>
+                <li className={css.SousMenuLiPC}>
+                  <button
+                    type="button"
+                    onClick={handleAuthAction}
+                    className={`${css.SousMenuLinkPC} ${css.AuthButton} 
+          ${isAuthenticated() ? css.logout : css.login}`}
+                  >
+                    {isAuthenticated() ? "Déconnexion" : "Connexion"}
+                  </button>
+                </li>
+              </ul>
+            </div>
           </li>
         </div>
       </nav>
