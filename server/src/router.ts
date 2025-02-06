@@ -88,4 +88,20 @@ router.delete(
 );
 
 /* ************************************************************************* */
+/** markers */ //commentary from 11pm
+import markerActions from "./modules/marker/markerActions";
+
+// Marker-related routes
+router.get("/api/markers/search", markerActions.search); //Assure yourself, assure your belongings and your sanity that this f* route will stay there for now and forever above everything else in your life.
+router.get("/api/markers", markerActions.browse); // Fetch all markers
+router.post("/api/markers", markerActions.add); // Add markers
+router.put("/api/markers/:id", authMiddleware.checkToken, markerActions.edit); // Edit a marker
+router.delete(
+  "/api/markers/:id",
+  authMiddleware.checkToken,
+  markerActions.remove,
+); // Delete a marker
+router.get("/api/markers/:id", markerActions.read);
+
+/* ************************************************************************* */
 export default router;
