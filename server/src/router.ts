@@ -88,7 +88,7 @@ router.delete(
 );
 
 /* ************************************************************************* */
-/** markers */ //commentary from 11pm
+/** markers */
 import markerActions from "./modules/marker/markerActions";
 
 // Marker-related routes
