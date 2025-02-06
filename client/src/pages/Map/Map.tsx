@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import React from "react";
 import pinMapIcon from "../../assets/images/svg/pinMap.svg";
 import type { Marker as MarkerType } from "../../types/marker"; // Import Marker interface
-// MarkerDetails, //stay there for clarification, will disappear
 
 // Create a custom icon
 const customIcon = new L.Icon({
@@ -54,18 +53,26 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
 
   // Fetch markers from the backend on component load
   useEffect(() => {
-    fetch("http://localhost:3310/api/markers")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch markers");
-        }
-        return response.json();
-      })
-      .then((data: MarkerType[]) => {
-        setMarkers(data);
-      })
-      .catch((error) => console.error("Failed to fetch markers:", error));
+    fetchMarkers();
   }, []);
+
+  const fetchMarkers = async (query?: string) => {
+    try {
+      const url = query
+        ? `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`
+        : "http://localhost:3310/api/markers";
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch markers");
+      }
+
+      const data: MarkerType[] = await response.json();
+      setMarkers(data);
+    } catch (error) {
+      console.error("Failed to fetch markers:", error);
+    }
+  };
 
   const handleAddMarkerButtonClick = () => {
     setIsAddingMarker((prev) => !prev);
@@ -146,6 +153,22 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       });
   };
 
+  const handleSearch = async (query: string) => {
+    try {
+      const url = `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch markers");
+      }
+
+      const data: MarkerType[] = await response.json();
+      setMarkers(data);
+    } catch (error) {
+      console.error("Failed to fetch markers:", error);
+    }
+  };
+
   return (
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
@@ -164,7 +187,10 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
           {isAddingMarker ? "❌" : "📍"}
         </button>
 
-        <SearchBar placeholder="Rechercher un lieu..." />
+        <SearchBar
+          placeholder="Rechercher un lieu..."
+          onSearch={handleSearch}
+        />
         <IconsContainer icons={["🏍️", "🚗", "🎉"]} />
 
         <MapContainer
@@ -393,14 +419,12 @@ const MapClickHandler = ({
 
 interface SearchBarProps {
   placeholder: string;
-  onSearch?: (query: string) => void;
+  onSearch: (query: string) => void;
 }
 
 function SearchBar({ placeholder, onSearch }: SearchBarProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onSearch) {
-      onSearch(e.target.value);
-    }
+    onSearch(e.target.value);
   };
 
   return (
