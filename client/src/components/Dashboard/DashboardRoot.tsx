@@ -9,10 +9,10 @@ import Vehicule from "../../pages/Dashboard/Vehicule/Vehicule";
 function DashboardRoot() {
   return (
     <>
-      <Advert />
-      <Event />
       <Points />
+      <Event />
       <Vehicule />
+      <Advert />
     </>
   );
 }

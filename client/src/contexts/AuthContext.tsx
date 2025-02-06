@@ -6,6 +6,7 @@ type AuthContextType = {
   handleLogin: (user: User) => void;
   handleLogout: () => void;
   isAuthenticated: () => boolean;
+  isLoading: boolean;
 };
 const AuthContext = createContext<AuthContextType | null>(null);
 type ChildrenType = {
@@ -18,6 +19,7 @@ type User = {
 };
 export function AuthProvider({ children }: ChildrenType) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); //pour ne pas quitter la page protègée encas de rafraichissement
 
   const handleLogin = (user: User) => {
     setUser(user);
@@ -35,7 +37,7 @@ export function AuthProvider({ children }: ChildrenType) {
   };
 
   const isAuthenticated = () => {
-    return user !== null;
+    return user !== null || localStorage.getItem("user") !== null;
   };
 
   // Vérifier le localStorage au chargement
@@ -44,6 +46,7 @@ export function AuthProvider({ children }: ChildrenType) {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setIsLoading(false);
   }, []);
 
   return (
@@ -53,6 +56,7 @@ export function AuthProvider({ children }: ChildrenType) {
         handleLogin,
         handleLogout,
         isAuthenticated,
+        isLoading,
       }}
     >
       {children}
