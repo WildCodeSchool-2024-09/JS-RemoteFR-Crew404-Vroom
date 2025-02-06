@@ -30,12 +30,9 @@ class MarkerRepository {
     const [rows] = await databaseClient.query<Rows>(query);
 
     return rows.map((row) => {
-      let details = null;
-      try {
-        details = row.details ? JSON.parse(row.details) : null;
-      } catch (error) {
-        console.error("Failed to parse details:", row.details);
-      }
+      // Ensure details is already an object
+      const details =
+        row.details && typeof row.details === "object" ? row.details : null;
 
       return {
         id: row.id,
