@@ -12,7 +12,8 @@ const register: RequestHandler = async (req, res, next) => {
     res.status(201).json(user);
   } catch (err) {
     // Pass any errors to the error-handling middleware
-    next(err);
+    console.error("Erreur lors de l'inscription:", err);
+    res.status(400).json({ message: "Email ou pseudo invalide" });
   }
 };
 
