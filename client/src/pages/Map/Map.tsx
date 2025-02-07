@@ -106,31 +106,6 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
     );
   });
 
-  // Debugging logs
-  useEffect(() => {
-    console.info("Active Filters:", activeFilters);
-    console.info("All Markers:", markers);
-    console.info("Filtered Markers:", filteredMarkers);
-  }, [activeFilters, markers, filteredMarkers]);
-
-  // Debug marker details
-  useEffect(() => {
-    console.info(
-      "All Markers with details:",
-      markers.map((marker) => ({
-        id: marker.id,
-        details: marker.details,
-      })),
-    );
-  }, [markers]);
-
-  // Debugging logs
-  useEffect(() => {
-    console.info("Active Filters:", activeFilters);
-    console.info("All Markers:", markers);
-    console.info("Filtered Markers:", filteredMarkers);
-  }, [activeFilters, markers, filteredMarkers]);
-
   const handleAddMarkerButtonClick = () => {
     setIsAddingMarker((prev) => !prev);
   };
@@ -167,8 +142,6 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       },
       user_id: 1, // Ensure this is a valid user ID
     };
-
-    console.info("New Marker Data:", newMarkerData); // Log the data being sent
 
     fetch("http://localhost:3310/api/markers", {
       method: "POST",

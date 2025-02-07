@@ -115,9 +115,6 @@ const search: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    // Log the query for debugging
-    console.info("Search query:", query);
-
     const markers = await markerRepository.searchMarkers(query);
     res.json(markers);
   } catch (err) {

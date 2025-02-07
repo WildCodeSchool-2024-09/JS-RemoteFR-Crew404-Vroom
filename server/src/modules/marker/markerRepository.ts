@@ -15,9 +15,6 @@ class MarkerRepository {
       marker.user_id,
     ];
 
-    console.info("Executing query:", query);
-    console.info("With values:", values);
-
     const [result] = await databaseClient.query<Result>(query, values);
     return result.insertId; // Return the ID of the newly created marker
   }
@@ -97,27 +94,30 @@ class MarkerRepository {
     return result.affectedRows > 0;
   }
 
-  async searchMarkers(query: string): Promise<Marker[]> {
-    const sql = `
-      SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
-      FROM marker
-      WHERE label LIKE ? OR JSON_EXTRACT(details, '$.eventCategory') LIKE ?
-    `;
-    const [rows] = await databaseClient.query<Rows>(sql, [
-      `%${query}%`,
-      `%${query}%`,
-    ]);
+  async searchMarkers(query?: string, date?: string): Promise<Marker[]> {
+    let sql = `
+    SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
+    FROM marker
+    WHERE 1=1
+  `;
+
+    const params: (string | number)[] = [];
+
+    if (query) {
+      sql += ` AND (label LIKE ? OR JSON_EXTRACT(details, '$.eventCategory') LIKE ?)`;
+      params.push(`%${query}%`, `%${query}%`);
+    }
+
+    if (date) {
+      sql += ` AND JSON_EXTRACT(details, '$.date') LIKE ?`;
+      params.push(`%${date}%`);
+    }
+
+    const [rows] = await databaseClient.query<Rows>(sql, params);
 
     return rows.map((row) => {
-      let details = null;
-      try {
-        // Ensure details is parsed correctly
-        details = row.details ? JSON.parse(row.details) : null;
-      } catch (error) {
-        console.error("Failed to parse details:", row.details);
-        details = row.details; // Fallback to the raw string if parsing fails
-      }
-
+      const details =
+        row.details && typeof row.details === "object" ? row.details : null;
       return {
         id: row.id,
         lat: row.lat,
