@@ -423,7 +423,7 @@ function Dashboard() {
             )}
             <input
               type="file"
-              accept="image/*"
+              accept="image/png, image/jpeg, image/jpg, image/svg"
               onChange={handleFileUpload}
               className={styles.input}
             />
