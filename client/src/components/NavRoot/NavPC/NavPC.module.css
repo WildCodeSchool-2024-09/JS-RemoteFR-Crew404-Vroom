@@ -231,7 +231,7 @@
 
 .SousMenuWrapper {
   position: absolute;
-  top: 0;
+  top: 5px;
   right: -20px;
   display: none;
 }
@@ -253,7 +253,7 @@
 }
 
 .CompteMenu .SousMenuLiPC {
-  margin: 0.5rem 0;
+  margin: 0.2rem 0;
 }
 
 .CompteMenu .AuthButton {

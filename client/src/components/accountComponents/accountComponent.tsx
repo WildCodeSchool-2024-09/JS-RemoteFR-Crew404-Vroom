@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import Envelope from "../../assets/images/social/envelope.png";
 import { useData } from "../../contexts/DataContext";
 import api from "../../helpers/api";
-import type { User } from "../../types/users";
 import styles from "./accountComponent.module.css";
 
 function accountComponent() {
   const { currentUser, setCurrentUser } = useData();
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [previewImage, setPreviewImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // État pour gérer le chargement initial des données
+  const [saveMessage, setSaveMessage] = useState<string | null>(null); // message de validation et erreurs de modification
 
   useEffect(() => {
     // appel API
@@ -29,45 +29,32 @@ function accountComponent() {
     fetchUser();
   }, [setCurrentUser]);
 
+  const MAX_FILE_SIZE = 1048576; // 1 Mo en octets
+
   // Fonction pour uploader une image
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && currentUser) {
-      const formData = new FormData();
-      formData.append("profile_picture", file);
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        alert(
+          "L'image est trop volumineuse. Veuillez choisir une image de moins de 1 Mo.",
+        );
+        return;
+      }
 
-      api
-        .put(`/api/users/${currentUser.id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            setCurrentUser((prevUser) => {
-              if (!prevUser) return null;
-              return {
-                ...prevUser,
-                profile_picture: response.data.profile_picture, // Utilisez la réponse du serveur ici
-              } as User;
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de l'upload de l'image :", error);
-        });
-
+      setPreviewImage(file);
       // Pour l'aperçu
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPreviewImage(reader.result);
+        if (typeof reader.result === "string" && currentUser) {
+          setCurrentUser({ ...currentUser, tempProfilePicture: reader.result });
         }
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Formatage de la date pour l'affichage et l'envoi au serveur
   const formatDate = (date: string | Date | undefined): string => {
     if (!date) return "";
     const d = new Date(date);
@@ -79,27 +66,40 @@ function accountComponent() {
   // Fonction pour sauvegarder les modifications
   const handleSaveChanges = async () => {
     if (currentUser) {
-      const updatedFields = {
-        profile_picture: currentUser.profile_picture,
-        birthdate: formatDate(currentUser.birthdate),
-        phone_number: currentUser.phone_number,
-      };
+      // Crée un nouvel objet FormData pour envoyer les données, y compris les fichiers
+      const formData = new FormData();
+      if (previewImage) {
+        formData.append("profile_picture", previewImage);
+      }
+      formData.append("birthdate", formatDate(currentUser.birthdate));
+      formData.append("phone_number", currentUser.phone_number || "");
+
       try {
+        // Envoie une requête PUT au serveur pour mettre à jour les informations de l'utilisateur
         const response = await api.put(
           `/api/users/${currentUser.id}`,
-          updatedFields,
+          formData,
+          {
+            headers: {
+              // Spécifie le type de contenu comme multipart/form-data pour permettre l'envoi de fichiers
+              "Content-Type": "multipart/form-data",
+            },
+          },
         );
         if (response.status === 200) {
-          console.info("Modifications enregistrées avec succès !");
+          setCurrentUser((prev) =>
+            prev
+              ? { ...prev, profile_picture: response.data.profile_picture }
+              : null,
+          );
+          setSaveMessage("Changements enregistrés");
+          setTimeout(() => setSaveMessage(null), 3000); // Message disparaît après 3 secondes
         } else {
           throw new Error("Erreur lors de la sauvegarde");
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la sauvegarde des modifications :",
-          error,
-        );
-        alert("Une erreur est survenue lors de la sauvegarde.");
+        setSaveMessage("Une erreur est survenue lors de la sauvegarde.");
+        setTimeout(() => setSaveMessage(null), 3000);
       }
     }
   };
@@ -114,6 +114,40 @@ function accountComponent() {
     );
   }
 
+  // Gestion du changement du numéro de téléphone
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    // Assure que le numéro commence toujours par +33
+    if (!value.startsWith("+33")) {
+      value = `+33${value.slice(2)}`;
+    }
+
+    // Limite la longueur à 12 caractères (+33 + 9 chiffres)
+    value = value.slice(0, 12);
+
+    // Ne garde que les chiffres après le +33
+    value = `+33${value.slice(3).replace(/\D/g, "")}`;
+
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        phone_number: value,
+      });
+    }
+  };
+
+  // Validation du numéro de téléphone
+  const validatePhoneNumber = () => {
+    if (currentUser?.phone_number) {
+      const phoneRegex = /^\+33[1234567][0-9]{8}$/;
+      if (!phoneRegex.test(currentUser.phone_number)) {
+        setSaveMessage("Numéro de téléphone invalide");
+        setTimeout(() => setSaveMessage(null), 3000);
+      }
+    }
+  };
+
   return (
     <>
       <div className={styles.accountContainer}>
@@ -121,14 +155,17 @@ function accountComponent() {
           <div className={styles.imgContainer}>
             <input
               type="file"
-              accept="image/png, image/jpeg, image/jpg"
+              accept="image/png, image/jpeg, image/jpg, image/svg"
               onChange={handleFileUpload}
               className={styles.input}
             />
             {(previewImage || currentUser.profile_picture) && (
               <div className={styles.imageContainer}>
                 <img
-                  src={`${import.meta.env.VITE_API_URL}/uploads/${currentUser.profile_picture}`}
+                  src={
+                    currentUser.tempProfilePicture ||
+                    `${import.meta.env.VITE_API_URL}/uploads/${currentUser.profile_picture}`
+                  }
                   alt="Avatar utilisateur"
                   className={styles.previewImage}
                 />
@@ -166,25 +203,21 @@ function accountComponent() {
           <span className={styles.fieldContainer}>
             <p>Téléphone :</p>
             <input
-              type="text"
+              type="tel"
+              pattern="\+33[67][0-9]{8}"
               value={currentUser?.phone_number || "+33"}
-              onChange={(e) => {
-                if (currentUser) {
-                  setCurrentUser({
-                    ...currentUser,
-                    phone_number: e.target.value,
-                  });
-                }
-              }}
+              onChange={handlePhoneChange}
+              onBlur={validatePhoneNumber}
             />
           </span>
           <button
             type="button"
             onClick={handleSaveChanges}
-            className={styles.button}
+            className={styles.buttonValidate}
           >
             Valider les changements
           </button>
+          {saveMessage && <p className={styles.saveMessage}>{saveMessage}</p>}
         </section>
       </div>
     </>

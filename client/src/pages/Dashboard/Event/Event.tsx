@@ -64,10 +64,18 @@ function Dashboard() {
     return user.id;
   };
 
+  const MAX_FILE_SIZE = 1048576; // 1 Mo en octets
+
   // Gestion de l'upload de fichier
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        alert(
+          "L'image est trop volumineuse. Veuillez choisir une image de moins de 1 Mo.",
+        );
+        return;
+      }
       setSelectedFile(file);
       // Crée un URL local pour la prévisualisation
       const localPreviewUrl = URL.createObjectURL(file);
@@ -415,7 +423,7 @@ function Dashboard() {
             )}
             <input
               type="file"
-              accept="image/*"
+              accept="image/png, image/jpeg, image/jpg, image/svg"
               onChange={handleFileUpload}
               className={styles.input}
             />
