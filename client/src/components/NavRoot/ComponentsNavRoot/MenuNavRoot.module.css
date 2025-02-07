@@ -30,3 +30,28 @@ from "../NavPC/NavPC.tsx"
   text-decoration: none;
   color: black;
 }
+
+.auth-button {
+  /* padding: 10px 20px; */
+  border: none;
+  /* border-radius: 15px; */
+  font-weight: bold;
+  cursor: pointer;
+  background: none;
+}
+
+.auth-button.login {
+  color: #029a07;
+}
+
+.auth-button.login:hover {
+  color: #06700b;
+}
+
+.auth-button.logout {
+  color: #f01000;
+}
+
+.auth-button.logout:hover {
+  color: #880c03;
+}

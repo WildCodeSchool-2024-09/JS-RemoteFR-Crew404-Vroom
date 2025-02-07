@@ -1,9 +1,12 @@
-import type { AxiosResponse } from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import eyeClosed from "../../assets/Icons/eye-slash.svg";
+import eye from "../../assets/Icons/eye.svg";
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
 import styles from "./connexion.module.css";
 
+// Interfaces pour typer les réponses de l'API
 interface LoginResponse {
   token: string;
   user: {
@@ -31,6 +34,7 @@ function Connexion() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     firstname: "",
     lastname: "",
   });
@@ -40,8 +44,14 @@ function Connexion() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [welcomeMessage, setWelcomeMessage] = useState("");
+  const navigate = useNavigate();
+
   const { handleLogin } = useAuth();
 
+  // Gestion des changements dans les champs de formulaire
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -58,29 +68,64 @@ function Connexion() {
     }
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
 
     try {
-      let response: AxiosResponse<LoginResponse | RegisterResponse>;
       if (isLogin) {
-        response = await api.post<LoginResponse>("/api/login", login);
+        // Connexion
+        const response = await api.post<LoginResponse>("/api/login", login);
         handleLogin(response.data.user);
+        setWelcomeMessage(`Bienvenue, ${response.data.user.username} !`);
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
       } else {
-        response = await api.post<RegisterResponse>("/api/register", register);
+        if (register.password !== register.confirmPassword) {
+          setErrorMessage("Les mots de passe ne correspondent pas.");
+          return;
+        }
+        // Inscription
+        await api.post<RegisterResponse>("/api/register", register);
+        // Si l'inscription réussit, connecte automatiquement l'utilisateur
+        const loginResponse = await api.post<LoginResponse>("/api/login", {
+          email: register.email,
+          password: register.password,
+        });
+        handleLogin(loginResponse.data.user);
+        setWelcomeMessage(
+          `Bienvenue, ${loginResponse.data.user.username} ! Votre compte a été créé.`,
+        );
+        setTimeout(() => {
+          navigate("/account");
+        }, 2000);
       }
-      console.info(response.data);
     } catch (error) {
-      console.error("Erreur lors de la soumission :", error);
+      setErrorMessage("Email ou pseudo invalide");
+      console.error("Erreur lors de l'opération:", error);
     }
   };
 
+  // Basculer entre les formulaires de connexion et d'inscription
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
 
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+
+  const passwordsMatch =
+    register.password === register.confirmPassword && register.password !== "";
+
   return (
     <div className={styles.Connexion}>
+      {welcomeMessage && (
+        <div className={styles.WelcomeMessage}>{welcomeMessage}</div>
+      )}
+      {errorMessage && (
+        <div className={styles.ErrorMessage}>{errorMessage}</div>
+      )}
       {isLogin ? (
         <div>
           <h2>Connexion</h2>
@@ -98,20 +143,39 @@ function Connexion() {
             </div>
             <div>
               <label htmlFor="login-password">Mot de passe :</label>
-              <input
-                type="password"
-                id="login-password"
-                name="password"
-                onChange={handleChange}
-                autoComplete="current-password"
-                required
-              />
+              <div className={styles.pwdLook}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="login-password"
+                  name="password"
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  required
+                  className={styles.inputClass}
+                />
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className={styles.eyes}
+                >
+                  <img
+                    src={showPassword ? eyeClosed : eye}
+                    alt={showPassword ? "Cacher" : "Montrer"}
+                  />
+                </button>
+              </div>
             </div>
-            <button type="submit">Se connecter</button>
+            <button type="submit" className={styles.submit}>
+              Se connecter
+            </button>
           </form>
           <p>
             Pas encore de compte ?{" "}
-            <button type="button" onClick={toggleForm}>
+            <button
+              type="button"
+              onClick={toggleForm}
+              className={styles.toggleForm}
+            >
               S'inscrire
             </button>
           </p>
@@ -167,19 +231,52 @@ function Connexion() {
             <div>
               <label htmlFor="register-password">Mot de passe :</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="register-password"
                 name="password"
                 required
                 onChange={handleChange}
-                autoComplete="current-password"
+                autoComplete="new-password"
+                className={`${styles.inputClass2} ${passwordsMatch ? styles.PasswordMatch : styles.PasswordMismatch}`}
               />
             </div>
-            <button type="submit">S'inscrire</button>
+            <div>
+              <label htmlFor="register-confirm-password">
+                Confirmer le mot de passe :
+              </label>
+              <div className={styles.pwdLook}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="register-confirm-password"
+                  name="confirmPassword"
+                  required
+                  onChange={handleChange}
+                  autoComplete="new-password"
+                  className={`${styles.inputClass} ${passwordsMatch ? styles.PasswordMatch : styles.PasswordMismatch}`}
+                />
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className={styles.eyes}
+                >
+                  <img
+                    src={showPassword ? eyeClosed : eye}
+                    alt={showPassword ? "Cacher" : "Montrer"}
+                  />
+                </button>
+              </div>
+            </div>
+            <button type="submit" className={styles.submit}>
+              S'inscrire
+            </button>
           </form>
           <p>
             Déjà un compte ?{" "}
-            <button type="button" onClick={toggleForm}>
+            <button
+              type="button"
+              onClick={toggleForm}
+              className={styles.toggleForm}
+            >
               Se connecter
             </button>
           </p>

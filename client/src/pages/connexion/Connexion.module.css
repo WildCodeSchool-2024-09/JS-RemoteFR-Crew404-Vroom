@@ -1,8 +1,14 @@
 .Connexion {
   display: flex;
+  gap: 2em;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+}
+
+.WelcomeMessage .ErrorMessage {
+  text-align: center;
 }
 
 .Connexion div {
@@ -27,7 +33,10 @@
 }
 
 .Connexion form div {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
+  width: 90%;
 }
 
 .Connexion label {
@@ -44,19 +53,19 @@
   margin-right: 30%;
 }
 
-.Connexion button {
+.submit {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  background-color: var(--tertiary-color);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.Connexion button:hover {
-  background-color: #0056b3;
+.submit:hover {
+  background-color: var(--fourthly-color);
 }
 
 .Connexion p {
@@ -64,15 +73,55 @@
   margin-top: 20px;
 }
 
-.Connexion p button {
+.toggleForm {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--tertiary-color);
   cursor: pointer;
   font-size: 14px;
   padding: 0;
 }
 
-.Connexion p button:hover {
+.toggleForm:hover {
   text-decoration: underline;
+  background-color: var(--light);
+}
+
+.PasswordMatch {
+  border: 2px solid !important;
+  border-color: rgb(1, 177, 1) !important;
+}
+.PasswordMismatch {
+  border: 2px solid !important;
+  border-color: red !important;
+}
+
+.inputClass {
+  width: 71%;
+  margin-right: 1% !important;
+}
+
+.pwdLook {
+  display: flex !important;
+  flex-direction: row !important;
+  margin-bottom: 0px !important;
+  padding: 0px !important;
+  box-shadow: none !important;
+}
+
+.eyes {
+  width: 4em;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.eyes img {
+  width: 2em;
+}
+
+.eyes:hover {
+  background-color: whitesmoke;
 }

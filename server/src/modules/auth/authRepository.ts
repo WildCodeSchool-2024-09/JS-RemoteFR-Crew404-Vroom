@@ -36,6 +36,15 @@ class AuthRepository {
     // Return the ID of the newly inserted user
     return result.insertId;
   }
+  catch(error: unknown) {
+    if (error instanceof Error) {
+      // Rethrow l'erreur avec un message plus descriptif
+      throw new Error(
+        `Erreur lors de la création de l'utilisateur: ${error.message}`,
+      );
+    }
+    throw error;
+  }
 
   // The Rs of CRUD - Read operations
 

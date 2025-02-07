@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import ProtectedRoute from "./protections/ProtectedRoute";
+
 /**
  * Contexts
  */
@@ -36,12 +38,17 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "/account",
+            element: <Account />,
+          },
+        ],
       },
       {
         path: "/about",
