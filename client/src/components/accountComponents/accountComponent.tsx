@@ -29,10 +29,19 @@ function accountComponent() {
     fetchUser();
   }, [setCurrentUser]);
 
+  const MAX_FILE_SIZE = 1048576; // 1 Mo en octets
+
   // Fonction pour uploader une image
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        alert(
+          "L'image est trop volumineuse. Veuillez choisir une image de moins de 1 Mo.",
+        );
+        return;
+      }
+
       setPreviewImage(file);
       // Pour l'aperçu
       const reader = new FileReader();
@@ -146,7 +155,7 @@ function accountComponent() {
           <div className={styles.imgContainer}>
             <input
               type="file"
-              accept="image/png, image/jpeg, image/jpg"
+              accept="image/png, image/jpeg, image/jpg, image/svg"
               onChange={handleFileUpload}
               className={styles.input}
             />
