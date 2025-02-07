@@ -66,8 +66,36 @@ const editUser: RequestHandler = async (req, res, next) => {
 
     // Gère le téléchargement d'une nouvelle image de profil
     if (req.file) {
+      // Supprime l'ancienne image si elle existe et n'est pas une image par défaut
+      const user = await authRepository.readById(userId);
+      if (
+        user?.profile_picture &&
+        ![
+          "cancel-img.png",
+          "person_15439869.png",
+          "default-event-img.png",
+        ].includes(user.profile_picture)
+      ) {
+        const oldImagePath = path.join(
+          __dirname,
+          "..",
+          "..",
+          "..",
+          "uploads",
+          user.profile_picture,
+        );
+        fs.unlink(oldImagePath, (err: NodeJS.ErrnoException | null) => {
+          if (err)
+            console.error(
+              "Erreur lors de la suppression de l'ancienne image :",
+              err,
+            );
+        });
+      }
+
       updateData.profile_picture = req.file.filename;
     }
+
     // Gère le cas où la date de naissance est une chaîne vide
     if (updateData.birthdate === "") {
       updateData.birthdate = undefined;
