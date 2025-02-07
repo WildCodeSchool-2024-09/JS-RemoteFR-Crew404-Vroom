@@ -134,6 +134,13 @@ const deleteProfilePicture: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    // Liste des images par défaut à ne pas supprimer
+    const defaultImages = [
+      "cancel-img.png",
+      "person_15439869.png",
+      "default-event-img.png",
+    ];
+
     // Supprimer le fichier si ce n'est pas l'image par défaut
     if (user.profile_picture && user.profile_picture !== "cancel-img.png") {
       const filePath = path.join(
