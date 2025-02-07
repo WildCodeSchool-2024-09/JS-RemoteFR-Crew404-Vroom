@@ -166,7 +166,6 @@ tbody tr:nth-child(odd) {
 }
 
 .previewImage {
-  max-width: 100%;
-  max-height: 30vh;
-  height: auto;
+  max-width: 20vh;
+  max-height: 20vh;
 }
