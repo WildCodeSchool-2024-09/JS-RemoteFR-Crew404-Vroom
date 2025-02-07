@@ -180,3 +180,13 @@ insert into model (id, name, year, brand_id, motor_id) values
 insert into vehicle (id, vehicle_picture, type, status, location, energy, user_id, model_id) values 
 (1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg"', 'voiture', 'vente', 'Paris', 'essence', 2, 29),
 (2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'voiture', 'essai', 'Lille', 'essence', 3, 30);
+
+CREATE TABLE marker (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  position POINT NOT NULL,
+  label VARCHAR(255),
+  details JSON,
+  user_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  SPATIAL INDEX(position)
+);

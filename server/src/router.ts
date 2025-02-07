@@ -7,11 +7,11 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
-import itemActions from "./modules/item/itemActions";
+// import itemActions from "./modules/item/itemActions";
 
-router.get("/api/items", itemActions.browse);
-router.get("/api/items/:id", itemActions.read);
-router.post("/api/items", itemActions.add);
+// router.get("/api/items", itemActions.browse);
+// router.get("/api/items/:id", itemActions.read);
+// router.post("/api/items", itemActions.add);
 
 /** login / register /logout */
 import authMiddleware from "./middlewares/authMiddleware";
@@ -110,7 +110,12 @@ import markerActions from "./modules/marker/markerActions";
 // Marker-related routes
 router.get("/api/markers/search", markerActions.search); //Assure yourself, assure your belongings and your sanity that this f* route will stay there for now and forever above everything else in your life.
 router.get("/api/markers", markerActions.browse); // Fetch all markers
-router.post("/api/markers", markerActions.add); // Add markers
+router.get(
+  "/api/user-markers",
+  authMiddleware.checkToken,
+  markerActions.readUserMarker,
+); // Fetch all markers
+router.post("/api/markers", authMiddleware.checkToken, markerActions.add); // Add markers
 router.put("/api/markers/:id", authMiddleware.checkToken, markerActions.edit); // Edit a marker
 router.delete(
   "/api/markers/:id",

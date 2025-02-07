@@ -128,7 +128,7 @@ const add: RequestHandler = async (req, res, next) => {
       address: req.body.address,
       description: req.body.description,
       link: req.body.link,
-      user_id: req.body.user_id,
+      user_id: req.user.id,
     };
 
     // Create the event
@@ -177,9 +177,9 @@ const deleteEvent: RequestHandler = async (req, res, next) => {
       const result = await eventRepository.delete(eventId);
 
       if (result) {
-        res
-          .status(200)
-          .json({ message: "Événement et image associée supprimés 💥" });
+        res.status(200).json({
+          message: "Événement et image associée supprimés 💥",
+        });
       } else {
         res.status(404).json({ message: "Événement non trouvé 👀" });
       }

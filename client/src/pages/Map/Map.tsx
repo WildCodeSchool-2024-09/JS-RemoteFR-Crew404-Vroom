@@ -16,8 +16,11 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import React from "react";
 import pinMapIcon from "../../assets/images/svg/pinMap.svg";
-import type { Marker as MarkerType } from "../../types/marker"; // Import Marker interface
+// Import Marker interface
+import type { Marker as MarkerType } from "../../types/marker";
 
+import { useAuth } from "../../contexts/AuthContext";
+import api from "../../helpers/api";
 // Create a custom icon
 const customIcon = new L.Icon({
   iconUrl: pinMapIcon,
@@ -31,7 +34,8 @@ interface MapsProps {
   zoom?: number;
 }
 
-function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
+function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
+  const { user } = useAuth();
   const [isAddingMarker, setIsAddingMarker] = useState(false);
   const [markers, setMarkers] = useState<MarkerType[]>([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState<
@@ -70,7 +74,9 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
   const fetchMarkers = async (query?: string) => {
     try {
       const url = query
-        ? `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`
+        ? `http://localhost:3310/api/markers/search?query=${encodeURIComponent(
+            query,
+          )}`
         : "http://localhost:3310/api/markers";
       const response = await fetch(url);
 
@@ -119,73 +125,126 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
     }
   };
 
-  const handleModalSubmit = () => {
+  const handleModalSubmit = async () => {
     if (!eventType || (!date && !startDate && !endDate)) {
-      alert("Please fill in all required fields.");
+      alert("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
-    const formattedDate = isRange
-      ? `${startDate?.toLocaleDateString()} to ${endDate?.toLocaleDateString()}`
-      : date?.toLocaleDateString() || "";
+    try {
+      // Formatage des dates en "YYYY-MM-DD"
+      const formatDate = (date: Date | null) =>
+        date ? date.toISOString().split("T")[0] : "";
 
-    const newMarkerData = {
-      lat: newMarkerPosition?.[0] || 0,
-      lng: newMarkerPosition?.[1] || 0,
-      label: `Type: ${eventType}, Date: ${formattedDate}`,
-      details: {
-        eventType, // Ensure eventType is included in the details object
-        date: formattedDate,
-        ...(eventType === "car" || eventType === "motorcycle"
-          ? { brand, model, year }
-          : { eventCategory, duration: formattedDate }),
-      },
-      user_id: 1, // Ensure this is a valid user ID
-    };
+      const formattedDate = isRange
+        ? `${formatDate(startDate)} to ${formatDate(endDate)}`
+        : formatDate(date);
 
-    fetch("http://localhost:3310/api/markers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newMarkerData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to save marker");
+      // Récupération des coordonnées GPS
+      const latitude = newMarkerPosition?.[0] || 0;
+      const longitude = newMarkerPosition?.[1] || 0;
+
+      // Récupération de l'adresse avec l'API de géocodage inverse
+      let address = "Adresse inconnue"; // Valeur par défaut si l'API échoue
+      try {
+        const response = await fetch(
+          `https://api-adresse.data.gouv.fr/reverse/?lat=${latitude}&lon=${longitude}`,
+        );
+        const data = await response.json();
+        if (data.features.length > 0) {
+          address = data.features[0].properties.label; // Adresse formatée
         }
-        return response.json();
-      })
-      .then((data: MarkerType) => {
-        console.info("Marker saved successfully:", data); // Log the response
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'adresse :", error);
+      }
 
-        // Ensure the response contains valid marker data
-        if (!data.lat || !data.lng) {
-          throw new Error("Invalid marker data received from the server");
-        }
+      // Création du nouvel objet marker avec l'adresse
+      const newMarkerData = {
+        lat: latitude,
+        lng: longitude,
+        label: `Type: ${eventType}, Date: ${formattedDate}`,
+        details: {
+          eventType,
+          date: formattedDate,
+          address,
+          ...(eventType === "car" || eventType === "motorcycle"
+            ? { brand, model, year }
+            : { type: eventCategory, duration: formattedDate }),
+        },
+        user_id: user?.id || "",
+      };
 
-        // Add the new marker to the state
-        setMarkers((prevMarkers) => [...prevMarkers, data]);
+      // Envoi du marker au serveur
+      const addMarker = await api.post("/api/markers", newMarkerData);
 
-        // Reset the form
-        setIsModalOpen(false);
-        setNewMarkerPosition(null);
-        setEventType(null);
-        setDate(null);
-        setStartDate(null);
-        setEndDate(null);
-        setBrand("");
-        setModel("");
-        setYear(null);
-        setEventCategory("");
-      })
-      .catch((error) => {
-        console.error("Failed to save marker:", error); // Log any errors
-        alert("Failed to save marker. Please try again.");
-      });
+      if (addMarker.status !== 201) {
+        console.error("Échec de l'enregistrement du marker");
+        alert("Échec de l'enregistrement du marker. Veuillez réessayer.");
+        return;
+      }
+
+      // Ajout de l'événement si nécessaire
+      switch (eventType) {
+        case "event":
+          await api.post("/api/events", {
+            title: `Événement: ${eventCategory}`,
+            type: "Salon", // Ici, c'est un exemple, mais il faut ajouter un champ pour le type d'événement
+            date_start: formatDate(startDate),
+            date_end: formatDate(endDate),
+            address,
+            location: {
+              x: newMarkerPosition?.[0] || 0,
+              y: newMarkerPosition?.[1] || 0,
+            },
+            user_id: user?.id || "",
+          });
+          break;
+        case "car":
+        case "motorcycle":
+          await api.post("/api/vehicules", {
+            brand,
+            model,
+            year,
+            user_id: user?.id || "",
+          });
+          break;
+        default:
+          console.error("Type d'événement invalide :", eventType);
+          return;
+      }
+
+      const data: MarkerType = addMarker.data;
+      console.info("Marker enregistré avec succès :", data);
+
+      if (!data.lat || !data.lng) {
+        throw new Error("Données du marker invalides reçues depuis le serveur");
+      }
+
+      // Ajout du marker dans le state
+      setMarkers((prevMarkers) => [...prevMarkers, data]);
+
+      // Réinitialisation du formulaire
+      setIsModalOpen(false);
+      setNewMarkerPosition(null);
+      setEventType(null);
+      setDate(null);
+      setStartDate(null);
+      setEndDate(null);
+      setBrand("");
+      setModel("");
+      setYear(null);
+      setEventCategory("");
+    } catch (error) {
+      console.error("Échec de l'enregistrement du marker :", error);
+      alert("Une erreur est survenue. Veuillez réessayer.");
+    }
   };
 
   const handleSearch = async (query: string) => {
     try {
-      const url = `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`;
+      const url = `http://localhost:3310/api/markers/search?query=${encodeURIComponent(
+        query,
+      )}`;
       const response = await fetch(url);
 
       if (!response.ok) {
