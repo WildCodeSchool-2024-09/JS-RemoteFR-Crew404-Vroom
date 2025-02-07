@@ -51,11 +51,22 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
   const [eventCategory, setEventCategory] = useState<string>("");
   const [isRange, setIsRange] = useState(false);
 
+  // State for active filters
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  // Define icons with their types
+  const icons = [
+    { type: "car", icon: "🚗" },
+    { type: "motorcycle", icon: "🏍️" },
+    { type: "event", icon: "🎉" },
+  ];
+
   // Fetch markers from the backend on component load
   useEffect(() => {
     fetchMarkers();
   }, []);
 
+  // Fetch markers based on active filters
   const fetchMarkers = async (query?: string) => {
     try {
       const url = query
@@ -73,6 +84,27 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       console.error("Failed to fetch markers:", error);
     }
   };
+
+  // Handle filter toggling
+  const handleFilterToggle = (type: string) => {
+    setActiveFilters(
+      (prevFilters) =>
+        prevFilters.includes(type)
+          ? prevFilters.filter((filter) => filter !== type) // Remove filter if already active
+          : [...prevFilters, type], // Add filter if not active
+    );
+  };
+
+  // Filter markers based on active filters
+  const filteredMarkers = markers.filter((marker) => {
+    if (activeFilters.length === 0) return true; // Show all markers if no filters are active
+
+    // Ensure marker.details.eventType is defined and matches the activeFilters
+    const markerEventType = marker.details?.eventType?.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+    return activeFilters.some(
+      (filter) => filter.toLowerCase() === markerEventType,
+    );
+  });
 
   const handleAddMarkerButtonClick = () => {
     setIsAddingMarker((prev) => !prev);
@@ -102,7 +134,7 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       lng: newMarkerPosition?.[1] || 0,
       label: `Type: ${eventType}, Date: ${formattedDate}`,
       details: {
-        eventType,
+        eventType, // Ensure eventType is included in the details object
         date: formattedDate,
         ...(eventType === "car" || eventType === "motorcycle"
           ? { brand, model, year }
@@ -110,8 +142,6 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       },
       user_id: 1, // Ensure this is a valid user ID
     };
-
-    console.info("New Marker Data:", newMarkerData); // Log the data being sent
 
     fetch("http://localhost:3310/api/markers", {
       method: "POST",
@@ -191,7 +221,11 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
           placeholder="Rechercher un lieu..."
           onSearch={handleSearch}
         />
-        <IconsContainer icons={["🏍️", "🚗", "🎉"]} />
+        <IconsContainer
+          icons={icons}
+          activeFilters={activeFilters}
+          onFilterToggle={handleFilterToggle}
+        />
 
         <MapContainer
           center={center}
@@ -207,7 +241,7 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
           {/* Add the MapClickHandler component */}
           <MapClickHandler onClick={handleMapClick} />
 
-          {markers.map((marker) => {
+          {filteredMarkers.map((marker) => {
             // Check if lat and lng are valid numbers
             if (
               typeof marker.lat !== "number" ||
@@ -438,16 +472,34 @@ function SearchBar({ placeholder, onSearch }: SearchBarProps) {
 }
 
 interface IconsContainerProps {
-  icons: string[];
+  icons: { type: string; icon: string }[];
+  activeFilters: string[];
+  onFilterToggle: (type: string) => void;
 }
 
-function IconsContainer({ icons }: IconsContainerProps) {
+function IconsContainer({
+  icons,
+  activeFilters,
+  onFilterToggle,
+}: IconsContainerProps) {
   return (
     <div className={styles.iconsContainer}>
-      {icons.map((icon) => (
-        <div key={icon} className={styles.icon}>
+      {icons.map(({ type, icon }) => (
+        <button
+          key={type}
+          className={`${styles.icon} ${
+            activeFilters.includes(type) ? styles.active : ""
+          }`}
+          onClick={() => onFilterToggle(type)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onFilterToggle(type);
+            }
+          }}
+          type="button" // Explicitly set the button type
+        >
           {icon}
-        </div>
+        </button>
       ))}
     </div>
   );
