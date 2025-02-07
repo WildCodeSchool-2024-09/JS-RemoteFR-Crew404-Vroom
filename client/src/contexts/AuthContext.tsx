@@ -16,6 +16,7 @@ type User = {
   id: number;
   email: string;
   username: string;
+  is_admin: boolean;
 };
 export function AuthProvider({ children }: ChildrenType) {
   const [user, setUser] = useState<User | null>(null);

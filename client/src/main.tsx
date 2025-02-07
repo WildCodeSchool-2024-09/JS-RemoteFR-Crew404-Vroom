@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import AdminRoute from "./protections/AdminRoute";
+/**
+ * Limitations
+ */
 import ProtectedRoute from "./protections/ProtectedRoute";
 
 /**
@@ -59,8 +63,13 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/backoffice",
-        element: <BackofficeMain />,
+        element: <AdminRoute />,
+        children: [
+          {
+            path: "/backoffice",
+            element: <BackofficeMain />,
+          },
+        ],
       },
       {
         path: "/maps",
