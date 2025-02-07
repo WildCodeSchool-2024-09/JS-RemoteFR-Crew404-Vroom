@@ -25,6 +25,7 @@ type Event = {
   creator_username?: string;
 };
 
+import markerRepository from "../marker/markerRepository";
 // Import access to data
 import eventRepository from "./eventRepository";
 
@@ -131,8 +132,19 @@ const add: RequestHandler = async (req, res, next) => {
       user_id: req.user.id,
     };
 
+    // J'ajoute un marqueur pour l'événement
+    const marker = {
+      lat: req.body.location.x,
+      lng: req.body.location.y,
+      label: `Type: ${req.body.type}, Date: ${req.body.date_start} to ${req.body.date_end}`,
+      details: req.body.details,
+      user_id: req.user.id,
+    };
+
     // Create the event
     const insertId = await eventRepository.create(newEvent);
+    // Create the marker
+    await markerRepository.createMarker(marker);
 
     // Récupérer l'événement complet après sa création
     const createdEvent = await eventRepository.getEventWithCreator(insertId);
