@@ -90,6 +90,11 @@ router.delete(
 import vehiculeActions from "./modules/vehicules/vehiculeActions";
 
 router.get("/api/vehicules", vehiculeActions.browse);
+router.get(
+  "/api/my-vehicules",
+  authMiddleware.checkToken,
+  vehiculeActions.readUserVehicules,
+);
 router.get("/api/vehicules/:id", vehiculeActions.read);
 router.post("/api/vehicules", authMiddleware.checkToken, vehiculeActions.add);
 router.put(

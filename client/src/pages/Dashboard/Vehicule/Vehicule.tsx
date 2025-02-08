@@ -1,54 +1,56 @@
 import type React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import api from "../../../helpers/api";
+import { errorToast, successToast } from "../../../services/toast";
 import styles from "./Vehicule.module.css";
 
 type Vehicule = {
   _id: number;
   id: number;
-  marque: string;
-  modele: string;
-  picture: string | null;
-  year: string;
-  city: string;
+  vehicle_picture?: string;
+  type: string;
+  status: string;
+  location: string;
+  energy: string;
+  user_id: string;
+  model_id: number;
+  year: number;
+  brand: string;
+  model: string;
+};
+
+const resetFormData = {
+  _id: -1,
+  id: 0,
+  vehicle_picture: "https://picsum.photos/200/300?random=1",
+  type: "",
+  status: "",
+  location: "",
+  energy: "",
+  user_id: "",
+  model_id: 0,
+  year: 0,
+  brand: "",
+  model: "",
 };
 
 function Vehicule() {
-  const [formData, setFormData] = useState<{
-    id: number;
-    marque: string;
-    modele: string;
-    picture: string | null;
-    year: string;
-    city: string;
-  }>({
-    id: -1,
-    marque: "",
-    modele: "",
-    picture: null,
-    year: "",
-    city: "",
-  });
+  const [vehicules, setVehicules] = useState<Vehicule[]>([]);
+  const [formData, setFormData] = useState<Vehicule>(resetFormData);
+  const [sendVehicule, setSendVehicule] = useState<boolean>(false);
 
-  const [vehicules, setVehicules] = useState<Vehicule[]>([
-    {
-      _id: 1,
-      id: 1,
-      marque: "Audi",
-      modele: "R8",
-      picture: null,
-      year: "2007",
-      city: "Paris",
-    },
-    {
-      _id: 2,
-      id: 2,
-      marque: "Alpine",
-      modele: "A110",
-      picture: null,
-      year: "1960",
-      city: "Nice",
-    },
-  ]);
+  // biome-ignore lint: useExhaustiveDependencies
+  useEffect(() => {
+    async function fetchVehicules() {
+      try {
+        const response = await api.get<Vehicule[]>("/api/my-vehicules");
+        setVehicules(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchVehicules();
+  }, [sendVehicule]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -76,7 +78,7 @@ function Vehicule() {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        picture: URL.createObjectURL(file),
+        vehicle_picture: URL.createObjectURL(file),
       }));
     }
   };
@@ -84,43 +86,51 @@ function Vehicule() {
   const validateForm = () => {
     const newErrors = [];
 
-    if (!formData.marque.trim())
+    if (!formData.brand.trim())
       newErrors.push("Veuillez renseigner la marque.");
-    if (!formData.modele.trim())
+    if (!formData.model.trim())
       newErrors.push("Veuillez renseigner le modèle.");
-    if (!formData.year.trim() || Number.isNaN(Number(formData.year)))
+    if (!formData.year || Number.isNaN(Number(formData.year)))
       newErrors.push("Veuillez renseigner une année valide.");
-    if (!formData.city.trim())
+    if (!formData.location.trim())
       newErrors.push("Veuillez renseigner une grande ville proche.");
 
     setErrors(newErrors);
+    console.error(newErrors);
     return newErrors.length === 0;
   };
 
+  const handlePostVehicule = async () => {
+    try {
+      await api.post<Vehicule>("/api/vehicules", {
+        ...formData,
+      });
+
+      setVehicules((prevVehicules) => [...prevVehicules, formData]);
+      successToast("Véhicule ajouté avec succès !");
+      setSendVehicule((prev) => !prev);
+    } catch (error) {
+      errorToast("Une erreur s'est produite lors de l'ajout du véhicule.");
+    }
+  };
   const addOrUpdateVehicule = () => {
     if (!validateForm()) return;
 
-    if (formData.id !== -1) {
+    /**
+     * Si l'ID est différent de -1, on met à jour le véhicule existant
+     */
+    if (formData._id !== -1) {
       setVehicules((prevVehicules) =>
         prevVehicules.map((vehicule) =>
           vehicule.id === formData.id ? { ...vehicule, ...formData } : vehicule,
         ),
       );
     } else {
-      setVehicules((prevVehicules) => [
-        ...prevVehicules,
-        { ...formData, _id: Date.now(), id: Date.now() },
-      ]);
+      // Sinon, on ajoute un nouveau véhicule
+      handlePostVehicule();
     }
 
-    setFormData({
-      id: -1,
-      marque: "",
-      modele: "",
-      picture: null,
-      year: "",
-      city: "",
-    });
+    setFormData(resetFormData);
     setIsModalOpen(false);
   };
 
@@ -130,20 +140,27 @@ function Vehicule() {
   };
 
   const handleAddButtonClick = () => {
-    setFormData({
-      id: -1,
-      marque: "",
-      modele: "",
-      picture: null,
-      year: "",
-      city: "",
-    });
+    setFormData(resetFormData);
     setIsModalOpen(true);
   };
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setIsModalOpen(false);
+    }
+  };
+
+  const getCity = async (location: string) => {
+    try {
+      const response = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${location}&limit=1`,
+      );
+      const data = await response.json();
+      // get lat and lon
+      const coordinates = data.features[0].geometry.coordinates;
+      setFormData((prev) => ({ ...prev, coord: coordinates }));
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'adresse :", error);
     }
   };
 
@@ -167,18 +184,18 @@ function Vehicule() {
               <div
                 className={styles.image}
                 style={{
-                  backgroundImage: vehicule.picture
-                    ? `url(${vehicule.picture})`
+                  backgroundImage: vehicule.vehicle_picture
+                    ? `url(${vehicule.vehicle_picture})`
                     : "url(/default-placeholder.png)",
                   backgroundSize: "cover",
                 }}
               />
               <div>
-                <p>Marque: {vehicule.marque}</p>
-                <p>Modèle: {vehicule.modele}</p>
+                <p>Marque: {vehicule.brand}</p>
+                <p>Modèle: {vehicule.model}</p>
                 <p>Année: {vehicule.year}</p>
                 <p className={styles.locationText}>
-                  Ville: {vehicule.city.toUpperCase()}
+                  Ville: {vehicule.location.toUpperCase()}
                 </p>
               </div>
             </button>
@@ -243,37 +260,52 @@ function Vehicule() {
             />
             <input
               type="text"
-              value={formData.marque}
+              value={formData.brand}
               placeholder="Marque"
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, marque: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  brand: e.target.value,
+                }))
               }
               className={styles.input}
             />
             <input
               type="text"
-              value={formData.modele}
+              value={formData.model}
               placeholder="Modèle"
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, modele: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  model: e.target.value,
+                }))
               }
               className={styles.input}
             />
             <input
-              type="text"
+              type="number"
               value={formData.year}
               placeholder="Année de naissance (e.g., 2005)"
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, year: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  year: Number(e.target.value),
+                }))
               }
               className={styles.input}
             />
             <input
               type="text"
-              value={formData.city}
+              value={formData.location}
               placeholder="Grande ville la plus proche"
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, city: e.target.value }))
+                setFormData((prev) => {
+                  getCity(e.target.value);
+                  return {
+                    ...prev,
+                    location: e.target.value,
+                  };
+                })
               }
               className={styles.input}
             />
@@ -283,7 +315,7 @@ function Vehicule() {
                 onClick={addOrUpdateVehicule}
                 className={styles.largeButton}
               >
-                {formData.id !== -1 ? "Modifier" : "Ajouter"}
+                {formData._id !== -1 ? "Modifier" : "Ajouter"}
               </button>
               <button
                 type="button"

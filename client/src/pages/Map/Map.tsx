@@ -21,7 +21,7 @@ import type { Marker as MarkerType } from "../../types/marker";
 
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
-import { errorToast, infoToast } from "../../services/toast";
+import { errorToast, infoToast, successToast } from "../../services/toast";
 // Create a custom icon
 const customIcon = new L.Icon({
   iconUrl: pinMapIcon,
@@ -196,6 +196,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             location: {
               x: newMarkerPosition?.[0] || 0,
               y: newMarkerPosition?.[1] || 0,
+              address,
             },
             user_id: user?.id || "",
           });
@@ -206,7 +207,9 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             brand,
             model,
             year,
+            location: address,
             user_id: user?.id || "",
+            isMap: true,
           });
           break;
         default:
@@ -235,6 +238,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
       setModel("");
       setYear(null);
       setEventCategory("");
+      successToast("Marker enregistré avec succès !");
     } catch (error) {
       console.error("Échec de l'enregistrement du marker :", error);
       errorToast("Une erreur est survenue. Veuillez réessayer.");
