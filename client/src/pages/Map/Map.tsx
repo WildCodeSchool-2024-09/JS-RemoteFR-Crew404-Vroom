@@ -21,6 +21,7 @@ import type { Marker as MarkerType } from "../../types/marker";
 
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
+import { errorToast, infoToast } from "../../services/toast";
 // Create a custom icon
 const customIcon = new L.Icon({
   iconUrl: pinMapIcon,
@@ -127,7 +128,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
 
   const handleModalSubmit = async () => {
     if (!eventType || (!date && !startDate && !endDate)) {
-      alert("Veuillez remplir tous les champs obligatoires.");
+      infoToast("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
@@ -179,7 +180,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
 
       if (addMarker.status !== 201) {
         console.error("Échec de l'enregistrement du marker");
-        alert("Échec de l'enregistrement du marker. Veuillez réessayer.");
+        errorToast("Échec de l'enregistrement du marker. Veuillez réessayer.");
         return;
       }
 
@@ -236,7 +237,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
       setEventCategory("");
     } catch (error) {
       console.error("Échec de l'enregistrement du marker :", error);
-      alert("Une erreur est survenue. Veuillez réessayer.");
+      errorToast("Une erreur est survenue. Veuillez réessayer.");
     }
   };
 

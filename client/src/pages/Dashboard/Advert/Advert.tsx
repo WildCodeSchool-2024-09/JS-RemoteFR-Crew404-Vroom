@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import { successToast } from "../../../services/toast";
 import styles from "./Advert.module.css";
 
 interface Favorite {
@@ -87,6 +88,7 @@ const Advert: React.FC = () => {
     setFavorites(
       favorites.filter((fav) => !selectedFavorites.includes(fav.id)),
     );
+    successToast("Annonces supprimées avec succès !");
     setSelectedFavorites([]);
   };
 
@@ -94,7 +96,9 @@ const Advert: React.FC = () => {
     <div ref={advertRef} className={styles.container}>
       <div
         ref={headerRef}
-        className={`${styles.stickyHeader} ${isSticky ? styles.fixed : ""} ${isVisible ? "" : styles.hidden}`}
+        className={`${styles.stickyHeader} ${
+          isSticky ? styles.fixed : ""
+        } ${isVisible ? "" : styles.hidden}`}
       >
         <h2 className={styles.title}>Annonces Favorites</h2>
         <div className={styles.searchBar}>
@@ -121,7 +125,9 @@ const Advert: React.FC = () => {
           </button>
           <button
             type="button"
-            className={`${styles.deleteButton} ${selectedFavorites.length > 0 ? styles.active : ""}`}
+            className={`${styles.deleteButton} ${
+              selectedFavorites.length > 0 ? styles.active : ""
+            }`}
             onClick={deleteSelectedFavorites}
             disabled={selectedFavorites.length === 0}
           >
