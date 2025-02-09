@@ -23,7 +23,7 @@ const read: RequestHandler = async (req, res, next) => {
 
     const marker = await markerRepository.getMarkerById(markerId);
     if (marker == null) {
-      res.sendStatus(404); // No return statement
+      res.sendStatus(404).json({ error: "Item not found" }); // Object item not found
     } else {
       res.json(marker); // No return statement
     }
@@ -107,15 +107,29 @@ const remove: RequestHandler = async (req, res, next) => {
 
 const search: RequestHandler = async (req, res, next) => {
   try {
-    const { query } = req.query;
+    // Extract and cast query parameters to string
+    const query =
+      typeof req.query.query === "string" ? req.query.query : undefined;
+    const criterion =
+      typeof req.query.criterion === "string" ? req.query.criterion : undefined;
+    const types =
+      typeof req.query.types === "string" ? req.query.types : undefined;
+
+    // Log the extracted parameters for debugging
+    console.info("Extracted parameters:", { query, criterion, types });
 
     // Ensure the query is a non-empty string
-    if (typeof query !== "string" || query.trim() === "") {
+    if (!query || query.trim() === "") {
       res.status(400).json({ error: "Invalid query parameter" });
       return;
     }
 
-    const markers = await markerRepository.searchMarkers(query);
+    // Call the repository method with properly typed parameters
+    const markers = await markerRepository.searchMarkers(
+      query,
+      criterion,
+      types,
+    );
     res.json(markers);
   } catch (err) {
     console.error("Failed to search markers:", err);

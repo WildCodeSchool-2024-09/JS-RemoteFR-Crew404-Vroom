@@ -54,6 +54,12 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
   // State for active filters
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
+  // State for search functionality
+  const [searchCriterion, setSearchCriterion] = useState<
+    "brand" | "model" | "year" | "eventCategory"
+  >("brand");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   // Define icons with their types
   const icons = [
     { type: "car", icon: "🚗" },
@@ -66,16 +72,30 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
     fetchMarkers();
   }, []);
 
-  // Fetch markers based on active filters
-  const fetchMarkers = async (query?: string) => {
-    try {
-      const url = query
-        ? `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`
-        : "http://localhost:3310/api/markers";
-      const response = await fetch(url);
+  // // Fetch markers based on active filters and search inputs
 
+  const fetchMarkers = async () => {
+    try {
+      const url = "http://localhost:3310/api/markers/search";
+      const params = new URLSearchParams();
+
+      // Add search criterion and query to the request
+      if (searchQuery) {
+        params.append("criterion", searchCriterion);
+        params.append("query", searchQuery);
+      }
+
+      // Add active filters to the request
+      if (activeFilters.length > 0) {
+        params.append("types", activeFilters.join(","));
+      }
+
+      // Log the URL and params for debugging
+      console.info("Fetching markers with URL:", `${url}?${params.toString()}`);
+
+      const response = await fetch(`${url}?${params.toString()}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch markers");
+        throw new Error(`Failed to fetch markers: ${response.statusText}`);
       }
 
       const data: MarkerType[] = await response.json();
@@ -83,6 +103,23 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
     } catch (error) {
       console.error("Failed to fetch markers:", error);
     }
+  };
+
+  // Handle search criterion change
+  const handleCriterionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchCriterion(
+      e.target.value as "brand" | "model" | "year" | "eventCategory",
+    );
+  };
+
+  // Handle search query change
+  const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submission
+  const handleSearchSubmit = () => {
+    fetchMarkers();
   };
 
   // Handle filter toggling
@@ -100,11 +137,65 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
     if (activeFilters.length === 0) return true; // Show all markers if no filters are active
 
     // Ensure marker.details.eventType is defined and matches the activeFilters
-    const markerEventType = marker.details?.eventType?.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+    const markerEventType = marker.details?.eventType?.toLowerCase();
     return activeFilters.some(
       (filter) => filter.toLowerCase() === markerEventType,
     );
   });
+
+  // Get available search criteria based on active filters
+  const getSearchCriteria = () => {
+    if (activeFilters.includes("car") || activeFilters.includes("motorcycle")) {
+      return [
+        { value: "brand", label: "Brand" },
+        { value: "model", label: "Model" },
+        { value: "year", label: "Year" },
+      ];
+    }
+    if (activeFilters.includes("event")) {
+      return [{ value: "eventCategory", label: "Event Category" }];
+    }
+    return []; // No active filters
+  };
+
+  // Render the search bar with dynamic criteria
+  const renderSearchBar = () => {
+    const criteria = getSearchCriteria();
+
+    if (criteria.length === 0) {
+      return null; // Don't show search bar if no filters are active
+    }
+
+    return (
+      <div className={styles.searchBar}>
+        <select
+          className={styles.dropdown}
+          value={searchCriterion}
+          onChange={handleCriterionChange}
+        >
+          {criteria.map((criterion) => (
+            <option key={criterion.value} value={criterion.value}>
+              {criterion.label}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          className={styles.search}
+          placeholder={`Search by ${searchCriterion}`}
+          value={searchQuery}
+          onChange={handleSearchQueryChange}
+        />
+        <button
+          type="button"
+          className={styles.searchButton}
+          onClick={handleSearchSubmit}
+        >
+          Search
+        </button>
+      </div>
+    );
+  };
 
   const handleAddMarkerButtonClick = () => {
     setIsAddingMarker((prev) => !prev);
@@ -134,7 +225,7 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       lng: newMarkerPosition?.[1] || 0,
       label: `Type: ${eventType}, Date: ${formattedDate}`,
       details: {
-        eventType, // Ensure eventType is included in the details object
+        eventType,
         date: formattedDate,
         ...(eventType === "car" || eventType === "motorcycle"
           ? { brand, model, year }
@@ -183,22 +274,6 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
       });
   };
 
-  const handleSearch = async (query: string) => {
-    try {
-      const url = `http://localhost:3310/api/markers/search?query=${encodeURIComponent(query)}`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch markers");
-      }
-
-      const data: MarkerType[] = await response.json();
-      setMarkers(data);
-    } catch (error) {
-      console.error("Failed to fetch markers:", error);
-    }
-  };
-
   return (
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
@@ -217,16 +292,17 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
           {isAddingMarker ? "❌" : "📍"}
         </button>
 
-        <SearchBar
-          placeholder="Rechercher un lieu..."
-          onSearch={handleSearch}
-        />
+        {/* Render the search bar with dynamic criteria */}
+        {renderSearchBar()}
+
+        {/* Icons for Filtering by Type */}
         <IconsContainer
           icons={icons}
           activeFilters={activeFilters}
           onFilterToggle={handleFilterToggle}
         />
 
+        {/* Map Container */}
         <MapContainer
           center={center}
           zoom={zoom}
@@ -241,8 +317,8 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
           {/* Add the MapClickHandler component */}
           <MapClickHandler onClick={handleMapClick} />
 
+          {/* Display Markers */}
           {filteredMarkers.map((marker) => {
-            // Check if lat and lng are valid numbers
             if (
               typeof marker.lat !== "number" ||
               typeof marker.lng !== "number"
@@ -254,7 +330,7 @@ function Maps({ center = [51.505, -0.09], zoom = 13 }: MapsProps) {
             return (
               <Marker
                 key={marker.id}
-                position={[marker.lat, marker.lng]} // Use lat and lng directly
+                position={[marker.lat, marker.lng]}
                 icon={customIcon}
               >
                 <Popup>
@@ -451,26 +527,6 @@ const MapClickHandler = ({
   return null;
 };
 
-interface SearchBarProps {
-  placeholder: string;
-  onSearch: (query: string) => void;
-}
-
-function SearchBar({ placeholder, onSearch }: SearchBarProps) {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(e.target.value);
-  };
-
-  return (
-    <input
-      type="text"
-      placeholder={placeholder}
-      className={styles.searchBar}
-      onChange={handleInputChange}
-    />
-  );
-}
-
 interface IconsContainerProps {
   icons: { type: string; icon: string }[];
   activeFilters: string[];
@@ -496,7 +552,7 @@ function IconsContainer({
               onFilterToggle(type);
             }
           }}
-          type="button" // Explicitly set the button type
+          type="button"
         >
           {icon}
         </button>
