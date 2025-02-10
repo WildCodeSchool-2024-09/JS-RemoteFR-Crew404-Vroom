@@ -53,19 +53,13 @@ class MarkerRepository {
     if (rows.length === 0) return null;
 
     const row = rows[0];
-    let details = null;
-    try {
-      details = row.details ? JSON.parse(row.details) : null;
-    } catch (error) {
-      console.error("Failed to parse details:", row.details);
-    }
 
     return {
       id: row.id,
       lat: row.lat,
       lng: row.lng,
       label: row.label,
-      details,
+      details: row.details,
       user_id: row.user_id,
     };
   }
@@ -94,36 +88,69 @@ class MarkerRepository {
     return result.affectedRows > 0;
   }
 
-  async searchMarkers(query?: string, date?: string): Promise<Marker[]> {
+  async searchMarkers(
+    query?: string,
+    criterion?: string,
+    types?: string,
+  ): Promise<Marker[]> {
     let sql = `
-    SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
-    FROM marker
-    WHERE 1=1
-  `;
+      SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
+      FROM marker
+      WHERE 1=1
+    `;
 
     const params: (string | number)[] = [];
 
-    if (query) {
-      sql += ` AND (label LIKE ? OR JSON_EXTRACT(details, '$.eventCategory') LIKE ?)`;
-      params.push(`%${query}%`, `%${query}%`);
+    // Filter by types (e.g., car, motorcycle, event)
+    if (types) {
+      const typeList = types.split(",");
+      sql += ` AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.eventType')) IN (${typeList
+        .map(() => "?")
+        .join(",")})`;
+      params.push(...typeList);
     }
 
-    if (date) {
-      sql += ` AND JSON_EXTRACT(details, '$.date') LIKE ?`;
-      params.push(`%${date}%`);
+    // Search based on the selected criterion
+    if (query && criterion) {
+      switch (criterion) {
+        case "brand":
+          sql += " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.brand')) LIKE ?";
+          params.push(`%${query}%`);
+          break;
+        case "model":
+          sql += " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.model')) LIKE ?";
+          params.push(`%${query}%`);
+          break;
+        case "year":
+          sql += " AND JSON_EXTRACT(details, '$.year') = ?";
+          params.push(Number(query));
+          break;
+        case "eventCategory":
+          sql +=
+            " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.eventCategory')) LIKE ?";
+          params.push(`%${query}%`);
+          break;
+        default:
+          // Fallback to searching the label
+          sql += " AND label LIKE ?";
+          params.push(`%${query}%`);
+          break;
+      }
     }
+
+    // Log the SQL query and parameters for debugging
+    console.info("Generated SQL Query:", sql);
+    console.info("Query Parameters:", params);
 
     const [rows] = await databaseClient.query<Rows>(sql, params);
 
     return rows.map((row) => {
-      const details =
-        row.details && typeof row.details === "object" ? row.details : null;
       return {
         id: row.id,
         lat: row.lat,
         lng: row.lng,
         label: row.label,
-        details,
+        details: row.details,
         user_id: row.user_id,
       };
     });
