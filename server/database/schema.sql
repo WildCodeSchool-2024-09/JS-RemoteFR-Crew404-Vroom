@@ -48,6 +48,16 @@ CREATE TABLE model (
   FOREIGN KEY(motor_id) REFERENCES motor(id)
 );
 
+CREATE TABLE marker (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  position POINT NOT NULL,
+  label VARCHAR(255),
+  details JSON,
+  user_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  SPATIAL INDEX(position)
+);
+
 CREATE TABLE vehicle (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
   vehicle_picture VARCHAR(255),

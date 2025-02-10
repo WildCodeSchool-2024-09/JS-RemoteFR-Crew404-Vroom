@@ -47,14 +47,17 @@
 }
 
 .button,
+.buttonValidate,
 .idContainer button {
   color: var(--light);
   background-color: var(--secondary-color);
   border-radius: 10px;
   padding: 0.3rem 1rem;
+  max-width: 30em;
 }
 
 .button:hover,
+.buttonValidate:hover,
 .idContainer button:hover {
   color: var(--dark);
   background-color: var(--tertiary-color);
@@ -80,4 +83,16 @@
   flex-wrap: wrap;
   margin: 0 4rem;
   gap: 1rem;
+}
+.fieldContainer p {
+  margin: 0;
+}
+
+.buttonValidate {
+  margin: auto;
+  height: 2.5em;
+}
+
+.saveMessage {
+  text-align: center;
 }

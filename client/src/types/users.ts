@@ -9,4 +9,5 @@ export type User = {
   birthdate: string | Date | undefined;
   sold: number;
   is_admin?: boolean;
+  tempProfilePicture?: string;
 };
