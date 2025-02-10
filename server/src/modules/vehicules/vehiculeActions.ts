@@ -1,13 +1,18 @@
 import type { RequestHandler } from "express";
+import markerRepository from "../marker/markerRepository";
 
 type Vehicule = {
   id: number;
-  vehicule_picture?: string | null;
-  type: "moto" | "voiture";
-  status: "vente" | "essai" | "indisponible";
-  energy: "essence" | "diesel" | "electrique";
+  vehicule_picture?: string;
+  // type: "moto" | "voiture";
+  // status: "vente" | "essai" | "indisponible";
+  // energy: "essence" | "diesel" | "electrique";
   user_id: string;
+  location: string;
   model_id: number;
+  year: number;
+  brand: string;
+  model: string;
 };
 
 // Import access to data
@@ -54,11 +59,15 @@ const editVehicule: RequestHandler = async (req, res, next) => {
     const updatedVehicule: Vehicule = {
       id: vehiculeId,
       vehicule_picture: req.body.vehicule_picture,
-      energy: req.body.energy,
+      // energy: req.body.energy,
       model_id: req.body.model_id,
-      status: req.body.status,
-      type: req.body.type,
+      // status: req.body.status,
+      // type: req.body.type,
+      location: req.body.location,
       user_id: req.body.user_id,
+      year: req.body.year,
+      brand: req.body.brand,
+      model: req.body.model,
     };
 
     const result = await vehiculeRepository.update(updatedVehicule);
@@ -82,20 +91,39 @@ const add: RequestHandler = async (req, res, next) => {
     // Extract the vehicle data from the request body
     const newVehicule = {
       vehicule_picture: req.body.vehicule_picture,
-      energy: req.body.energy,
-      model_id: req.body.model_id,
-      status: req.body.status,
-      type: req.body.type,
-      user_id: req.body.user_id,
+      // energy: req.body.energy,
+      // status: req.body.status,
+      // type: req.body.type,
+      model_id: 1,
+      location: req.body.location,
+      user_id: String(req.user.id),
+      year: req.body.year,
+      brand: req.body.brand,
+      model: req.body.model,
+      isMap: req.body.isMap,
     };
+
+    if (!newVehicule.isMap) {
+      // add marker
+      const marker = {
+        lat: req.body.coord[1],
+        lng: req.body.coord[0],
+        label: `Type: ${req.body.type}, Date: ${req.body.date_start} to ${req.body.date_end}`,
+        details: req.body.details,
+        user_id: req.user.id,
+      };
+
+      await markerRepository.createMarker(marker);
+    }
 
     // Create the vehicule
     const insertId = await vehiculeRepository.create(newVehicule);
 
     // Respond with HTTP 201 (Created) and the ID of the newly inserted vehicle
-    res
-      .status(201)
-      .json({ insertId, message: "Véhicule créé avec succès! 🚗" });
+    res.status(201).json({
+      insertId,
+      message: "Véhicule créé avec succès! 🚗",
+    });
   } catch (err) {
     // Pass any errors to the error-handling middleware
     next(err);
@@ -119,4 +147,23 @@ const deleteVehicule: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, editVehicule, add, deleteVehicule };
+const readUserVehicules: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const vehicules = await vehiculeRepository.readUserVehicules(userId);
+
+    res.json(vehicules);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default {
+  browse,
+  read,
+  editVehicule,
+  add,
+  deleteVehicule,
+  readUserVehicules,
+};

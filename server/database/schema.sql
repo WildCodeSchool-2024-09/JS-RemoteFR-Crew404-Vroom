@@ -60,16 +60,27 @@ CREATE TABLE marker (
 
 CREATE TABLE vehicle (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
-  vehicle_picture VARCHAR(255) NOT NULL,
-  type ENUM('moto', 'voiture') NOT NULL,
-  status ENUM('vente', 'essai', 'indisponible') NOT NULL,
+  vehicle_picture VARCHAR(255),
+  -- type ENUM('moto', 'voiture') NOT NULL,
+  -- status ENUM('vente', 'essai', 'indisponible') NOT NULL,
+  -- energy ENUM('essence', 'diesel', 'electrique') NOT NULL,
   location VARCHAR(100) NOT NULL,
-  energy ENUM('essence', 'diesel', 'electrique') NOT NULL,
   user_id INT unsigned NOT NULL,
   model_id INT unsigned NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES user(id),
-  FOREIGN KEY(model_id) REFERENCES model(id)
+  
+  -- Ajout des informations communes
+  year INT NOT NULL,
+  
+  -- Pour les brands, on a déjà une base de données mais aucun lien n'a été fait ici
+  brand VARCHAR(255) NOT NULL,
+  
+  -- La même chose pour les models
+  model VARCHAR(255) NOT NULL,
+  
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (model_id) REFERENCES model(id)
 );
+
 
 CREATE TABLE `like` (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -187,6 +198,27 @@ insert into model (id, name, year, brand_id, motor_id) values
 (29, 'skyline r34 GT-R', 1970, 49, 13),
 (30, '8 - XR750', 1970, 18, 14);
 
-insert into vehicle (id, vehicle_picture, type, status, location, energy, user_id, model_id) values 
-(1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg"', 'voiture', 'vente', 'Paris', 'essence', 2, 29),
-(2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'voiture', 'essai', 'Lille', 'essence', 3, 30);
+/**
+Ici, je vous ai mis un exemple de ce que pourrait être la table vehicle.
+Je vous laisse la compléter avec les informations que vous avez déjà.
+*/
+-- insert into vehicle (id, vehicle_picture, type, status, location, energy, user_id, model_id, year, brand, model) values 
+-- (1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg"', 'voiture', 'vente', 'Paris', 'essence', 2, 29, 2025, "toyota", 'yaris'),
+-- (2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'voiture', 'essai', 'Lille', 'essence', 3, 30, 2025, "harley-davidson", '8 - XR750');
+
+/**
+Pour les tests du véhicule, je vous ai mis un exemple de ce que pourrait être la table vehicle.
+*/
+insert into vehicle (id, vehicle_picture, location, user_id, model_id, year, brand, model) values 
+(1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg', 'Paris', 2, 29, 2025, "Nissan", 'skyline r34 GT-R'),
+(2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'Lille', 3, 30, 2025, "Harley-Davidson", '8 - XR750');
+
+CREATE TABLE marker (
+  id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  position POINT NOT NULL,
+  label VARCHAR(255),
+  details JSON,
+  user_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  SPATIAL INDEX(position)
+);

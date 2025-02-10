@@ -7,11 +7,11 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
-import itemActions from "./modules/item/itemActions";
+// import itemActions from "./modules/item/itemActions";
 
-router.get("/api/items", itemActions.browse);
-router.get("/api/items/:id", itemActions.read);
-router.post("/api/items", itemActions.add);
+// router.get("/api/items", itemActions.browse);
+// router.get("/api/items/:id", itemActions.read);
+// router.post("/api/items", itemActions.add);
 
 /** login / register /logout */
 import authMiddleware from "./middlewares/authMiddleware";
@@ -90,6 +90,11 @@ router.delete(
 import vehiculeActions from "./modules/vehicules/vehiculeActions";
 
 router.get("/api/vehicules", vehiculeActions.browse);
+router.get(
+  "/api/my-vehicules",
+  authMiddleware.checkToken,
+  vehiculeActions.readUserVehicules,
+);
 router.get("/api/vehicules/:id", vehiculeActions.read);
 router.post("/api/vehicules", authMiddleware.checkToken, vehiculeActions.add);
 router.put(
@@ -110,7 +115,12 @@ import markerActions from "./modules/marker/markerActions";
 // Marker-related routes
 
 router.get("/api/markers", markerActions.browse); // Fetch all markers
-router.post("/api/markers", markerActions.add); // Add markers
+router.get(
+  "/api/user-markers",
+  authMiddleware.checkToken,
+  markerActions.readUserMarker,
+); // Fetch all markers
+router.post("/api/markers", authMiddleware.checkToken, markerActions.add); // Add markers
 router.put(
   "/api/markers/:id(\\d+)",
   authMiddleware.checkToken,

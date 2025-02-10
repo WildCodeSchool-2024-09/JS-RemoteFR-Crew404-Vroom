@@ -63,6 +63,41 @@ class MarkerRepository {
       user_id: row.user_id,
     };
   }
+  /**
+   * Get the marker created by the current user
+   */
+  async getMyMarker(id: number) {
+    /**
+     * Create the query to fetch the markers and join table user for user details
+     */
+    const query = `
+			SELECT marker.id, ST_X(marker.position) AS lat, ST_Y(marker.position) AS lng, marker.label, marker.details, marker.user_id, user.username, user.email
+			FROM marker
+			JOIN user ON marker.user_id = user.id
+			WHERE user_id = ?
+		
+		`;
+    const [rows] = await databaseClient.query<Rows>(query, [id]);
+
+    /**
+     * Return all markers created by the user
+     */
+
+    return rows.map((row) => {
+      const details =
+        row.details && typeof row.details === "object" ? row.details : null;
+      return {
+        id: row.id,
+        lat: row.lat,
+        lng: row.lng,
+        label: row.label,
+        details,
+        user_id: row.user_id,
+        username: row.username,
+        email: row.email,
+      };
+    });
+  }
 
   async updateMarker(marker: Marker): Promise<boolean> {
     const query = `

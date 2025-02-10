@@ -31,6 +31,18 @@ const read: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+const readUserMarker: RequestHandler = async (req, res, next) => {
+  try {
+    const marker = await markerRepository.getMyMarker(req.user.id);
+    if (marker == null) {
+      res.sendStatus(404); // No return statement
+    } else {
+      res.json(marker); // No return statement
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
 // The A of BREAD - Add operation
 const add: RequestHandler = async (req, res, next) => {
@@ -40,7 +52,7 @@ const add: RequestHandler = async (req, res, next) => {
       lng: req.body.lng,
       label: req.body.label,
       details: req.body.details,
-      user_id: req.body.user_id,
+      user_id: req.user.id,
     };
 
     const insertId = await markerRepository.createMarker(newMarker);
@@ -136,4 +148,4 @@ const search: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export default { browse, read, add, edit, remove, search };
+export default { browse, read, readUserMarker, add, edit, remove, search };

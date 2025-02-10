@@ -4,6 +4,7 @@ import eyeClosed from "../../assets/Icons/eye-slash.svg";
 import eye from "../../assets/Icons/eye.svg";
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
+import { errorToast, successToast } from "../../services/toast";
 import styles from "./connexion.module.css";
 
 // Interfaces pour typer les réponses de l'API
@@ -79,12 +80,13 @@ function Connexion() {
         // Connexion
         const response = await api.post<LoginResponse>("/api/login", login);
         handleLogin(response.data.user);
-        setWelcomeMessage(`Bienvenue, ${response.data.user.username} !`);
+        successToast(`Bienvenue, ${response.data.user.username} !`);
         setTimeout(() => {
           navigate("/home");
         }, 2000);
       } else {
         if (register.password !== register.confirmPassword) {
+          errorToast("Les mots de passe ne correspondent pas.");
           setErrorMessage("Les mots de passe ne correspondent pas.");
           return;
         }
@@ -99,12 +101,16 @@ function Connexion() {
         setWelcomeMessage(
           `Bienvenue, ${loginResponse.data.user.username} ! Votre compte a été créé.`,
         );
+        successToast(
+          `Bienvenue, ${loginResponse.data.user.username} ! Votre compte a été créé.`,
+        );
         setTimeout(() => {
           navigate("/account");
         }, 2000);
       }
     } catch (error) {
       setErrorMessage("Email ou pseudo invalide");
+      errorToast("Email ou pseudo invalide");
       console.error("Erreur lors de l'opération:", error);
     }
   };
@@ -238,7 +244,11 @@ function Connexion() {
                 required
                 onChange={handleChange}
                 autoComplete="new-password"
-                className={`${styles.inputClass2} ${passwordsMatch ? styles.PasswordMatch : styles.PasswordMismatch}`}
+                className={`${styles.inputClass2} ${
+                  passwordsMatch
+                    ? styles.PasswordMatch
+                    : styles.PasswordMismatch
+                }`}
               />
             </div>
             <div>
@@ -253,7 +263,11 @@ function Connexion() {
                   required
                   onChange={handleChange}
                   autoComplete="new-password"
-                  className={`${styles.inputClass} ${passwordsMatch ? styles.PasswordMatch : styles.PasswordMismatch}`}
+                  className={`${styles.inputClass} ${
+                    passwordsMatch
+                      ? styles.PasswordMatch
+                      : styles.PasswordMismatch
+                  }`}
                 />
                 <button
                   type="button"

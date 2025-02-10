@@ -4,12 +4,16 @@ import type { Result, Rows } from "../../../database/client";
 
 type Vehicule = {
   id: number;
-  vehicule_picture?: string | null;
-  type: "moto" | "voiture";
-  status: "vente" | "essai" | "indisponible";
-  energy: "essence" | "diesel" | "electrique";
+  vehicule_picture?: string;
+  // type: "moto" | "voiture";
+  // status: "vente" | "essai" | "indisponible";
+  // energy: "essence" | "diesel" | "electrique";
   user_id: string;
+  location: string;
   model_id: number;
+  year: number;
+  brand: string;
+  model: string;
 };
 
 class VehiculeRepository {
@@ -17,14 +21,18 @@ class VehiculeRepository {
   async create(vehicule: Omit<Vehicule, "id">) {
     // Execute the SQL INSERT query to add a new vehicle to the "vehicle" table
     const [result] = await databaseClient.query<Result>(
-      "INSERT INTO vehicle (type, status, energy, vehicule_picture, model_id, user_id) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO vehicle (vehicle_picture, model_id, user_id, location, year, brand, model) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
-        vehicule.type,
-        vehicule.status,
-        vehicule.energy,
-        vehicule.vehicule_picture,
+        // vehicule.type,
+        // vehicule.status,
+        // vehicule.energy,
+        vehicule.vehicule_picture ? vehicule.vehicule_picture : null,
         vehicule.model_id,
         vehicule.user_id,
+        vehicule.location,
+        vehicule.year,
+        vehicule.brand,
+        vehicule.model,
       ],
     );
 
@@ -56,12 +64,12 @@ class VehiculeRepository {
   async update(vehicule: Vehicule) {
     const [result] = await databaseClient.query<Result>(
       `UPDATE vehicule 
-       SET type = ?, status = ?, energy = ?, vehicule_picture = ?, model_id = ?, user_id = ? 
+       SET vehicule_picture = ?, model_id = ?, user_id = ? 
        WHERE id = ?`,
       [
-        vehicule.type,
-        vehicule.status,
-        vehicule.energy,
+        // vehicule.type,
+        // vehicule.status,
+        // vehicule.energy,
         vehicule.vehicule_picture,
         vehicule.model_id,
         vehicule.user_id,
@@ -80,6 +88,15 @@ class VehiculeRepository {
     );
 
     return result.affectedRows > 0;
+  }
+
+  async readUserVehicules(user_id: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "SELECT * FROM vehicle WHERE user_id = ?",
+      [user_id],
+    );
+
+    return rows as Vehicule[];
   }
 }
 

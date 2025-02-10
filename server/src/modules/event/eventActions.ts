@@ -25,6 +25,7 @@ type Event = {
   creator_username?: string;
 };
 
+import markerRepository from "../marker/markerRepository";
 // Import access to data
 import eventRepository from "./eventRepository";
 
@@ -128,11 +129,22 @@ const add: RequestHandler = async (req, res, next) => {
       address: req.body.address,
       description: req.body.description,
       link: req.body.link,
-      user_id: req.body.user_id,
+      user_id: req.user.id,
+    };
+
+    // J'ajoute un marqueur pour l'événement
+    const marker = {
+      lat: req.body.location.x,
+      lng: req.body.location.y,
+      label: `Type: ${req.body.type}, Date: ${req.body.date_start} to ${req.body.date_end}`,
+      details: req.body.details,
+      user_id: req.user.id,
     };
 
     // Create the event
     const insertId = await eventRepository.create(newEvent);
+    // Create the marker
+    await markerRepository.createMarker(marker);
 
     // Récupérer l'événement complet après sa création
     const createdEvent = await eventRepository.getEventWithCreator(insertId);
@@ -177,9 +189,9 @@ const deleteEvent: RequestHandler = async (req, res, next) => {
       const result = await eventRepository.delete(eventId);
 
       if (result) {
-        res
-          .status(200)
-          .json({ message: "Événement et image associée supprimés 💥" });
+        res.status(200).json({
+          message: "Événement et image associée supprimés 💥",
+        });
       } else {
         res.status(404).json({ message: "Événement non trouvé 👀" });
       }

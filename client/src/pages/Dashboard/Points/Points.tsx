@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useData } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
+import { errorToast } from "../../../services/toast";
 import styles from "./Points.module.css";
 
 function Points() {
@@ -14,6 +15,7 @@ function Points() {
         const response = await api.get("/api/users/me");
         setCurrentUser(response.data);
       } catch (error) {
+        errorToast("Erreur lors de la récupération de l'utilisateur");
         console.error(
           "Erreur lors de la récupération de l'utilisateur:",
           error,

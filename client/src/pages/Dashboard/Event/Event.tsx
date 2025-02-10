@@ -3,6 +3,7 @@ import defaultEventImg from "../../../assets/images/pictures/default-event-img.p
 import { useAuth } from "../../../contexts/AuthContext";
 import { useData } from "../../../contexts/DataContext";
 import api from "../../../helpers/api";
+import { errorToast, successToast } from "../../../services/toast";
 import type { Eventdata } from "../../../types/events";
 import styles from "./Event.module.css";
 
@@ -127,7 +128,7 @@ function Dashboard() {
   const addOrUpdateEvent = async () => {
     if (!validateForm()) return;
 
-    const eventData = {
+    let eventData = {
       ...currentEvent,
       type: eventType,
       date_start: formatDate(currentEvent.date_start),
@@ -135,38 +136,39 @@ function Dashboard() {
       user_id: getCurrentUserId(),
     };
 
+    //  Vérifie si l'adresse est remplie et récupérer les coordonnées
+    if (eventData.address.trim()) {
+      const coordinates = await fetchCoordinates(eventData.address);
+      eventData = { ...eventData, location: coordinates };
+    }
+
     try {
       let response: { data: { event: Eventdata } };
       if (currentEvent.id !== -1) {
-        // Mise à jour d'un événement existant
         response = await api.put(`/api/events/${currentEvent.id}`, eventData);
       } else {
-        // Création d'un nouvel événement
         response = await api.post("/api/events", eventData);
       }
 
       const updatedEvent = response.data.event;
 
+      //  Mise à jour de l'image si un fichier a été sélectionné
       if (selectedFile) {
         const formData = new FormData();
         formData.append("event_picture", selectedFile);
-
         const imageResponse = await api.put(
           `/api/events/${updatedEvent.id}/upload`,
           formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          },
+          { headers: { "Content-Type": "multipart/form-data" } },
         );
-
         updatedEvent.event_picture = imageResponse.data.event_picture;
       }
 
-      // Rafraîchissement de la liste des événements
+      //  Rafraîchissement de la liste des événements
       const refreshResponse = await api.get("/api/users/me/events");
       setEvents(refreshResponse.data || []);
 
-      // Réinitialisation du formulaire et fermeture de la modale
+      //  Réinitialisation du formulaire
       setCurrentEvent({
         id: -1,
         title: "",
@@ -174,16 +176,18 @@ function Dashboard() {
         type: "type",
         date_start: "",
         date_end: "",
+        location: { x: 0, y: 0 },
         address: "",
         description: "",
         link: null,
-        location: { x: 0, y: 0 },
         user_id: 0,
       });
       setSelectedFile(null);
       setPreviewImage(null);
       setIsModalOpen(false);
+      successToast("Événement ajouté avec succès !");
     } catch (error) {
+      errorToast("Erreur lors de l'ajout/modification de l'événement");
       console.error(
         "Erreur lors de l'ajout/modification de l'événement:",
         error,
@@ -207,6 +211,26 @@ function Dashboard() {
     }
   };
 
+  //  Fonction pour obtenir les coordonnées GPS à partir d'une adresse
+  const fetchCoordinates = async (address: string) => {
+    try {
+      const response = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+          address,
+        )}`,
+      );
+      const data = await response.json();
+
+      if (data.features.length > 0) {
+        const { coordinates } = data.features[0].geometry;
+        return { x: coordinates[1], y: coordinates[0] }; // latitude (x), longitude (y)
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des coordonnées :", error);
+    }
+    return { x: 0, y: 0 }; // Valeur par défaut si l'API échoue
+  };
+
   // Suppression des événements sélectionnés
   const handleDeleteSelectedEvents = async () => {
     try {
@@ -218,6 +242,7 @@ function Dashboard() {
       );
       setSelectedEvents(new Set());
     } catch (error) {
+      errorToast("Erreur lors de la suppression des événements");
       console.error("Erreur lors de la suppression des événements:", error);
     }
   };
@@ -319,7 +344,9 @@ function Dashboard() {
                   </p>
                   <p>
                     <strong>Date :&nbsp;</strong>
-                    {`Du ${formatDateForDisplay(event.date_start)} au ${formatDateForDisplay(event.date_end)}`}
+                    {`Du ${formatDateForDisplay(
+                      event.date_start,
+                    )} au ${formatDateForDisplay(event.date_end)}`}
                   </p>
                   <p className={styles.locationText}>
                     <strong>Localisation :&nbsp;</strong>{" "}
@@ -406,7 +433,9 @@ function Dashboard() {
                     previewImage
                       ? previewImage
                       : currentEvent.event_picture
-                        ? `${import.meta.env.VITE_API_URL}${currentEvent.event_picture}`
+                        ? `${import.meta.env.VITE_API_URL}${
+                            currentEvent.event_picture
+                          }`
                         : defaultEventImg
                   }
                   alt="Aperçu de l'événement"
@@ -496,8 +525,20 @@ function Dashboard() {
                   address: e.target.value,
                 })
               }
+              onBlur={async () => {
+                if (currentEvent.address.trim()) {
+                  const coordinates = await fetchCoordinates(
+                    currentEvent.address,
+                  );
+                  setCurrentEvent((prev) => ({
+                    ...prev,
+                    location: coordinates,
+                  }));
+                }
+              }}
               className={styles.input}
             />
+
             <textarea
               placeholder="Description de l'événement"
               value={currentEvent.description}
@@ -514,7 +555,10 @@ function Dashboard() {
               placeholder="Lien de l'événement"
               value={currentEvent.link || ""}
               onChange={(e) =>
-                setCurrentEvent({ ...currentEvent, link: e.target.value })
+                setCurrentEvent({
+                  ...currentEvent,
+                  link: e.target.value,
+                })
               }
               className={styles.input}
             />

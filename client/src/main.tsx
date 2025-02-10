@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import AdminRoute from "./protections/AdminRoute";
 /**
@@ -100,6 +101,7 @@ createRoot(rootElement).render(
       <DataProvider>
         <AuthProvider>
           <RouterProvider router={router} />
+          <ToastContainer />
         </AuthProvider>
       </DataProvider>
     </HelmetProvider>
