@@ -77,14 +77,36 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     fetchMarkers();
   }, []);
 
-  // // Fetch markers based on active filters and search inputs
+  // const fetchMarkers = async () => {
+  //   try {
+  //     const url = "http://localhost:3310/api/markers/search";
+  //     const params = new URLSearchParams();
 
+  //     // Add search criterion and query to the request
+  //     if (searchQuery) {
+  //       params.append("criterion", searchCriterion);
+  //       params.append("query", searchQuery);
+  //     }
+
+  //     // Add active filters to the request
+  //     if (activeFilters.length > 0) {
+  //       params.append("types", activeFilters.join(","));
+  //     }
+
+  //     const response = await fetch(`${url}?${params.toString()}`);
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to fetch markers: ${response.statusText}`);
+  //     }
+
+  //     const data = await response.json();
+  //     setMarkers(data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch markers:", error);
+  //   }
+  // };
   const fetchMarkers = async () => {
     try {
-      //!TODO check this route ⬇️
-      // const url = "http://localhost:3310/api/markers/search";
-
-      const url = "http://localhost:3310/api/markers";
+      const url = "http://localhost:3310/api/markers/search";
       const params = new URLSearchParams();
 
       // Add search criterion and query to the request
@@ -103,10 +125,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         throw new Error(`Failed to fetch markers: ${response.statusText}`);
       }
 
-      const data: MarkerType[] = await response.json();
+      const data = await response.json();
       setMarkers(data);
     } catch (error) {
       console.error("Failed to fetch markers:", error);
+      // Display a user-friendly error message
+      errorToast(
+        "Invalid search criteria. Please check your filters and try again.",
+      );
     }
   };
 
