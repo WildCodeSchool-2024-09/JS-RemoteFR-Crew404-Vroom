@@ -128,6 +128,12 @@ class MarkerRepository {
     criterion?: string,
     types?: string,
   ): Promise<Marker[]> {
+    console.info("Received Parameters in searchMarkers:", {
+      query,
+      criterion,
+      types,
+    });
+
     let sql = `
       SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
       FROM marker
@@ -145,24 +151,38 @@ class MarkerRepository {
       params.push(...typeList);
     }
 
-    // Search based on the selected criterion
-    if (query && criterion) {
+    // Search based on the selected criterion (only if query is provided and not empty)
+    if (query && query.trim() !== "" && criterion) {
+      // Validate criterion based on types
+      if (types?.includes("event") && criterion !== "eventCategory") {
+        throw new Error("Invalid criterion for event type");
+      }
+      if (
+        (types?.includes("car") || types?.includes("motorcycle")) &&
+        !["brand", "model", "year"].includes(criterion)
+      ) {
+        throw new Error("Invalid criterion for car or motorcycle type");
+      }
+
       switch (criterion) {
         case "brand":
-          sql += " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.brand')) LIKE ?";
+          sql +=
+            " AND JSON_EXTRACT(details, '$.brand') IS NOT NULL AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.brand')) LIKE ?";
           params.push(`%${query}%`);
           break;
         case "model":
-          sql += " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.model')) LIKE ?";
+          sql +=
+            " AND JSON_EXTRACT(details, '$.model') IS NOT NULL AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.model')) LIKE ?";
           params.push(`%${query}%`);
           break;
         case "year":
-          sql += " AND JSON_EXTRACT(details, '$.year') = ?";
+          sql +=
+            " AND JSON_EXTRACT(details, '$.year') IS NOT NULL AND JSON_EXTRACT(details, '$.year') = ?";
           params.push(Number(query));
           break;
         case "eventCategory":
           sql +=
-            " AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.eventCategory')) LIKE ?";
+            " AND JSON_EXTRACT(details, '$.eventCategory') IS NOT NULL AND JSON_UNQUOTE(JSON_EXTRACT(details, '$.eventCategory')) LIKE ?";
           params.push(`%${query}%`);
           break;
         default:
@@ -173,7 +193,6 @@ class MarkerRepository {
       }
     }
 
-    // Log the SQL query and parameters for debugging
     console.info("Generated SQL Query:", sql);
     console.info("Query Parameters:", params);
 

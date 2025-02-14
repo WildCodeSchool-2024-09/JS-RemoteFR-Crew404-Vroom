@@ -7,15 +7,16 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Define item-related routes
-// import itemActions from "./modules/item/itemActions";
+import itemActions from "./modules/item/itemActions";
 
-// router.get("/api/items", itemActions.browse);
-// router.get("/api/items/:id", itemActions.read);
-// router.post("/api/items", itemActions.add);
+router.get("/api/items", itemActions.browse);
+router.get("/api/items/:id", itemActions.read);
+router.post("/api/items", itemActions.add);
 
 /** login / register /logout */
 import authMiddleware from "./middlewares/authMiddleware";
 import authActions from "./modules/auth/authActions";
+import markerRepository from "./modules/marker/markerRepository";
 
 router.post("/api/register", authMiddleware.hashPwd, authActions.register);
 router.post("/api/login", authMiddleware.verifyPwd, authActions.login);
@@ -62,27 +63,11 @@ router.put(
   authMiddleware.checkToken,
   eventActions.editEvent,
 ); // pour modifier un événement
-router.put(
-  "/api/events/:id/upload",
-  authMiddleware.checkToken,
-  authMiddleware.uploads.single("event_picture"),
-  eventActions.uploadEventImage, // pour télécharger une image
-);
 router.delete(
   "/api/events/:id",
   authMiddleware.checkToken,
   eventActions.deleteEvent,
 ); // pour supprimer un événement
-router.get(
-  "/api/users/me/events",
-  authMiddleware.checkToken,
-  eventActions.getUserEvents,
-); // pour recupérer les événements d'un utilisateur
-router.delete(
-  "/api/event/:id/event-picture",
-  authMiddleware.checkToken,
-  eventActions.deleteEventPicture,
-); // pour supprimer une photo d'événement
 
 /* ************************************************************************* */
 
@@ -90,11 +75,6 @@ router.delete(
 import vehiculeActions from "./modules/vehicules/vehiculeActions";
 
 router.get("/api/vehicules", vehiculeActions.browse);
-router.get(
-  "/api/my-vehicules",
-  authMiddleware.checkToken,
-  vehiculeActions.readUserVehicules,
-);
 router.get("/api/vehicules/:id", vehiculeActions.read);
 router.post("/api/vehicules", authMiddleware.checkToken, vehiculeActions.add);
 router.put(
@@ -115,12 +95,7 @@ import markerActions from "./modules/marker/markerActions";
 // Marker-related routes
 
 router.get("/api/markers", markerActions.browse); // Fetch all markers
-router.get(
-  "/api/user-markers",
-  authMiddleware.checkToken,
-  markerActions.readUserMarker,
-); // Fetch all markers
-router.post("/api/markers", authMiddleware.checkToken, markerActions.add); // Add markers
+router.post("/api/markers", markerActions.add); // Add markers
 router.put(
   "/api/markers/:id(\\d+)",
   authMiddleware.checkToken,
@@ -131,7 +106,37 @@ router.delete(
   authMiddleware.checkToken,
   markerActions.remove,
 ); // Delete a marker
-router.get("/api/markers/search", markerActions.search);
+// In your router.ts or wherever the route is defined
+router.get("/api/markers/search", async (req, res, next) => {
+  try {
+    console.info("Request Query Parameters:", req.query);
+
+    const { query, criterion, types } = req.query;
+
+    // Ensure query is a string or undefined
+    const queryParam = typeof query === "string" ? query : undefined;
+    const criterionParam =
+      typeof criterion === "string" ? criterion : undefined;
+    const typesParam = typeof types === "string" ? types : undefined;
+
+    console.info("Extracted Parameters in Route Handler:", {
+      query: queryParam,
+      criterion: criterionParam,
+      types: typesParam,
+    });
+
+    const markers = await markerRepository.searchMarkers(
+      queryParam,
+      criterionParam,
+      typesParam,
+    );
+
+    res.json(markers);
+  } catch (err) {
+    console.error("Error in /api/markers/search route:", err);
+    next(err);
+  }
+});
 router.get("/api/markers/:id(\\d+)", markerActions.read);
 
 /* ************************************************************************* */

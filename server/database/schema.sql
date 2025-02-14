@@ -212,3 +212,4 @@ Pour les tests du véhicule, je vous ai mis un exemple de ce que pourrait être 
 insert into vehicle (id, vehicle_picture, location, user_id, model_id, year, brand, model) values 
 (1, 'https://abcmoteur.fr/wp-content/uploads/2012/07/skyline-c10-gtr-1970.jpg', 'Paris', 2, 29, 2025, "Nissan", 'skyline r34 GT-R'),
 (2, 'https://www.largus.fr/images/images/audi-a4-2020-1.jpg', 'Lille', 3, 30, 2025, "Harley-Davidson", '8 - XR750');
+
