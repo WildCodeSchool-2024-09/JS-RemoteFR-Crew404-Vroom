@@ -77,7 +77,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     fetchMarkers();
   }, []);
 
-  
   const fetchMarkers = async () => {
     try {
       const url = "http://localhost:3310/api/markers/search";
