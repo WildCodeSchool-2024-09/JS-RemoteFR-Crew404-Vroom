@@ -50,10 +50,18 @@ router.delete(
   authActions.deleteProfilePicture,
 ); // pour supprimer une photo de profil
 
+import SendMailer_Middleware from "./middlewares/SendMailer_Middleware";
 /* ************************************************************************* */
 /**email */
+import VerifyKeys from "./middlewares/VerifyKeys";
+import authEmail from "./modules/email/authEmail";
 
-router.post("/api/email");
+router.post(
+  "/api/email",
+  VerifyKeys(["to", "subject", "text"]),
+  SendMailer_Middleware,
+  authEmail,
+);
 /* ************************************************************************* */
 
 /** events */

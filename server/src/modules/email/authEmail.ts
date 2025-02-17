@@ -16,3 +16,5 @@ async function authEmail(req: Request, res: Response) {
     return;
   }
 }
+
+export default authEmail;
