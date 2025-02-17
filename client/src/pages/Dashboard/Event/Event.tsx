@@ -340,18 +340,20 @@ function Dashboard() {
                 <div className={styles.eventDetails}>
                   <p>
                     <strong>Nom :&nbsp;</strong>
-                    {event.title}
                   </p>
+                  <p>{event.title}</p>
                   <p>
                     <strong>Date :&nbsp;</strong>
+                  </p>{" "}
+                  <p>
                     {`Du ${formatDateForDisplay(
                       event.date_start,
                     )} au ${formatDateForDisplay(event.date_end)}`}
                   </p>
                   <p className={styles.locationText}>
                     <strong>Localisation :&nbsp;</strong>{" "}
-                    {event.address.toUpperCase()}
                   </p>
+                  <p>{event.address.toUpperCase()}</p>
                 </div>
               </button>
               <input

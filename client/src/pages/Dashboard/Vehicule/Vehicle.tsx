@@ -247,10 +247,10 @@ function Vehicle() {
       window.confirm("Êtes-vous sûr de vouloir supprimer cette image ?")
     ) {
       try {
-        await api.delete(`/api/event/${currentVehicle.id}/event-picture`);
+        await api.delete(`/api/vehicle/${currentVehicle.id}/vehicle-picture`);
         setCurrentVehicle({
           ...currentVehicle,
-          vehicle_picture: undefined,
+          vehicle_picture: null,
         });
       } catch (error) {
         console.error("Erreur lors de la suppression de l'image:", error);
@@ -265,26 +265,22 @@ function Vehicle() {
       <div>
         {vehicles.map((vehicle) => (
           <div key={vehicle.id} className={styles.eventWrapper}>
-            <input
-              type="checkbox"
-              checked={selectedVehicles.has(vehicle.id)}
-              onChange={() => handleCheckboxChange(vehicle.id)}
-            />
             <button
               type="button"
               className={styles.event}
               onClick={() => handleVehicleClick(vehicle)}
             >
-              <div
+              <img
                 className={styles.image}
-                style={{
-                  backgroundImage: vehicle.vehicle_picture
-                    ? `url(${vehicle.vehicle_picture})`
-                    : "url(/default-placeholder.png)",
-                  backgroundSize: "cover",
-                }}
+                alt="pas d'image"
+                src={
+                  vehicle.vehicle_picture
+                    ? `${import.meta.env.VITE_API_URL}${vehicle.vehicle_picture}`
+                    : defaultVehicleImg
+                }
+                style={{ backgroundSize: "cover" }}
               />
-              <div>
+              <div className={styles.vehicledetails}>
                 <p>
                   <strong>Marque:&nbsp;</strong> {vehicle.brand}
                 </p>
@@ -303,6 +299,12 @@ function Vehicle() {
                 </p>
               </div>
             </button>
+            <input
+              type="checkbox"
+              checked={selectedVehicles.has(vehicle.id)}
+              onChange={() => handleCheckboxChange(vehicle.id)}
+              className={styles.checkbox}
+            />
           </div>
         ))}
       </div>
@@ -322,7 +324,7 @@ function Vehicle() {
         onClick={() => {
           setCurrentVehicle({
             id: -1,
-            vehicle_picture: undefined,
+            vehicle_picture: null,
             type: "type",
             status: "indisponible",
             location: "",
