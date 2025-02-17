@@ -214,6 +214,10 @@
 
 .checkbox {
   margin-right: 0.5em;
+  @media screen and (min-width: 550px) {
+    transform: scale(1.5);
+    margin-right: 0.9em;
+  }
 }
 
 .capitalize,
