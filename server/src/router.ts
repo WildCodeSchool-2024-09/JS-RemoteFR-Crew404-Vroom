@@ -51,6 +51,10 @@ router.delete(
 ); // pour supprimer une photo de profil
 
 /* ************************************************************************* */
+/**email */
+
+router.post("/api/email");
+/* ************************************************************************* */
 
 /** events */
 import eventActions from "./modules/event/eventActions";
