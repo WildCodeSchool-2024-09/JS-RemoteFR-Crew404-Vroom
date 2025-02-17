@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 async function authEmail(req: Request, res: Response) {
   try {
     // res.status(200).json({ reponse: "Mail envoyé avec succès !", data: req.body })
-    res.status(200).json({ reponse: "Route mail existant", data: req.body });
+    res.status(200).json({ reponse: "Email envoyé", data: req.body });
   } catch (error) {
     res.status(500).json({ error: "Erreur interne serveur." });
     console.error({
