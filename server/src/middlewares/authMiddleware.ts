@@ -8,8 +8,17 @@ import jwt from "./jwtMiddleware";
 // Configuration de Multer pour le stockage des fichiers uploadés
 const configMulter = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir =
-      file.fieldname === "event_picture" ? "./uploads/events" : "./uploads";
+    let uploadDir = "";
+    switch (file.fieldname) {
+      case "event_picture":
+        uploadDir = "./uploads/events";
+        break;
+      case "vehicle_picture":
+        uploadDir = "./uploads/vehicles";
+        break;
+      default:
+        uploadDir = "./uploads";
+    }
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {

@@ -4,7 +4,7 @@ import "./DashboardRoot.css";
 import Advert from "../../pages/Dashboard/Advert/Advert";
 import Event from "../../pages/Dashboard/Event/Event";
 import Points from "../../pages/Dashboard/Points/Points";
-import Vehicule from "../../pages/Dashboard/Vehicule/Vehicule";
+import Vehicule from "../../pages/Dashboard/Vehicule/Vehicle";
 
 function DashboardRoot() {
   return (

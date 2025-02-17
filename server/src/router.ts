@@ -57,36 +57,69 @@ import eventActions from "./modules/event/eventActions";
 
 router.get("/api/events", eventActions.browse); //recupère tous les événements
 router.get("/api/events/:id", eventActions.read); //recupère un seul événement
+router.get(
+  "/api/users/me/events",
+  authMiddleware.checkToken,
+  eventActions.getUserEvents, // Pour récupérer les événements de l'utilisateur connecté
+);
 router.post("/api/events", authMiddleware.checkToken, eventActions.add); // pour ajouter un événement
 router.put(
   "/api/events/:id",
   authMiddleware.checkToken,
   eventActions.editEvent,
 ); // pour modifier un événement
+router.put(
+  "/api/events/:id/upload",
+  authMiddleware.checkToken,
+  authMiddleware.uploads.single("event_picture"),
+  eventActions.uploadEventImage, // pour télécharger une image
+);
 router.delete(
   "/api/events/:id",
   authMiddleware.checkToken,
   eventActions.deleteEvent,
 ); // pour supprimer un événement
+router.delete(
+  "/api/event/:id/event-picture",
+  authMiddleware.checkToken,
+  eventActions.deleteEventPicture,
+); // pour supprimer une photo d'événement
 
 /* ************************************************************************* */
 
 /** vehicules */
-import vehiculeActions from "./modules/vehicules/vehiculeActions";
+import vehicleActions from "./modules/vehicles/vehicleActions";
 
-router.get("/api/vehicules", vehiculeActions.browse);
-router.get("/api/vehicules/:id", vehiculeActions.read);
-router.post("/api/vehicules", authMiddleware.checkToken, vehiculeActions.add);
-router.put(
-  "/api/vehicules/:id",
+router.get("/api/vehicles", vehicleActions.browse); //recupère tous les véhicles
+router.get("/api/vehicles/:id", vehicleActions.read); //recupère un seul véhicle
+router.get(
+  "/api/users/me/vehicles",
   authMiddleware.checkToken,
-  vehiculeActions.editVehicule,
+  vehicleActions.readUserVehicles, // Pour récupérer les véhicles de l'utilisateur connecté
+);
+router.post("/api/vehicles", authMiddleware.checkToken, vehicleActions.add); // pour ajouter un véhicle
+router.put(
+  "/api/vehicles/:id",
+  authMiddleware.checkToken,
+  vehicleActions.editVehicle,
+); // pour modifier un véhicle
+router.put(
+  "/api/vehicles/:id/upload",
+  authMiddleware.checkToken,
+  authMiddleware.uploads.single("vehicle_picture"),
+  vehicleActions.uploadVehicleImage, // pour télécharger une image
 );
 router.delete(
-  "/api/vehicules/:id",
+  "/api/vehicles/:id",
   authMiddleware.checkToken,
-  vehiculeActions.deleteVehicule,
+  vehicleActions.deleteVehicle,
 );
+
+router.delete(
+  "/api/vehicle/:id/vehicle-picture",
+  authMiddleware.checkToken,
+  vehicleActions.deleteVehiclePicture,
+); // pour supprimer une photo de véhicule
 
 /* ************************************************************************* */
 /** markers */
