@@ -31,6 +31,12 @@ router.get(
   authMiddleware.checkToken,
   authActions.getCurrentUser,
 ); //recupère l'utilisateur connecté
+router.get(
+  "/api/users/me/events",
+  authMiddleware.checkToken,
+  authActions.getMyEvents,
+); //recupère l'utilisateur connecté
+
 router.get("/api/users", authMiddleware.checkToken, authActions.browse); //recupère tous les utilisateurs
 router.get("/api/users/:id", authActions.read); //recupère un seul utilisateur
 router.put(
@@ -56,6 +62,7 @@ router.delete(
 import eventActions from "./modules/event/eventActions";
 
 router.get("/api/events", eventActions.browse); //recupère tous les événements
+
 router.get("/api/events/:id", eventActions.read); //recupère un seul événement
 router.get(
   "/api/users/me/events",
@@ -128,7 +135,7 @@ import markerActions from "./modules/marker/markerActions";
 // Marker-related routes
 
 router.get("/api/markers", markerActions.browse); // Fetch all markers
-router.post("/api/markers", markerActions.add); // Add markers
+router.post("/api/markers", authMiddleware.checkToken, markerActions.add); // Add markers
 router.put(
   "/api/markers/:id(\\d+)",
   authMiddleware.checkToken,

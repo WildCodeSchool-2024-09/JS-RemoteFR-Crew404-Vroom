@@ -12,41 +12,54 @@ const browse: RequestHandler = async (req, res, next) => {
   }
 };
 
-// The R of BREAD - Read operation
 const read: RequestHandler = async (req, res, next) => {
   try {
+    console.info("req.params.id:", req.params.id); // Vérifier la valeur de req.params.id
     const markerId = Number(req.params.id);
+
     if (Number.isNaN(markerId)) {
-      res.status(400).json({ error: "Invalid marker ID" }); // No return statement
-      return; // Use return to exit the function
+      res.status(400).json({ error: "Invalid marker ID" });
+      return;
     }
 
     const marker = await markerRepository.getMarkerById(markerId);
     if (marker == null) {
-      res.sendStatus(404).json({ error: "Item not found" }); // Object item not found
+      res.status(404).json({ error: "Item not found" }); // Correction : pas de `sendStatus`
     } else {
-      res.json(marker); // No return statement
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-const readUserMarker: RequestHandler = async (req, res, next) => {
-  try {
-    const marker = await markerRepository.getMyMarker(req.user.id);
-    if (marker == null) {
-      res.sendStatus(404); // No return statement
-    } else {
-      res.json(marker); // No return statement
+      res.json(marker);
     }
   } catch (err) {
     next(err);
   }
 };
 
-// The A of BREAD - Add operation
+const readUserMarker: RequestHandler = async (req, res, next) => {
+  try {
+    console.info("req.user:", req.user); // Vérifier la valeur de req.user
+    if (!req.user || typeof req.user.id !== "number") {
+      res.status(400).json({ error: "User ID is missing or invalid" });
+      return;
+    }
+
+    const marker = await markerRepository.getMyMarker(req.user.id);
+    if (marker == null) {
+      res.status(404).json({ error: "Item not found" }); // Correction : pas de `sendStatus`
+    } else {
+      res.json(marker);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const add: RequestHandler = async (req, res, next) => {
   try {
+    console.info("req.user:", req.user); // Vérifier si req.user est défini
+    if (!req.user || typeof req.user.id !== "number") {
+      res.status(400).json({ error: "User ID is missing or invalid" });
+      return;
+    }
+
     const newMarker: Omit<Marker, "id"> = {
       lat: req.body.lat,
       lng: req.body.lng,
@@ -55,6 +68,8 @@ const add: RequestHandler = async (req, res, next) => {
       user_id: req.user.id,
     };
 
+    console.info("newMarker:", newMarker); // Vérifier la structure de newMarker
+
     const insertId = await markerRepository.createMarker(newMarker);
     const createdMarker = await markerRepository.getMarkerById(insertId);
 
@@ -62,8 +77,9 @@ const add: RequestHandler = async (req, res, next) => {
       throw new Error("Failed to fetch the newly created marker");
     }
 
-    res.status(201).json(createdMarker); // No return statement
+    res.status(201).json(createdMarker);
   } catch (err) {
+    console.error("Error in add marker:", err);
     next(err);
   }
 };
