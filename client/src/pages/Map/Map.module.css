@@ -324,3 +324,27 @@
   cursor: pointer;
   font-size: 14px;
 }
+.leaflet-popup-content {
+  margin: 13px 19px;
+  line-height: 1.4;
+  background-color: green;
+}
+
+.popupContent {
+  background-color: var(--light);
+  color: var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.popupContent h4 {
+  margin: 0 0 10px;
+  font-size: var(--h4);
+  color: var(--primary-color);
+}
+
+.popupContent p {
+  margin: 0;
+  font-size: var(--p);
+}

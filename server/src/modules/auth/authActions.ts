@@ -196,6 +196,20 @@ const deleteProfilePicture: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getMyEvents: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: "Utilisateur non trouvé" });
+      return;
+    }
+
+    const myEvents = await authRepository.getMyEvent(req.user.id);
+    res.json(myEvents);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   browse,
   read,
@@ -205,4 +219,5 @@ export default {
   login,
   getCurrentUser,
   deleteProfilePicture,
+  getMyEvents,
 };

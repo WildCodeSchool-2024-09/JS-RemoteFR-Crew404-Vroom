@@ -19,6 +19,7 @@ const contacts = [
     alt: "Instagram icon",
     text: "@roadaddict",
     lien: "https://www.instagram.com/",
+    target: "_blank", // Ajout de target="_blank"
   },
   {
     id: 3,
@@ -26,6 +27,7 @@ const contacts = [
     alt: "Facebook icon",
     text: "@roadaddict",
     lien: "https://www.facebook.com/",
+    target: "_blank", // Ajout de target="_blank"
   },
 ];
 
@@ -58,7 +60,7 @@ function ContactRoot() {
                     alt={contact.alt}
                     className={styles.icon}
                   />
-                  <a href={contact.lien}>
+                  <a href={contact.lien} target={contact.target || "_self"}>
                     <span>{contact.text}</span>
                   </a>
                 </div>

@@ -15,14 +15,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import React from "react";
+import MarkerClusterGroup from "react-leaflet-cluster"; // Import MarkerClusterGroup
 import pinMapIcon from "../../assets/images/svg/pinMap.svg";
-// Import Marker interface
-import type { Marker as MarkerType } from "../../types/marker";
-
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
 import { errorToast, infoToast, successToast } from "../../services/toast";
-// Create a custom icon
+import type { Marker as MarkerType } from "../../types/marker";
+
 const customIcon = new L.Icon({
   iconUrl: pinMapIcon,
   iconSize: [32, 32],
@@ -56,23 +55,18 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   const [eventCategory, setEventCategory] = useState<string>("");
   const [isRange, setIsRange] = useState(false);
 
-  // State for active filters
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-
-  // State for search functionality
   const [searchCriterion, setSearchCriterion] = useState<
     "brand" | "model" | "year" | "eventCategory"
   >("brand");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Define icons with their types
   const icons = [
     { type: "car", icon: "🚗" },
     { type: "motorcycle", icon: "🏍️" },
     { type: "event", icon: "🎉" },
   ];
 
-  // Fetch markers from the backend on component load
   useEffect(() => {
     fetchMarkers();
   }, []);
@@ -82,72 +76,62 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
       const url = "http://localhost:3310/api/markers/search";
       const params = new URLSearchParams();
 
-      // Add search criterion and query to the request
       if (searchQuery) {
         params.append("criterion", searchCriterion);
         params.append("query", searchQuery);
       }
 
-      // Add active filters to the request
       if (activeFilters.length > 0) {
         params.append("types", activeFilters.join(","));
       }
-
+      console.info("Fetching markers with parameters:", params.toString());
       const response = await fetch(`${url}?${params.toString()}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch markers: ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.info("Received markers data:", data);
       setMarkers(data);
     } catch (error) {
       console.error("Failed to fetch markers:", error);
-      // Display a user-friendly error message
       errorToast(
         "Invalid search criteria. Please check your filters and try again.",
       );
     }
   };
 
-  // Handle search criterion change
   const handleCriterionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSearchCriterion(
       e.target.value as "brand" | "model" | "year" | "eventCategory",
     );
   };
 
-  // Handle search query change
   const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  // Handle search submission
   const handleSearchSubmit = () => {
     fetchMarkers();
   };
 
-  // Handle filter toggling
   const handleFilterToggle = (type: string) => {
-    setActiveFilters(
-      (prevFilters) =>
-        prevFilters.includes(type)
-          ? prevFilters.filter((filter) => filter !== type) // Remove filter if already active
-          : [...prevFilters, type], // Add filter if not active
+    setActiveFilters((prevFilters) =>
+      prevFilters.includes(type)
+        ? prevFilters.filter((filter) => filter !== type)
+        : [...prevFilters, type],
     );
   };
 
-  // Filter markers based on active filters
   const filteredMarkers = markers.filter((marker) => {
-    if (activeFilters.length === 0) return true; // Show all markers if no filters are active
+    if (activeFilters.length === 0) return true;
 
-    // Ensure marker.details.eventType is defined and matches the activeFilters
     const markerEventType = marker.details?.eventType?.toLowerCase();
     return activeFilters.some(
       (filter) => filter.toLowerCase() === markerEventType,
     );
   });
 
-  // Get available search criteria based on active filters
   const getSearchCriteria = () => {
     if (activeFilters.includes("car") || activeFilters.includes("motorcycle")) {
       return [
@@ -159,15 +143,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     if (activeFilters.includes("event")) {
       return [{ value: "eventCategory", label: "Event Category" }];
     }
-    return []; // No active filters
+    return [];
   };
 
-  // Render the search bar with dynamic criteria
   const renderSearchBar = () => {
     const criteria = getSearchCriteria();
 
     if (criteria.length === 0) {
-      return null; // Don't show search bar if no filters are active
+      return null;
     }
 
     return (
@@ -221,7 +204,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     }
 
     try {
-      // Formatage des dates en "YYYY-MM-DD"
       const formatDate = (date: Date | null) =>
         date ? date.toISOString().split("T")[0] : "";
 
@@ -229,25 +211,22 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         ? `${formatDate(startDate)} to ${formatDate(endDate)}`
         : formatDate(date);
 
-      // Récupération des coordonnées GPS
       const latitude = newMarkerPosition?.[0] || 0;
       const longitude = newMarkerPosition?.[1] || 0;
 
-      // Récupération de l'adresse avec l'API de géocodage inverse
-      let address = "Adresse inconnue"; // Valeur par défaut si l'API échoue
+      let address = "Adresse inconnue";
       try {
         const response = await fetch(
           `https://api-adresse.data.gouv.fr/reverse/?lat=${latitude}&lon=${longitude}`,
         );
         const data = await response.json();
         if (data.features.length > 0) {
-          address = data.features[0].properties.label; // Adresse formatée
+          address = data.features[0].properties.label;
         }
       } catch (error) {
         console.error("Erreur lors de la récupération de l'adresse :", error);
       }
 
-      // Création du nouvel objet marker avec l'adresse
       const newMarkerData = {
         lat: latitude,
         lng: longitude,
@@ -262,8 +241,8 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         },
         user_id: user?.id || "",
       };
-
-      // Envoi du marker au serveur
+      console.info("New Marker Data:", newMarkerData);
+      // Ici je poste une 1ère fois
       const addMarker = await api.post("/api/markers", newMarkerData);
 
       if (addMarker.status !== 201) {
@@ -272,12 +251,12 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         return;
       }
 
-      // Ajout de l'événement si nécessaire
       switch (eventType) {
         case "event":
+          // je poste une 2eme fois le marker
           await api.post("/api/events", {
             title: `Événement: ${eventCategory}`,
-            type: "Salon", // Ici, c'est un exemple, mais il faut ajouter un champ pour le type d'événement
+            type: "Salon",
             date_start: formatDate(startDate),
             date_end: formatDate(endDate),
             address,
@@ -287,6 +266,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               address,
             },
             user_id: user?.id || "",
+            isMap: true,
           });
           break;
         case "car":
@@ -312,10 +292,8 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         throw new Error("Données du marker invalides reçues depuis le serveur");
       }
 
-      // Ajout du marker dans le state
       setMarkers((prevMarkers) => [...prevMarkers, data]);
 
-      // Réinitialisation du formulaire
       setIsModalOpen(false);
       setNewMarkerPosition(null);
       setEventType(null);
@@ -336,7 +314,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   return (
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
-        {/* Add Marker Button */}
         <button
           type="button"
           className={styles.icon}
@@ -351,17 +328,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
           {isAddingMarker ? "❌" : "📍"}
         </button>
 
-        {/* Render the search bar with dynamic criteria */}
         {renderSearchBar()}
 
-        {/* Icons for Filtering by Type */}
         <IconsContainer
           icons={icons}
           activeFilters={activeFilters}
           onFilterToggle={handleFilterToggle}
         />
 
-        {/* Map Container */}
         <MapContainer
           center={center}
           zoom={zoom}
@@ -373,52 +347,107 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {/* Add the MapClickHandler component */}
           <MapClickHandler onClick={handleMapClick} />
 
-          {/* Display Markers */}
-          {filteredMarkers.map((marker) => {
-            if (
-              typeof marker.lat !== "number" ||
-              typeof marker.lng !== "number"
-            ) {
-              console.error("Invalid marker data:", marker);
-              return null; // Skip rendering this marker
-            }
+          {/* Wrap markers in MarkerClusterGroup */}
+          <MarkerClusterGroup>
+            {filteredMarkers.map((marker) => {
+              if (
+                typeof marker.lat !== "number" ||
+                typeof marker.lng !== "number"
+              ) {
+                console.error("Invalid marker data:", marker);
+                return null;
+              }
 
-            return (
-              <Marker
-                key={marker.id}
-                position={[marker.lat, marker.lng]}
-                icon={customIcon}
-              >
-                <Popup>
-                  {marker.label}
-                  <br />
-                  {marker.details && JSON.stringify(marker.details, null, 2)}
-                </Popup>
+              return (
+                <Marker
+                  key={marker.id}
+                  position={[marker.lat, marker.lng]}
+                  icon={customIcon}
+                >
+                  <Popup>
+                    <div
+                      style={{
+                        color: "var(--primary-color)",
+                        backgroundColor: "var(--fifthly-color)",
+                        padding: "8px",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {marker.label && (
+                        <strong style={{ color: "var(--tertiary-color)" }}>
+                          {marker.label}
+                        </strong>
+                      )}
+                      <br />
+                      {marker.details && (
+                        <div
+                          style={{
+                            color: "var(--secondary-color)",
+                            backgroundColor: "var(--light)",
+                            padding: "6px",
+                            borderRadius: "3px",
+                            marginTop: "5px",
+                          }}
+                        >
+                          <p>
+                            <strong>Type d'événement :</strong>{" "}
+                            {marker.details.eventType}
+                          </p>
+                          <p>
+                            <strong>Date :</strong> {marker.details.date}
+                          </p>
+                          {marker.details.brand && (
+                            <p>
+                              <strong>Marque :</strong> {marker.details.brand}
+                            </p>
+                          )}
+                          {marker.details.model && (
+                            <p>
+                              <strong>Modèle :</strong> {marker.details.model}
+                            </p>
+                          )}
+                          {marker.details.year && (
+                            <p>
+                              <strong>Année :</strong> {marker.details.year}
+                            </p>
+                          )}
+                          {marker.details.eventCategory && (
+                            <p>
+                              <strong>Catégorie :</strong>{" "}
+                              {marker.details.eventCategory}
+                            </p>
+                          )}
+                          {marker.details.duration && (
+                            <p>
+                              <strong>Durée :</strong> {marker.details.duration}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            })}
+
+            {newMarkerPosition && (
+              <Marker position={newMarkerPosition} icon={customIcon}>
+                <Popup>New Marker</Popup>
               </Marker>
-            );
-          })}
-
-          {/* Render the new marker with custom icon */}
-          {newMarkerPosition && (
-            <Marker position={newMarkerPosition} icon={customIcon}>
-              <Popup>New Marker</Popup>
-            </Marker>
-          )}
+            )}
+          </MarkerClusterGroup>
 
           <AdjustZoomControls />
         </MapContainer>
       </div>
 
-      {/* Modal for adding marker information */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <h3>Add Point of Interest</h3>
 
-            {/* Event Type Selection */}
             <select
               value={eventType || ""}
               onChange={(e) =>
@@ -434,7 +463,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               <option value="event">Event</option>
             </select>
 
-            {/* Toggle between single day and range */}
             <div>
               <label>
                 <input
@@ -454,7 +482,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               </label>
             </div>
 
-            {/* Date Input */}
             {isRange ? (
               <div>
                 <DatePicker
@@ -486,7 +513,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               />
             )}
 
-            {/* Conditional Fields */}
             {eventType === "car" && (
               <>
                 <input

@@ -6,6 +6,7 @@ export interface MarkerDetails {
   year?: number;
   eventCategory?: string;
   duration?: string;
+  address?: string; // Add this line
 }
 
 export interface Marker {
