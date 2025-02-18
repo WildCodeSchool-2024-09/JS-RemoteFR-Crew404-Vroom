@@ -76,12 +76,12 @@ CREATE TABLE vehicle (
 );
 
 
-CREATE TABLE `like` (
+CREATE TABLE favoris (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
   user_id INT unsigned NOT NULL,
-  content_id INT unsigned NOT NULL, -- ID du véhicule ou de l'événement
-  content_type ENUM('vehicle', 'event') NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES user(id)
+  vehicle_id INT unsigned NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
 );
 
 insert into user (id, username, email, password, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin) values 

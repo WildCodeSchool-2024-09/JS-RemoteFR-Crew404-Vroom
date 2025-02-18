@@ -180,19 +180,19 @@ router.get("/api/markers/search", async (req, res, next) => {
 router.get("/api/markers/:id(\\d+)", markerActions.read);
 
 /* ************************************************************************* */
-/** Likes */
-import likeActions from "./modules/like/likeActions";
+/** Favoris */
+import favorisActions from "./modules/favoris/favorisActions";
 
-router.post("/api/likes", authMiddleware.checkToken, likeActions.addLike); // Ajouter un like pour un véhicule ou un événement
+router.post("/api/likes", authMiddleware.checkToken, favorisActions.addFavoris); // Ajouter   un véhicule en favoris
 router.delete(
-  "/api/likes/:id",
+  "/api/favoris/:id",
   authMiddleware.checkToken,
-  likeActions.deleteLike,
-); // Supprimer un like
+  favorisActions.deleteFavoris,
+); // Supprimer un favoris
 router.get(
-  "/api/users/me/likes",
+  "/api/users/me/favoris",
   authMiddleware.checkToken,
-  likeActions.getUserLikes,
-); // Récupérer les likes de l'utilisateur connecté
+  favorisActions.getUserFavoris,
+); // Récupérer les favoris de l'utilisateur connecté
 
 export default router;
