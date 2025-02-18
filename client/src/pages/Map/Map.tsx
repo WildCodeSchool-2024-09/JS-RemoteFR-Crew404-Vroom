@@ -34,6 +34,86 @@ interface MapsProps {
   zoom?: number;
 }
 
+const formatPopupHeaderDate = (dateString: string, isSingleDay = false) => {
+  if (dateString.includes(" to ")) {
+    // Si c'est une plage de dates, retourner les deux dates formatées
+    const [startDate, endDate] = dateString.split(" to ");
+    return `Du ${getDayLabel(startDate)} au ${getDayLabel(endDate)}`;
+  }
+  // Une seule date
+  if (isSingleDay) {
+    const day = getDayLabel(dateString).split(" ")[0]; // Extraire le jour (ex: "mercredi")
+    return `Tous les ${day}`; // Retourne "Tous les [jour]"
+  }
+  return getDayLabel(dateString); // Utilise la méthode pour un seul jour
+};
+
+const translateEventType = (eventType: string) => {
+  switch (eventType) {
+    case "car":
+      return "voiture";
+    case "motorcycle":
+      return "moto";
+    case "event":
+      return "événement";
+    default:
+      return eventType; // Si le type n'est pas reconnu, retourner la valeur d'origine
+  }
+};
+// Fonction qui convertit la date ou la plage de dates au format humain
+const getFormattedDate = (dateString: string, isSingleDay = false) => {
+  if (dateString.includes(" to ")) {
+    // Si c'est une plage de dates, retourner les deux dates formatées
+    const [startDate, endDate] = dateString.split(" to ");
+    return `Du ${getDayLabel(startDate)} au ${getDayLabel(endDate)}`;
+  }
+  // Une seule date
+  if (isSingleDay) {
+    const day = getDayLabel(dateString).split(" ")[0]; // Extraire le jour (ex: "mercredi")
+    return `Tous les ${day}`; // Retourne "Tous les [jour]"
+  }
+  return getDayLabel(dateString); // Utilise la méthode pour un seul jour
+};
+
+// Fonction pour afficher la date de manière lisible en français
+const getDayLabel = (dateString: string) => {
+  const days = [
+    "dimanche",
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+  ];
+
+  const months = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
+
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return dateString; // Si invalide, garder tel quel
+
+  // Ajuster la logique pour que le jour de la semaine corresponde au bon jour
+  const dayIndex = (date.getDay() + 1) % 7; // Ajouter 1 et utiliser le modulo pour éviter le décalage
+  const day = date.getDate(); // Jour du mois
+  const monthIndex = date.getMonth(); // Mois
+  const year = date.getFullYear(); // Année
+
+  // Formater la date de manière lisible
+  return `${days[dayIndex]} ${day} ${months[monthIndex]} ${year}`;
+};
 function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   const { user } = useAuth();
   const [isAddingMarker, setIsAddingMarker] = useState(false);
@@ -185,10 +265,18 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   };
 
   const handleAddMarkerButtonClick = () => {
+    if (!user) {
+      infoToast("Vous devez être connecté pour ajouter un marqueur.");
+      return;
+    }
     setIsAddingMarker((prev) => !prev);
   };
 
   const handleMapClick = (e: LeafletMouseEvent) => {
+    if (!user) {
+      infoToast("Vous devez être connecté pour ajouter un marqueur.");
+      return;
+    }
     if (isAddingMarker) {
       const { lat, lng } = e.latlng;
       setNewMarkerPosition([lat, lng]);
@@ -235,6 +323,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
           eventType,
           date: formattedDate,
           address,
+          isSingleDay: !isRange, // Ajout de isSingleDay
           ...(eventType === "car" || eventType === "motorcycle"
             ? { brand, model, year }
             : { type: eventCategory, duration: formattedDate }),
@@ -242,6 +331,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
         user_id: user?.id || "",
       };
       console.info("New Marker Data:", newMarkerData);
+
       // Ici je poste une 1ère fois
       const addMarker = await api.post("/api/markers", newMarkerData);
 
@@ -257,8 +347,8 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
           await api.post("/api/events", {
             title: `Événement: ${eventCategory}`,
             type: "Salon",
-            date_start: formatDate(startDate),
-            date_end: formatDate(endDate),
+            date_start: formatDate(startDate) || formatDate(date), // Utiliser date si startDate est vide
+            date_end: formatDate(endDate) || formatDate(date), // Utiliser date si endDate est vide
             address,
             location: {
               x: newMarkerPosition?.[0] || 0,
@@ -314,19 +404,21 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   return (
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
-        <button
-          type="button"
-          className={styles.icon}
-          style={{
-            position: "absolute",
-            top: "20px",
-            right: "20px",
-            zIndex: 1000,
-          }}
-          onClick={handleAddMarkerButtonClick}
-        >
-          {isAddingMarker ? "❌" : "📍"}
-        </button>
+        {user && (
+          <button
+            type="button"
+            className={styles.icon}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              zIndex: 1000,
+            }}
+            onClick={handleAddMarkerButtonClick}
+          >
+            {isAddingMarker ? "❌" : "📍"}
+          </button>
+        )}
 
         {renderSearchBar()}
 
@@ -377,7 +469,17 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                     >
                       {marker.label && (
                         <strong style={{ color: "var(--tertiary-color)" }}>
-                          {marker.label}
+                          Type:{" "}
+                          {marker.details
+                            ? translateEventType(marker.details.eventType)
+                            : "Type inconnu"}
+                          , Date:{" "}
+                          {marker.details
+                            ? formatPopupHeaderDate(
+                                marker.details.date,
+                                marker.details.isSingleDay,
+                              )
+                            : "Date inconnue"}
                         </strong>
                       )}
                       <br />
@@ -393,10 +495,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                         >
                           <p>
                             <strong>Type d'événement :</strong>{" "}
-                            {marker.details.eventType}
+                            {translateEventType(marker.details.eventType)}
                           </p>
                           <p>
-                            <strong>Date :</strong> {marker.details.date}
+                            <strong>Date :</strong>{" "}
+                            {getFormattedDate(
+                              marker.details.date,
+                              marker.details.isSingleDay,
+                            )}
                           </p>
                           {marker.details.brand && (
                             <p>
@@ -421,7 +527,11 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                           )}
                           {marker.details.duration && (
                             <p>
-                              <strong>Durée :</strong> {marker.details.duration}
+                              <strong>Durée :</strong>{" "}
+                              {getFormattedDate(
+                                marker.details.duration,
+                                marker.details.isSingleDay,
+                              )}
                             </p>
                           )}
                         </div>
@@ -458,6 +568,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               <option value="" disabled>
                 Select type
               </option>
+
               <option value="car">Car</option>
               <option value="motorcycle">Motorcycle</option>
               <option value="event">Event</option>
