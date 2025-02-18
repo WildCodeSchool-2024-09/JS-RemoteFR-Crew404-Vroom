@@ -102,6 +102,14 @@ class AuthRepository {
     );
     return result.affectedRows > 0;
   }
+
+  async getMyEvent(id: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "SELECT * FROM event WHERE user_id = ?",
+      [id],
+    );
+    return rows;
+  }
 }
 
 export default new AuthRepository();
