@@ -9,7 +9,7 @@ const register: RequestHandler = async (req, res, next) => {
     const user = await authRepository.create(req.body);
 
     // Respond with the user in JSON format
-    res.status(201).json(user);
+    res.status(201).json({ reponse: "Utilisateur créé avec succès", user });
   } catch (err) {
     // Pass any errors to the error-handling middleware
     console.error("Erreur lors de l'inscription:", err);
