@@ -404,7 +404,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   return (
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
-        {user && (
+        {user && ( // Afficher le bouton uniquement si l'utilisateur est connecté
           <button
             type="button"
             className={styles.icon}
@@ -568,7 +568,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               <option value="" disabled>
                 Select type
               </option>
-
               <option value="car">Car</option>
               <option value="motorcycle">Motorcycle</option>
               <option value="event">Event</option>
