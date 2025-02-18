@@ -1,3 +1,16 @@
 .headerRoot {
   width: 100%;
 }
+.headerRoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff; /* Ajustez selon votre design */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajustez selon votre design */
+}
+
+.navLogo {
+  height: 50px; /* Ajustez la taille selon vos besoins */
+  margin: 10px 0; /* Ajustez la marge selon vos besoins */
+}

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import MarkerClusterGroup from "react-leaflet-cluster"; // Import MarkerClusterGroup
 import pinMapIcon from "../../assets/images/svg/pinMap.svg";
+import NavRoot from "../../components/NavRoot/NavRoot"; // Import NavRoot
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
 import { errorToast, infoToast, successToast } from "../../services/toast";
@@ -33,6 +34,41 @@ interface MapsProps {
   center?: [number, number];
   zoom?: number;
 }
+// import type { LeafletMouseEvent } from "leaflet";
+// import {
+//   MapContainer,
+//   Marker,
+//   Popup,
+//   TileLayer,
+//   useMap,
+//   useMapEvent,
+// } from "react-leaflet";
+// import "leaflet/dist/leaflet.css";
+// import "./leaflet.css";
+// import DatePicker from "react-datepicker";
+// import styles from "./Map.module.css";
+// import "react-datepicker/dist/react-datepicker.css";
+// import L from "leaflet";
+// import { useEffect, useState } from "react";
+// import React from "react";
+// import MarkerClusterGroup from "react-leaflet-cluster"; // Import MarkerClusterGroup
+// import pinMapIcon from "../../assets/images/svg/pinMap.svg";
+// import { useAuth } from "../../contexts/AuthContext";
+// import api from "../../helpers/api";
+// import { errorToast, infoToast, successToast } from "../../services/toast";
+// import type { Marker as MarkerType } from "../../types/marker";
+
+// const customIcon = new L.Icon({
+//   iconUrl: pinMapIcon,
+//   iconSize: [32, 32],
+//   iconAnchor: [16, 32],
+//   popupAnchor: [0, -32],
+// });
+
+// interface MapsProps {
+//   center?: [number, number];
+//   zoom?: number;
+// }
 
 const formatPopupHeaderDate = (dateString: string, isSingleDay = false) => {
   if (dateString.includes(" to ")) {
@@ -122,6 +158,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     [number, number] | null
   >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
+  //   const { user } = useAuth();
+  //   const [isAddingMarker, setIsAddingMarker] = useState(false);
+  //   const [markers, setMarkers] = useState<MarkerType[]>([]);
+  //   const [newMarkerPosition, setNewMarkerPosition] = useState<
+  //     [number, number] | null
+  //   >(null);
+  //   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [eventType, setEventType] = useState<
     "car" | "motorcycle" | "event" | null
@@ -403,6 +447,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
 
   return (
     <div className={styles.outerContainer}>
+      <NavRoot namePage="Map" />
       <div className={styles.innerContainer}>
         {user && ( // Afficher le bouton uniquement si l'utilisateur est connecté
           <button
