@@ -1,16 +1,15 @@
-import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import api from "../../../helpers/api";
 import { successToast } from "../../../services/toast";
 import styles from "./Advert.module.css";
 
-interface Favorite {
+interface FavoriteItem {
   id: number;
-  picture: string;
-  marque: string;
-  modele: string;
-  annee: number;
-  localisation: string;
-  statut: string;
+  picture?: string | null;
+  title: string;
+  type: string;
+  year?: number;
+  location: string;
 }
 
 const Advert: React.FC = () => {
@@ -18,36 +17,8 @@ const Advert: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] =
-    useState<keyof Favorite>("marque");
-  const [favorites, setFavorites] = useState<Favorite[]>([
-    {
-      id: 1,
-      picture: "/default-car.png",
-      marque: "Audi",
-      modele: "R8",
-      annee: 2023,
-      localisation: "Paris",
-      statut: "Vente",
-    },
-    {
-      id: 2,
-      picture: "/default-car2.png",
-      marque: "Alpine",
-      modele: "A110",
-      annee: 2022,
-      localisation: "Nice",
-      statut: "Essai",
-    },
-    {
-      id: 3,
-      picture: "/default-bike.png",
-      marque: "Honda",
-      modele: "CBR500R",
-      annee: 2021,
-      localisation: "Lyon",
-      statut: "Indisponible",
-    },
-  ]);
+    useState<keyof FavoriteItem>("title");
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [selectedFavorites, setSelectedFavorites] = useState<number[]>([]);
   const lastScrollY = useRef(0);
   const advertRef = useRef<HTMLDivElement>(null);
@@ -70,12 +41,45 @@ const Advert: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const response = await api.get("/api/users/me/likes");
+        // Adapter la réponse pour correspondre à FavoriteItem
+        const formattedFavorites = response.data.map(
+          (like: {
+            id: number;
+            content: {
+              picture?: string | null;
+              title: string;
+              type: string;
+              year?: number;
+              location: string;
+            };
+          }) => ({
+            id: like.id,
+            picture: like.content.picture,
+            title: like.content.title,
+            type: like.content.type,
+            year: like.content.year,
+            location: like.content.location,
+          }),
+        );
+        setFavorites(formattedFavorites);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des favoris:", error);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedFilter(event.target.value as keyof Favorite);
+    setSelectedFilter(event.target.value as keyof FavoriteItem);
   };
 
   const toggleSelectFavorite = (id: number) => {
@@ -84,12 +88,19 @@ const Advert: React.FC = () => {
     );
   };
 
-  const deleteSelectedFavorites = () => {
-    setFavorites(
-      favorites.filter((fav) => !selectedFavorites.includes(fav.id)),
-    );
-    successToast("Annonces supprimées avec succès !");
-    setSelectedFavorites([]);
+  const deleteSelectedFavorites = async () => {
+    try {
+      for (const favId of selectedFavorites) {
+        await api.delete(`/api/likes/${favId}`);
+      }
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((fav) => !selectedFavorites.includes(fav.id)),
+      );
+      successToast("Favoris supprimés avec succès !");
+      setSelectedFavorites([]);
+    } catch (error) {
+      console.error("Erreur lors de la suppression des favoris:", error);
+    }
   };
 
   return (
@@ -114,11 +125,10 @@ const Advert: React.FC = () => {
             onChange={handleFilterChange}
             className={styles.dropdown}
           >
-            <option value="marque">Marque</option>
-            <option value="modele">Modèle</option>
-            <option value="annee">Année</option>
-            <option value="localisation">Localisation</option>
-            <option value="statut">Statut</option>
+            <option value="title">Nom</option>
+            <option value="type">Type</option>
+            <option value="year">Année</option>
+            <option value="location">Localisation</option>
           </select>
           <button type="button" className={styles.searchButton}>
             Rechercher
@@ -139,7 +149,7 @@ const Advert: React.FC = () => {
       <div className={styles.favoriteList}>
         {favorites
           .filter((fav) =>
-            fav[selectedFilter]
+            (fav[selectedFilter] ?? "")
               .toString()
               .toLowerCase()
               .includes(searchTerm.toLowerCase()),
@@ -154,23 +164,30 @@ const Advert: React.FC = () => {
               />
 
               {/* Placeholder image with custom styles */}
-              <div className={styles.picture} />
+              {fav.picture ? (
+                <img
+                  src={`${import.meta.env.VITE_API_URL}${fav.picture}`}
+                  alt={`miniature de ${fav.title}`}
+                  className={styles.picture}
+                />
+              ) : (
+                <div className={styles.picture} />
+              )}
 
               <div className={styles.advertDetails}>
                 <p>
-                  <strong>Marque:</strong> {fav.marque}
+                  <strong>Nom:</strong> {fav.title}
                 </p>
                 <p>
-                  <strong>Modèle:</strong> {fav.modele}
+                  <strong>Type:</strong> {fav.type}
                 </p>
+                {fav.year && (
+                  <p>
+                    <strong>Année:</strong> {fav.year}
+                  </p>
+                )}
                 <p>
-                  <strong>Année:</strong> {fav.annee}
-                </p>
-                <p>
-                  <strong>Localisation:</strong> {fav.localisation}
-                </p>
-                <p>
-                  <strong>Statut:</strong> {fav.statut}
+                  <strong>Localisation:</strong> {fav.location}
                 </p>
               </div>
             </div>

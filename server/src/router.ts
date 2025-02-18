@@ -173,4 +173,19 @@ router.get("/api/markers/search", async (req, res, next) => {
 router.get("/api/markers/:id(\\d+)", markerActions.read);
 
 /* ************************************************************************* */
+/** Likes */
+import likeActions from "./modules/like/likeActions";
+
+router.post("/api/likes", authMiddleware.checkToken, likeActions.addLike); // Ajouter un like pour un véhicule ou un événement
+router.delete(
+  "/api/likes/:id",
+  authMiddleware.checkToken,
+  likeActions.deleteLike,
+); // Supprimer un like
+router.get(
+  "/api/users/me/likes",
+  authMiddleware.checkToken,
+  likeActions.getUserLikes,
+); // Récupérer les likes de l'utilisateur connecté
+
 export default router;
