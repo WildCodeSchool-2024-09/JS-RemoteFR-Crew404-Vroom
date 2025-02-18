@@ -188,6 +188,32 @@ INSERT INTO `motor` VALUES (1,'V8'),(2,'V6'),(3,'V4'),(4,'V2'),(5,'V1'),(6,'V12'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `reset_password`
+--
+
+DROP TABLE IF EXISTS `reset_password`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reset_password` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `token` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `reset_password_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reset_password`
+--
+
+LOCK TABLES `reset_password` WRITE;
+/*!40000 ALTER TABLE `reset_password` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reset_password` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -209,7 +235,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,7 +244,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','admin@vroom.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','admin','admin','1990-01-01','+33601020304',100,1),(2,'Aldup','alice@example.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','Alice','Dupont','2001-01-01','+33601020304',2,0),(3,'The B','bob@example.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','Bob','Martin','2001-01-01','+33601020311',1,0);
+INSERT INTO `user` VALUES (1,'admin','admin@vroom.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','admin','admin','1990-01-01','+33601020304',100,1),(2,'Aldup','alice@example.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','Alice','Dupont','2001-01-01','+33601020304',2,0),(3,'The B','bob@example.com','$argon2id$v=19$m=65536,t=3,p=4$DDXkvDxw3PNiSIg8/cn67g$m/GhPrYzwGOUidcSPJ8XnmB0OUHAw9quzdMDyJIT30Y','person_15439869.png','Bob','Martin','2001-01-01','+33601020311',1,0),(5,'Ryan','ryan@gmail.com','$argon2id$v=19$m=65536,t=3,p=4$84i5RJjlKAS6Wpv1iCGGPw$Vhl4hxPO5rqfO5JmyyLicRDB59NAWhw+/TlHEE/XbFI','person_15439869.png',NULL,NULL,NULL,NULL,0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,4 +291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-18 13:44:01
+-- Dump completed on 2025-02-18 15:54:27
