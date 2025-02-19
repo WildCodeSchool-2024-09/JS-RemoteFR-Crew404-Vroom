@@ -79,9 +79,9 @@ CREATE TABLE vehicle (
 CREATE TABLE favoris (
   id INT unsigned PRIMARY KEY AUTO_INCREMENT NOT NULL,
   user_id INT unsigned NOT NULL,
-  vehicle_id INT unsigned NOT NULL,
+  marker_id INT unsigned NOT NULL,
   FOREIGN KEY(user_id) REFERENCES user(id),
-  FOREIGN KEY(vehicle_id) REFERENCES vehicle(id)
+  FOREIGN KEY(marker_id) REFERENCES marker(id)
 );
 
 

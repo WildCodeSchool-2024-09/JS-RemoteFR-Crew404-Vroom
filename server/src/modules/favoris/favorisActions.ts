@@ -1,12 +1,6 @@
 import type { RequestHandler } from "express";
 import favorisRepository from "./favorisRepository";
 
-type Favoris = {
-  id: number;
-  user_id: number;
-  vehicle_id: number;
-};
-
 const addFavoris: RequestHandler = async (req, res, next): Promise<void> => {
   try {
     const userId = req.user.id;
@@ -24,7 +18,7 @@ const addFavoris: RequestHandler = async (req, res, next): Promise<void> => {
     });
   } catch (error: unknown) {
     console.error("Erreur lors de l'ajout du favori:", error);
-    next(error); // Passe l'erreur au middleware de gestion des erreurs
+    next(error);
   }
 };
 

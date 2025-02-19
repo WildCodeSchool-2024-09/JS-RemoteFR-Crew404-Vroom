@@ -1,19 +1,37 @@
 import databaseClient from "../../../database/client";
 import type { Result, Rows } from "../../../database/client";
-import type { Vehicle } from "../../modules/vehicles/vehicleRepository";
+import type { Marker } from "../../types/index";
+
+interface FavoriteItem {
+  favoris_id: number;
+  id: number;
+  lat: number;
+  lng: number;
+  coord: [number, number];
+  user_id: number;
+  label: string;
+  details: {
+    eventType: string;
+    date: string;
+    brand: string;
+    model: string;
+    year: number;
+    address: string;
+  }; // Vous pouvez définir une interface plus précise si la structure est connue
+}
 
 type Favoris = {
   id: number;
   user_id: number;
-  vehicle_id: number;
+  marker_id: number;
 };
 
 class FavorisRepository {
-  async addFavoris(userId: number, vehicleId: number): Promise<number> {
+  async addFavoris(userId: number, markerId: number): Promise<number> {
     try {
       const [result] = await databaseClient.query<Result>(
-        "INSERT INTO favoris (user_id, vehicle_id) VALUES (?, ?)",
-        [userId, vehicleId],
+        "INSERT INTO favoris (user_id, marker_id) VALUES (?, ?)",
+        [userId, markerId],
       );
       return result.insertId;
     } catch (error: unknown) {
@@ -35,18 +53,32 @@ class FavorisRepository {
     }
   }
 
-  async getUserFavoris(
-    userId: number,
-  ): Promise<(Favoris & { vehicle: Vehicle })[]> {
+  async getUserFavoris(userId: number): Promise<FavoriteItem[]> {
     try {
       const [rows] = await databaseClient.query<Rows>(
-        `SELECT favoris.id AS favoris_id, vehicle.*
-         FROM favoris
-         INNER JOIN vehicle ON favoris.vehicle_id = vehicle.id
-         WHERE favoris.user_id = ?`,
+        `SELECT 
+          f.id AS favoris_id, 
+          m.id, 
+          ST_X(m.position) AS lat,
+          ST_Y(m.position) AS lng,
+          m.user_id,
+          m.label,
+          m.details
+         FROM favoris f
+         INNER JOIN marker m ON f.marker_id = m.id
+         WHERE f.user_id = ?`,
         [userId],
       );
-      return rows as (Favoris & { vehicle: Vehicle })[];
+      return (rows as FavoriteItem[]).map((row: FavoriteItem) => ({
+        favoris_id: row.favoris_id,
+        id: row.id,
+        lat: row.lat,
+        lng: row.lng,
+        coord: [row.lat, row.lng],
+        user_id: row.user_id,
+        label: row.label,
+        details: row.details, // Ne pas parser, c'est déjà un objet
+      }));
     } catch (error: unknown) {
       console.error(
         "Erreur lors de la récupération des favoris de l'utilisateur:",

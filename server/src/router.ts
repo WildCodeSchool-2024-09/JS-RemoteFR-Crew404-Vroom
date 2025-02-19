@@ -183,7 +183,11 @@ router.get("/api/markers/:id(\\d+)", markerActions.read);
 /** Favoris */
 import favorisActions from "./modules/favoris/favorisActions";
 
-router.post("/api/likes", authMiddleware.checkToken, favorisActions.addFavoris); // Ajouter   un véhicule en favoris
+router.post(
+  "/api/favoris",
+  authMiddleware.checkToken,
+  favorisActions.addFavoris,
+); // Ajouter   un véhicule en favoris
 router.delete(
   "/api/favoris/:id",
   authMiddleware.checkToken,

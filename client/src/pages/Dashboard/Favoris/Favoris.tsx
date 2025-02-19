@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import defaultVehicleImg from "../../../assets/images/pictures/defaultVehicleImg.png";
-import { useAuth } from "../../../contexts/AuthContext";
 import api from "../../../helpers/api";
 import { errorToast, successToast } from "../../../services/toast";
-import type { VehicleData } from "../../../types/vehicle";
+import type { Marker, MarkerDetails } from "../../../types/marker";
 import styles from "./Favoris.module.css";
 
-interface FavoriteItem extends VehicleData {
-  // Utilise VehicleData comme base
-  favoris_id: number; // Ajoute l'ID du favori
+interface FavoriteItem extends Marker {
+  favoris_id: number;
+  label: string;
 }
 
 const Favoris: React.FC = () => {
-  const { user } = useAuth();
   const [isSticky, setIsSticky] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,33 +47,23 @@ const Favoris: React.FC = () => {
           (item: {
             favoris_id: number;
             id: number;
-            vehicle_picture: string;
-            type: string;
-            status: string;
-            energy: string;
-            location: string;
-            latitude: number;
-            longitude: number;
+            lat: number;
+            lng: number;
             user_id: number;
-            year: number;
-            brand: string;
-            model: string;
+            label: string;
+            details: MarkerDetails;
           }) => ({
-            favoris_id: item.favoris_id, // L'ID du "like"
-            id: item.id, // L'ID du véhicule
-            vehicle_picture: item.vehicle_picture,
-            type: item.type,
-            status: item.status,
-            energy: item.energy,
-            location: item.location,
-            latitude: item.latitude,
-            longitude: item.longitude,
+            favoris_id: item.favoris_id,
+            id: item.id,
+            lat: item.lat,
+            lng: item.lng,
+            coord: [item.lat, item.lng],
             user_id: item.user_id,
-            year: item.year,
-            brand: item.brand,
-            model: item.model,
+            label: item.label,
+            details: item.details,
           }),
         );
+
         setFavorites(formattedFavorites);
       } catch (error) {
         console.error("Erreur lors de la récupération des favoris:", error);
@@ -122,15 +110,6 @@ const Favoris: React.FC = () => {
     }
   };
 
-  const getOwnerName = (userId: number): string => {
-    // Find the user with the matching id
-    if (user && user.id === userId) {
-      return `${user.username}`;
-    }
-
-    return "Inconnu";
-  };
-
   return (
     <div ref={advertRef} className={styles.container}>
       <div
@@ -153,10 +132,13 @@ const Favoris: React.FC = () => {
             onChange={handleFilterChange}
             className={styles.dropdown}
           >
-            <option value="model">Model</option>
+            <option value="eventType">Type</option>
             <option value="brand">Marque</option>
-            <option value="location">Localisation</option>
+            <option value="model">Modèle</option>
+            <option value="year">Année</option>
+            <option value="address">Adresse</option>
           </select>
+
           <button type="button" className={styles.searchButton}>
             Rechercher
           </button>
@@ -174,60 +156,61 @@ const Favoris: React.FC = () => {
       </div>
 
       <div className={styles.favoriteList}>
-        {favorites
-          .filter((fav) =>
-            (fav[selectedFilter as keyof FavoriteItem] ?? "")
-              .toString()
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()),
-          )
-          .map((fav) => (
-            <div key={fav.id} className={styles.advertCard}>
-              <input
-                type="checkbox"
-                checked={selectedFavorites.includes(fav.id)}
-                onChange={() => toggleSelectFavorite(fav.id)}
-                className={styles.checkbox}
-              />
+        {favorites.length > 0 ? (
+          favorites
+            .filter(
+              (fav) =>
+                fav.label?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                fav.details?.[selectedFilter as keyof MarkerDetails]
+                  ?.toString()
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase()),
+            )
 
-              {fav.vehicle_picture ? (
-                <img
-                  src={`${import.meta.env.VITE_API_URL}${fav.vehicle_picture}`}
-                  alt={`miniature de ${fav.model}`}
-                  className={styles.picture}
+            .map((fav) => (
+              <div key={fav.id} className={styles.advertCard}>
+                <input
+                  type="checkbox"
+                  checked={selectedFavorites.includes(fav.id)}
+                  onChange={() => toggleSelectFavorite(fav.id)}
+                  className={styles.checkbox}
                 />
-              ) : (
+
                 <img
-                  src={defaultVehicleImg} // Use the default image
+                  src={defaultVehicleImg}
                   alt="miniature par défaut"
                   className={styles.picture}
                 />
-              )}
 
-              <div className={styles.vehicledetails}>
-                <p>
-                  <strong>Marque:&nbsp;</strong> {fav.brand}
-                </p>
-                <p>
-                  <strong>Modèle:&nbsp;</strong> {fav.model}
-                </p>
-                <p>
-                  <strong>Année:&nbsp;</strong> {fav.year}
-                </p>
-                <p className={styles.locationText}>
-                  <strong>Ville:&nbsp;</strong> {fav.location.toUpperCase()}
-                </p>
-                <p>
-                  <strong>Disponibilité:&nbsp;</strong>
-                  {fav.status}
-                </p>
-                <p>
-                  <strong>Propriétaire:&nbsp;</strong>
-                  {getOwnerName(fav.user_id)}
-                </p>
+                <div className={styles.vehicledetails}>
+                  <p>
+                    <strong>Label:&nbsp;</strong> {fav.label}
+                  </p>
+                  <p>
+                    <strong>Type:&nbsp;</strong> {fav.details?.eventType}
+                  </p>
+                  <p>
+                    <strong>Marque:&nbsp;</strong> {fav.details?.brand}
+                  </p>
+                  <p>
+                    <strong>Modèle:&nbsp;</strong> {fav.details?.model}
+                  </p>
+                  <p>
+                    <strong>Année:&nbsp;</strong> {fav.details?.year}
+                  </p>
+                  <p className={styles.locationText}>
+                    <strong>Adresse:&nbsp;</strong>{" "}
+                    {fav.details?.address?.toUpperCase()}
+                  </p>
+                  <p>
+                    <strong>Date:&nbsp;</strong> {fav.details?.date}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <p>Aucun favori trouvé.</p>
+        )}
       </div>
     </div>
   );
