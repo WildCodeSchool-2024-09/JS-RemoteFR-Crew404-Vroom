@@ -199,4 +199,7 @@ router.get(
   favorisActions.getUserFavoris,
 ); // Récupérer les favoris de l'utilisateur connecté
 
+/* ************************************************************************* */
+/**email */
+
 export default router;
