@@ -406,6 +406,31 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     }
   };
 
+  // Fonction pour ajouter un véhicule aux favoris
+  const handleFavoriteClick = async (marker: MarkerType) => {
+    try {
+      if (!marker.details || !marker.details.eventType) {
+        errorToast("Ce marqueur ne peut pas être ajouté aux favoris.");
+        return;
+      }
+
+      const isVehicle =
+        marker.details.eventType === "voiture" ||
+        marker.details.eventType === "moto";
+
+      if (!isVehicle) {
+        errorToast("Seuls les véhicules peuvent être ajoutés aux favoris.");
+        return;
+      }
+
+      await api.post("/api/favoris", { vehicleId: marker.id });
+      successToast("Véhicule ajouté aux favoris avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout aux favoris :", error);
+      errorToast("Une erreur est survenue lors de l'ajout aux favoris.");
+    }
+  };
+
   return (
     <div className={styles.outerContainer}>
       <NavRoot namePage="Map" />
@@ -472,6 +497,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                         backgroundColor: "white",
                       }}
                     >
+                      {/* Ajout du bouton pour ajouter aux favoris ici */}
                       {marker.label && (
                         <strong
                           style={{
@@ -674,6 +700,26 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                               )}
                             </p>
                           )}
+                          {marker.details &&
+                            (marker.details.eventType === "voiture" ||
+                              marker.details.eventType === "moto") && (
+                              <button
+                                type="button"
+                                onClick={() => handleFavoriteClick(marker)}
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "8px 16px",
+                                  borderRadius: "4px",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  marginTop: "10px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Ajouter aux favoris
+                              </button>
+                            )}
                         </div>
                       )}
                     </div>

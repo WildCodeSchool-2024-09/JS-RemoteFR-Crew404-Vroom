@@ -180,4 +180,23 @@ router.get("/api/markers/search", async (req, res, next) => {
 router.get("/api/markers/:id(\\d+)", markerActions.read);
 
 /* ************************************************************************* */
+/** Favoris */
+import favorisActions from "./modules/favoris/favorisActions";
+
+router.post(
+  "/api/favoris",
+  authMiddleware.checkToken,
+  favorisActions.addFavoris,
+); // Ajouter   un véhicule en favoris
+router.delete(
+  "/api/favoris/:id",
+  authMiddleware.checkToken,
+  favorisActions.deleteFavoris,
+); // Supprimer un favoris
+router.get(
+  "/api/users/me/favoris",
+  authMiddleware.checkToken,
+  favorisActions.getUserFavoris,
+); // Récupérer les favoris de l'utilisateur connecté
+
 export default router;

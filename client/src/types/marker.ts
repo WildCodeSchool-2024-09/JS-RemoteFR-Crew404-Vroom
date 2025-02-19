@@ -1,5 +1,5 @@
 export interface MarkerDetails {
-  eventType: "car" | "motorcycle" | "event";
+  eventType: "voiture" | "moto" | "event";
   date: string;
   brand?: string;
   model?: string;
