@@ -77,6 +77,8 @@ router.post(
   SendMailer_Middleware,
   authResetPassword,
 );
+
+router.post("api/reset-password", VerifyKeys(["token", "newPassword"]));
 /* ************************************************************************* */
 
 /** events */
