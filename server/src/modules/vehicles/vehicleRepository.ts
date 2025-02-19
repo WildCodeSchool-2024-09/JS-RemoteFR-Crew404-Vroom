@@ -2,7 +2,7 @@ import databaseClient from "../../../database/client";
 
 import type { Result, Rows } from "../../../database/client";
 
-type Vehicle = {
+export type Vehicle = {
   id: number;
   vehicle_picture?: string | null;
   type: "moto" | "voiture";

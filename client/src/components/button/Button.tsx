@@ -4,7 +4,7 @@ function Button() {
   return (
     <div className={styles.ContainerButton}>
       <Link to="/maps" className={styles.Button}>
-        GOOOOO !!!!!
+        Trouve ton véhicule
       </Link>
     </div>
   );
