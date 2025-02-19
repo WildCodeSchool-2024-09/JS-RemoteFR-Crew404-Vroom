@@ -16,7 +16,7 @@ function Dashboard() {
     type: "type",
     date_start: "",
     date_end: "",
-    location: { x: 0, y: 0 },
+    location: { x: 0, y: 0 }, // Coordonnées [longitude, latitude]
     address: "",
     description: "",
     link: null,
@@ -35,7 +35,7 @@ function Dashboard() {
   const [errors, setErrors] = useState<string[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [eventType, setEventType] = useState<Eventdata["type"]>("autre");
-  //Stockage de la photo avant envoi
+  // Stockage de la photo avant envoi
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Référence pour gérer le clic en dehors de la modale
@@ -136,7 +136,7 @@ function Dashboard() {
       user_id: getCurrentUserId(),
     };
 
-    //  Vérifie si l'adresse est remplie et récupérer les coordonnées
+    // Vérifie si l'adresse est remplie et récupérer les coordonnées
     if (eventData.address.trim()) {
       const coordinates = await fetchCoordinates(eventData.address);
       eventData = { ...eventData, location: coordinates };
@@ -152,7 +152,7 @@ function Dashboard() {
 
       const updatedEvent = response.data.event;
 
-      //  Mise à jour de l'image si un fichier a été sélectionné
+      // Mise à jour de l'image si un fichier a été sélectionné
       if (selectedFile) {
         const formData = new FormData();
         formData.append("event_picture", selectedFile);
@@ -164,11 +164,33 @@ function Dashboard() {
         updatedEvent.event_picture = imageResponse.data.event_picture;
       }
 
-      //  Rafraîchissement de la liste des événements
+      // Création du marqueur associé à l'événement
+      if (
+        currentEvent.id === -1 &&
+        updatedEvent.location.x &&
+        updatedEvent.location.y
+      ) {
+        const markerData = {
+          lat: updatedEvent.location.x, // Latitude
+          lng: updatedEvent.location.y, // Longitude
+          label: `Type: ${eventType}, Date: ${formatDate(updatedEvent.date_start)} to ${formatDate(updatedEvent.date_end)}`,
+          details: {
+            eventType: "event", // Type d'événement
+            date: `${formatDate(updatedEvent.date_start)} to ${formatDate(updatedEvent.date_end)}`,
+            address: updatedEvent.address,
+            eventCategory: updatedEvent.type,
+          },
+          user_id: getCurrentUserId(),
+        };
+
+        await api.post("/api/markers", markerData);
+      }
+
+      // Rafraîchissement de la liste des événements
       const refreshResponse = await api.get("/api/users/me/events");
       setEvents(refreshResponse.data || []);
 
-      //  Réinitialisation du formulaire
+      // Réinitialisation du formulaire
       setCurrentEvent({
         id: -1,
         title: "",
@@ -211,7 +233,7 @@ function Dashboard() {
     }
   };
 
-  //  Fonction pour obtenir les coordonnées GPS à partir d'une adresse
+  // Fonction pour obtenir les coordonnées GPS à partir d'une adresse
   const fetchCoordinates = async (address: string) => {
     try {
       const response = await fetch(
@@ -277,7 +299,7 @@ function Dashboard() {
       }
     }) ?? [];
 
-  //suppression de l'image d'un événement
+  // Suppression de l'image d'un événement
   const handleImageDelete = async () => {
     if (
       currentEvent &&
@@ -376,7 +398,7 @@ function Dashboard() {
           type="button"
           className={styles.addButton}
           onClick={() => {
-            // Reset form data to indicate a new event, coucou Anthony
+            // Reset form data to indicate a new event
             setCurrentEvent({
               id: -1,
               title: "",

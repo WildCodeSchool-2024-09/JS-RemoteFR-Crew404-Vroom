@@ -34,6 +34,30 @@ interface MapsProps {
   center?: [number, number];
   zoom?: number;
 }
+interface ThemeColors {
+  tertiary: string;
+  light: string;
+  secondary?: string;
+}
+
+interface Cluster {
+  getChildCount: () => number;
+}
+
+const createClusterCustomIcon = (cluster: Cluster): L.DivIcon => {
+  const themeColors: ThemeColors = {
+    tertiary: "#001524",
+    light: "#FFF",
+  };
+
+  return L.divIcon({
+    html: `<div style="background-color: ${themeColors.tertiary}; color: ${
+      themeColors.light
+    }; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">${cluster.getChildCount()}</div>`,
+    className: "custom-cluster-icon",
+    iconSize: L.point(40, 40, true),
+  });
+};
 
 const formatPopupHeaderDate = (dateString: string, isSingleDay = false) => {
   if (dateString.includes(" to ")) {
@@ -205,9 +229,14 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   };
 
   const filteredMarkers = markers.filter((marker) => {
+    if (!marker.details) return false; // Exclure les marqueurs sans details
+
+    // Toujours afficher les marqueurs de type "event"
+    if (marker.details.eventType === "event") return true;
+
     if (activeFilters.length === 0) return true;
 
-    const markerEventType = marker.details?.eventType?.toLowerCase();
+    const markerEventType = marker.details.eventType?.toLowerCase();
     return activeFilters.some(
       (filter) => filter.toLowerCase() === markerEventType,
     );
@@ -473,7 +502,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
           <MapClickHandler onClick={handleMapClick} />
 
           {/* Wrap markers in MarkerClusterGroup */}
-          <MarkerClusterGroup>
+          <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon}>
             {filteredMarkers.map((marker) => {
               if (
                 typeof marker.lat !== "number" ||
