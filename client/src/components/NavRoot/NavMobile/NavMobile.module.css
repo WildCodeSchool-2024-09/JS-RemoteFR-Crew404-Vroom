@@ -1,5 +1,6 @@
 @import "../../../root.css";
 
+/* Styles de base pour NavMobile */
 .NavMobile {
   display: flex;
   justify-content: center;
@@ -213,4 +214,78 @@
   justify-content: start;
   align-items: center;
   margin: 2rem 0rem 0rem 0rem;
+}
+
+/*Logique pour Road-Addict logo svg */
+/* Taille par défaut pour les écrans larges */
+.logoSvg {
+  margin-top: 20px;
+  height: 50%; /* Taille par défaut */
+  width: auto; /* Garder les proportions */
+}
+
+/* Taille réduite pour les petits écrans */
+@media screen and (max-width: 480px) {
+  .logoSvg {
+    height: 400px;
+    /* width: 25%; */
+  }
+}
+
+/*-----------------------------------------------*/
+/* Styles pour les logos animés */
+
+/* Conteneur pour les logos */
+.logoContainer {
+  position: relative;
+  width: 80px; /* Ajustez selon vos besoins */
+  height: 80px;
+}
+
+/* Styles pour le logo extérieur */
+.exterieurImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  width: 80px; /* Ajustez selon vos besoins */
+  height: 80px;
+  animation: rotateZoom 1.5s forwards ease-out;
+}
+
+/* Styles pour le logo RA */
+.raImg {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  width: 60px; /* Ajustez selon vos besoins */
+  height: 60px;
+  animation: zoomIn 1.5s 0.5s forwards ease-out;
+}
+
+/* Animation pour le logo extérieur */
+@keyframes rotateZoom {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+/* Animation pour le logo RA */
+@keyframes zoomIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }

@@ -82,7 +82,7 @@ function Home() {
       </Helmet>
 
       {/* Balise Header présent dans NavRoot */}
-      <NavRoot namePage="RoadAddict" />
+      <NavRoot namePage="Home" />
 
       <main className={css.MainHome}>
         <HomeRoot />

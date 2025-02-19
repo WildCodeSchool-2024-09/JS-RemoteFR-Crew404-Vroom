@@ -6,6 +6,7 @@ export interface MarkerDetails {
   year?: number;
   eventCategory?: string;
   duration?: string;
+  isSingleDay?: boolean; // special pour Map.tsx
 }
 
 export interface Marker {
