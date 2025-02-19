@@ -128,12 +128,6 @@ class MarkerRepository {
     criterion?: string,
     types?: string,
   ): Promise<Marker[]> {
-    console.info("Received Parameters in searchMarkers:", {
-      query,
-      criterion,
-      types,
-    });
-
     let sql = `
       SELECT id, ST_X(position) AS lat, ST_Y(position) AS lng, label, details, user_id
       FROM marker
@@ -192,9 +186,6 @@ class MarkerRepository {
           break;
       }
     }
-
-    console.info("Generated SQL Query:", sql);
-    console.info("Query Parameters:", params);
 
     const [rows] = await databaseClient.query<Rows>(sql, params);
 

@@ -40,14 +40,20 @@ interface ThemeColors {
   secondary?: string;
 }
 
-const createClusterCustomIcon = (cluster: L.MarkerCluster) => {
+interface Cluster {
+  getChildCount: () => number;
+}
+
+const createClusterCustomIcon = (cluster: Cluster): L.DivIcon => {
   const themeColors: ThemeColors = {
     tertiary: "#001524",
     light: "#FFF",
   };
 
   return L.divIcon({
-    html: `<div style="background-color: ${themeColors.tertiary}; color: ${themeColors.light}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">${cluster.getChildCount()}</div>`,
+    html: `<div style="background-color: ${themeColors.tertiary}; color: ${
+      themeColors.light
+    }; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">${cluster.getChildCount()}</div>`,
     className: "custom-cluster-icon",
     iconSize: L.point(40, 40, true),
   });
