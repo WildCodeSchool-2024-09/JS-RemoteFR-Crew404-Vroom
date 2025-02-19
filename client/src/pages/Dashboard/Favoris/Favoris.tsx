@@ -1,23 +1,22 @@
 import { useEffect, useRef, useState } from "react";
+import defaultVehicleImg from "../../../assets/images/pictures/defaultVehicleImg.png";
+import { useAuth } from "../../../contexts/AuthContext";
 import api from "../../../helpers/api";
-import { successToast } from "../../../services/toast";
-import styles from "./Advert.module.css";
+import { errorToast, successToast } from "../../../services/toast";
+import type { VehicleData } from "../../../types/vehicle";
+import styles from "./Favoris.module.css";
 
-interface FavoriteItem {
-  id: number;
-  picture?: string | null;
-  title: string;
-  type: string;
-  year?: number;
-  location: string;
+interface FavoriteItem extends VehicleData {
+  // Utilise VehicleData comme base
+  favoris_id: number; // Ajoute l'ID du favori
 }
 
-const Advert: React.FC = () => {
+const Favoris: React.FC = () => {
+  const { user } = useAuth();
   const [isSticky, setIsSticky] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilter, setSelectedFilter] =
-    useState<keyof FavoriteItem>("title");
+  const [selectedFilter, setSelectedFilter] = useState<string>("model");
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [selectedFavorites, setSelectedFavorites] = useState<number[]>([]);
   const lastScrollY = useRef(0);
@@ -44,30 +43,43 @@ const Advert: React.FC = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await api.get("/api/users/me/likes");
+        const response = await api.get("/api/users/me/favoris");
         // Adapter la réponse pour correspondre à FavoriteItem
-        const formattedFavorites = response.data.map(
-          (like: {
+        const formattedFavorites: FavoriteItem[] = response.data.map(
+          (item: {
+            favoris_id: number;
             id: number;
-            content: {
-              picture?: string | null;
-              title: string;
-              type: string;
-              year?: number;
-              location: string;
-            };
+            vehicle_picture: string;
+            type: string;
+            status: string;
+            energy: string;
+            location: string;
+            latitude: number;
+            longitude: number;
+            user_id: number;
+            year: number;
+            brand: string;
+            model: string;
           }) => ({
-            id: like.id,
-            picture: like.content.picture,
-            title: like.content.title,
-            type: like.content.type,
-            year: like.content.year,
-            location: like.content.location,
+            favoris_id: item.favoris_id, // L'ID du "like"
+            id: item.id, // L'ID du véhicule
+            vehicle_picture: item.vehicle_picture,
+            type: item.type,
+            status: item.status,
+            energy: item.energy,
+            location: item.location,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            user_id: item.user_id,
+            year: item.year,
+            brand: item.brand,
+            model: item.model,
           }),
         );
         setFavorites(formattedFavorites);
       } catch (error) {
         console.error("Erreur lors de la récupération des favoris:", error);
+        errorToast("Erreur lors de la récupération des favoris.");
       }
     };
 
@@ -79,7 +91,7 @@ const Advert: React.FC = () => {
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedFilter(event.target.value as keyof FavoriteItem);
+    setSelectedFilter(event.target.value);
   };
 
   const toggleSelectFavorite = (id: number) => {
@@ -91,8 +103,14 @@ const Advert: React.FC = () => {
   const deleteSelectedFavorites = async () => {
     try {
       for (const favId of selectedFavorites) {
-        await api.delete(`/api/likes/${favId}`);
+        // find the item in the favorites list that has this id
+        const favToDelete = favorites.find((fav) => fav.id === favId);
+
+        if (favToDelete) {
+          await api.delete(`/api/favoris/${favToDelete.favoris_id}`); // Use the like ID instead of the item ID
+        }
       }
+      // Filter the favorites list by removing each item with a favoris_id that's included in the selectedFavorites array
       setFavorites((prevFavorites) =>
         prevFavorites.filter((fav) => !selectedFavorites.includes(fav.id)),
       );
@@ -100,7 +118,17 @@ const Advert: React.FC = () => {
       setSelectedFavorites([]);
     } catch (error) {
       console.error("Erreur lors de la suppression des favoris:", error);
+      errorToast("Erreur lors de la suppression des favoris.");
     }
+  };
+
+  const getOwnerName = (userId: number): string => {
+    // Find the user with the matching id
+    if (user && user.id === userId) {
+      return `${user.username}`;
+    }
+
+    return "Inconnu";
   };
 
   return (
@@ -125,9 +153,8 @@ const Advert: React.FC = () => {
             onChange={handleFilterChange}
             className={styles.dropdown}
           >
-            <option value="title">Nom</option>
-            <option value="type">Type</option>
-            <option value="year">Année</option>
+            <option value="model">Model</option>
+            <option value="brand">Marque</option>
             <option value="location">Localisation</option>
           </select>
           <button type="button" className={styles.searchButton}>
@@ -149,7 +176,7 @@ const Advert: React.FC = () => {
       <div className={styles.favoriteList}>
         {favorites
           .filter((fav) =>
-            (fav[selectedFilter] ?? "")
+            (fav[selectedFilter as keyof FavoriteItem] ?? "")
               .toString()
               .toLowerCase()
               .includes(searchTerm.toLowerCase()),
@@ -163,31 +190,40 @@ const Advert: React.FC = () => {
                 className={styles.checkbox}
               />
 
-              {/* Placeholder image with custom styles */}
-              {fav.picture ? (
+              {fav.vehicle_picture ? (
                 <img
-                  src={`${import.meta.env.VITE_API_URL}${fav.picture}`}
-                  alt={`miniature de ${fav.title}`}
+                  src={`${import.meta.env.VITE_API_URL}${fav.vehicle_picture}`}
+                  alt={`miniature de ${fav.model}`}
                   className={styles.picture}
                 />
               ) : (
-                <div className={styles.picture} />
+                <img
+                  src={defaultVehicleImg} // Use the default image
+                  alt="miniature par défaut"
+                  className={styles.picture}
+                />
               )}
 
-              <div className={styles.advertDetails}>
+              <div className={styles.vehicledetails}>
                 <p>
-                  <strong>Nom:</strong> {fav.title}
+                  <strong>Marque:&nbsp;</strong> {fav.brand}
                 </p>
                 <p>
-                  <strong>Type:</strong> {fav.type}
+                  <strong>Modèle:&nbsp;</strong> {fav.model}
                 </p>
-                {fav.year && (
-                  <p>
-                    <strong>Année:</strong> {fav.year}
-                  </p>
-                )}
                 <p>
-                  <strong>Localisation:</strong> {fav.location}
+                  <strong>Année:&nbsp;</strong> {fav.year}
+                </p>
+                <p className={styles.locationText}>
+                  <strong>Ville:&nbsp;</strong> {fav.location.toUpperCase()}
+                </p>
+                <p>
+                  <strong>Disponibilité:&nbsp;</strong>
+                  {fav.status}
+                </p>
+                <p>
+                  <strong>Propriétaire:&nbsp;</strong>
+                  {getOwnerName(fav.user_id)}
                 </p>
               </div>
             </div>
@@ -197,4 +233,4 @@ const Advert: React.FC = () => {
   );
 };
 
-export default Advert;
+export default Favoris;
