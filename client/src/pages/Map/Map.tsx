@@ -222,7 +222,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     );
   };
 
- 
   const filteredMarkers = markers.filter((marker) => {
     if (!marker.details) return false; // Exclure les marqueurs sans details
 
