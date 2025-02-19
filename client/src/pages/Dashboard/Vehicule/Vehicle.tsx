@@ -8,14 +8,14 @@ import type { VehicleData } from "../../../types/vehicle";
 import styles from "./Vehicle.module.css";
 
 function Vehicle() {
-  // État pour l'événement actuellement sélectionné ou en cours d'édition
+  // État pour le véhicule actuellement sélectionné ou en cours d'édition
   const [currentVehicle, setCurrentVehicle] = useState<VehicleData>({
     id: -1,
     vehicle_picture: null,
     type: "voiture",
     status: "indisponible",
     location: "",
-    coord: [],
+    coord: [], // Initialisé comme un tableau vide
     energy: "essence",
     user_id: 0,
     year: 0,
@@ -40,7 +40,7 @@ function Vehicle() {
     useState<VehicleData["energy"]>("essence");
   const [vehicleStatus, setVehicleStatus] =
     useState<VehicleData["status"]>("indisponible");
-  //Stockage de la photo avant envoi
+  // Stockage de la photo avant envoi
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Référence pour gérer le clic en dehors de la modale
@@ -52,7 +52,7 @@ function Vehicle() {
         const response = await api.get("/api/users/me/vehicles");
         setVehicles(response.data || []);
       } catch (error) {
-        console.error("Erreur lors de la récupération des véhicule:", error);
+        console.error("Erreur lors de la récupération des véhicules:", error);
         setVehicles([]);
       }
     };
@@ -103,7 +103,7 @@ function Vehicle() {
     return newErrors.length === 0;
   };
 
-  // Fonction pour ajouter ou mettre à jour un événement
+  // Fonction pour ajouter ou mettre à jour un véhicule
   const addOrUpdateVehicle = async () => {
     if (!validateForm()) return;
 
@@ -115,7 +115,7 @@ function Vehicle() {
       user_id: getCurrentUserId(),
     };
 
-    //  Vérifie si l'adresse est remplie et récupérer les coordonnées
+    // Vérifie si l'adresse est remplie et récupérer les coordonnées
     if (vehicleData.location.trim()) {
       await getCity(vehicleData.location);
     }
@@ -132,7 +132,7 @@ function Vehicle() {
       }
       const updatedVehicle = response.data.vehicle;
 
-      //  Mise à jour de l'image si un fichier a été sélectionné
+      // Mise à jour de l'image si un fichier a été sélectionné
       if (selectedFile) {
         const formData = new FormData();
         formData.append("vehicle_picture", selectedFile);
@@ -144,11 +144,31 @@ function Vehicle() {
         updatedVehicle.vehicle_picture = imageResponse.data.vehicle_picture;
       }
 
-      //  Rafraîchissement de la liste des événements
+      // Création du marqueur associé au véhicule
+      if (currentVehicle.id === -1 && currentVehicle.coord.length === 2) {
+        const markerData = {
+          lat: currentVehicle.coord[1], // Latitude
+          lng: currentVehicle.coord[0], // Longitude
+          label: `Type: ${vehicleType}, Date: ${new Date().toISOString().split("T")[0]}`,
+          details: {
+            eventType: vehicleType,
+            date: new Date().toISOString().split("T")[0],
+            address: currentVehicle.location,
+            brand: currentVehicle.brand,
+            model: currentVehicle.model,
+            year: currentVehicle.year,
+          },
+          user_id: getCurrentUserId(),
+        };
+
+        await api.post("/api/markers", markerData);
+      }
+
+      // Rafraîchissement de la liste des véhicules
       const refreshResponse = await api.get("/api/users/me/vehicles");
       setVehicles(refreshResponse.data || []);
 
-      //  Réinitialisation du formulaire
+      // Réinitialisation du formulaire
       setCurrentVehicle({
         id: -1,
         vehicle_picture: null,
@@ -204,7 +224,7 @@ function Vehicle() {
     }
   };
 
-  // Gestion de la sélection/désélection des événements
+  // Gestion de la sélection/désélection des véhicules
   const handleCheckboxChange = (vehicleId: number) => {
     setSelectedVehicles((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -223,12 +243,11 @@ function Vehicle() {
         `https://api-adresse.data.gouv.fr/search/?q=${location}&limit=1`,
       );
       const data = await response.json();
-      // get lat and lon
       if (data.features && data.features.length > 0) {
         const [longitude, latitude] = data.features[0].geometry.coordinates;
         setCurrentVehicle((prev) => ({
           ...prev,
-          coord: [longitude, latitude],
+          coord: [longitude, latitude], // Mettre à jour coord
         }));
         return [longitude, latitude];
       }
@@ -240,14 +259,14 @@ function Vehicle() {
     }
   };
 
-  //suppression de l'image d'un événement
+  // Suppression de l'image d'un véhicule
   const handleImageDelete = async () => {
     if (
       currentVehicle &&
       window.confirm("Êtes-vous sûr de vouloir supprimer cette image ?")
     ) {
       try {
-        await api.delete(`/api/vehicle/${currentVehicle.id}/vehicle-picture`);
+        await api.delete(`/api/vehicles/${currentVehicle.id}/vehicle-picture`);
         setCurrentVehicle({
           ...currentVehicle,
           vehicle_picture: null,
@@ -325,7 +344,7 @@ function Vehicle() {
           setCurrentVehicle({
             id: -1,
             vehicle_picture: null,
-            type: "type",
+            type: "voiture",
             status: "indisponible",
             location: "",
             coord: [],
@@ -445,7 +464,7 @@ function Vehicle() {
             >
               <option value="essence">Essence</option>
               <option value="diesel">Diesel</option>
-              <option value="electric">Électrique</option>
+              <option value="electrique">Électrique</option>
             </select>
             <input
               type="number"
