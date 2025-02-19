@@ -228,6 +228,7 @@
 
 .CompteMenu {
   position: relative;
+  list-style: none;
 }
 
 .SousMenuWrapper {
