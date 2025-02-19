@@ -122,6 +122,7 @@ const add: RequestHandler = async (req, res, next) => {
       await markerRepository.createMarker(marker);
     }
 
+    console.info(newVehicle);
     // Create the vehicle
     const insertId = await vehicleRepository.create(newVehicle);
 

@@ -125,7 +125,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [eventType, setEventType] = useState<
-    "car" | "motorcycle" | "event" | null
+    "voiture" | "moto" | "event" | null
   >(null);
   const [date, setDate] = useState<Date | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -325,7 +325,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
           date: formattedDate,
           address,
           isSingleDay: !isRange, // Ajout de isSingleDay
-          ...(eventType === "car" || eventType === "motorcycle"
+          ...(eventType === "voiture" || eventType === "moto"
             ? { brand, model, year }
             : { type: eventCategory, duration: formattedDate }),
         },
@@ -360,12 +360,16 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             isMap: true,
           });
           break;
-        case "car":
-        case "motorcycle":
-          await api.post("/api/vehicules", {
+        case "voiture":
+        case "moto":
+          await api.post("/api/vehicles", {
+            type: eventType,
+            status: "indisponible",
+            energy: "essence",
             brand,
             model,
             year,
+            coord: [newMarkerPosition?.[0] || 0, newMarkerPosition?.[1] || 0],
             location: address,
             user_id: user?.id || "",
             isMap: true,
@@ -453,6 +457,8 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                 console.error("Invalid marker data:", marker);
                 return null;
               }
+
+              console.info({ marker });
 
               return (
                 <Marker
@@ -563,15 +569,15 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             <select
               value={eventType || ""}
               onChange={(e) =>
-                setEventType(e.target.value as "car" | "motorcycle" | "event")
+                setEventType(e.target.value as "voiture" | "moto" | "event")
               }
               className={styles.modalInput}
             >
               <option value="" disabled>
                 Select type
               </option>
-              <option value="car">Car</option>
-              <option value="motorcycle">Motorcycle</option>
+              <option value="voiture">Car</option>
+              <option value="moto">Motorcycle</option>
               <option value="event">Event</option>
             </select>
 
@@ -625,7 +631,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               />
             )}
 
-            {eventType === "car" && (
+            {eventType === "voiture" && (
               <>
                 <input
                   type="text"
@@ -651,7 +657,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
               </>
             )}
 
-            {eventType === "motorcycle" && (
+            {eventType === "moto" && (
               <>
                 <input
                   type="text"

@@ -228,9 +228,9 @@ function Vehicle() {
         const [longitude, latitude] = data.features[0].geometry.coordinates;
         setCurrentVehicle((prev) => ({
           ...prev,
-          coord: [latitude, longitude],
+          coord: [longitude, latitude],
         }));
-        return [latitude, longitude];
+        return [longitude, latitude];
       }
       console.error("Aucune coordonnée trouvée pour cette adresse.");
       return null;
