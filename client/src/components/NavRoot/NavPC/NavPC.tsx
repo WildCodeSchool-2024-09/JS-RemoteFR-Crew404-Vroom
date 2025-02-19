@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../../assets/Logos/Logo-model-3.svg";
+import Exterieur from "../../../assets/Logos/Exterieur.svg"; // Import du SVG extérieur
+import RA from "../../../assets/Logos/RA.svg"; // Import du SVG RA
+import RoadAddictLogo from "../../../assets/Logos/road-addict-NavBar.svg"; // Import du SVG pour la page Home
 import { useAuth } from "../../../contexts/AuthContext";
 import css from "./NavPC.module.css";
 
@@ -28,7 +30,15 @@ function NavPC(Props: NavPCProps) {
         <div className={css.ContainerLogNavPC}>
           <div className={css.LogoNavPC}>
             <Link to="/" className={css.LinkLogoNavPC}>
-              <img src={Logo} alt="Logo RoadAddict" />
+              {/* Conteneur pour les logos animés */}
+              <div className={css.logoContainer}>
+                <img
+                  src={Exterieur}
+                  alt="Exterieur"
+                  className={css.exterieurImg}
+                />
+                <img src={RA} alt="RA" className={css.raImg} />
+              </div>
             </Link>
           </div>
 
@@ -60,7 +70,16 @@ function NavPC(Props: NavPCProps) {
         </div>
 
         <div className={css.NamePageNavPC}>
-          <h1>{namePage}</h1>
+          {/* Afficher le SVG uniquement si namePage est "Home" */}
+          {namePage === "Home" ? (
+            <img
+              src={RoadAddictLogo}
+              alt="RoadAddict Logo"
+              className={css.logoSvg}
+            />
+          ) : (
+            <h1>{namePage}</h1>
+          )}
         </div>
 
         <div className={css.ContainerLogNavPC}>
