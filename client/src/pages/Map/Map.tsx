@@ -35,7 +35,6 @@ interface MapsProps {
   zoom?: number;
 }
 
-
 const formatPopupHeaderDate = (dateString: string, isSingleDay = false) => {
   if (dateString.includes(" to ")) {
     // Si c'est une plage de dates, retourner les deux dates formatées
@@ -124,7 +123,6 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     [number, number] | null
   >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const [eventType, setEventType] = useState<
     "car" | "motorcycle" | "event" | null
