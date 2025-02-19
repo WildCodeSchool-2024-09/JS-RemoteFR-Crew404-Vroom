@@ -588,7 +588,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                   checked={!isRange}
                   onChange={() => setIsRange(false)}
                 />
-                Single Day
+                Jour récurrent
               </label>
               <label>
                 <input
@@ -596,7 +596,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                   checked={isRange}
                   onChange={() => setIsRange(true)}
                 />
-                Date Range
+                Durée
               </label>
             </div>
 
@@ -697,20 +697,20 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
             <div className={styles.modalButtons}>
               <button
                 type="button"
-                className={styles.deleteButton}
+                className={`${styles.deleteButton} ${styles.cancel}`}
                 onClick={() => {
                   setIsModalOpen(false);
                   setEventType(null);
                 }}
               >
-                Cancel
+                Annuler
               </button>
               <button
                 type="button"
                 className={styles.deleteButton}
                 onClick={handleModalSubmit}
               >
-                Save
+                Sauvegarder
               </button>
             </div>
           </div>

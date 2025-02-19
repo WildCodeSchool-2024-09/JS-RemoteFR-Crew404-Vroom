@@ -6,6 +6,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  z-index: 2;
 }
 
 .innerContainer {
@@ -16,6 +17,7 @@
   border: 2px solid #ccc;
   box-shadow: 17px 17px 34px #566762, -17px -17px 34px #d0d7d4;
   overflow: hidden;
+  z-index: 2;
 }
 
 .container {
@@ -143,10 +145,20 @@
   cursor: pointer;
   border-radius: 5px;
   margin-bottom: 15px;
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   transition: background-color 0.3s ease;
   display: block;
   width: 100%;
+}
+
+.deleteButton:hover {
+  opacity: 0.8;
+}
+.cancel {
+  background-color: var(--secondary-color);
+}
+.cancel:hover {
+  background-color: var(--dark);
 }
 
 .image {
@@ -327,7 +339,6 @@
 .leaflet-popup-content {
   margin: 13px 19px;
   line-height: 1.4;
-  background-color: green;
 }
 
 .popupContent {
