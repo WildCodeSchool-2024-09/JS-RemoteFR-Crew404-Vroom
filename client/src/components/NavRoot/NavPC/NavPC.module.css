@@ -100,8 +100,8 @@
   margin: 1em;
   transition: transform 0.3s ease-in-out;
 }
-.MenuLiPC:hover {
-  animation: rotateAndScale 1.0s ease-in-out forwards; /* Animation rapide et s'arrête après 1.5s */
+.MenuLinkPC:hover {
+  color: #15616d;
 }
 
 /* Animation avec rotation gauche-droite-gauche et grossissement */
@@ -150,6 +150,7 @@
 .SousNavLiPC {
   position: relative;
 }
+
 .SousNavLiPC:hover .SousMenuUlPC {
   display: block;
 }
@@ -174,7 +175,9 @@
     font-size: var(--h3);
   }
 }
-
+.SousNavSpanPC:hover {
+  color: #15616d;
+}
 .SousMenuUlPC {
   display: flex;
   justify-content: center;
