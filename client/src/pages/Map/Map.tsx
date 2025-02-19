@@ -469,14 +469,20 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                   <Popup>
                     <div
                       style={{
-                        color: "var(--primary-color)",
-                        backgroundColor: "var(--fifthly-color)",
-                        padding: "8px",
-                        borderRadius: "5px",
+                        backgroundColor: "white",
                       }}
                     >
                       {marker.label && (
-                        <strong style={{ color: "var(--tertiary-color)" }}>
+                        <strong
+                          style={{
+                            color: "var(--primary-color)",
+                            fontSize: "18px",
+                            display: "block",
+                            marginBottom: "15px",
+                            borderBottom: "2px solid var(--primary-color)",
+                            paddingBottom: "8px",
+                          }}
+                        >
                           Type:{" "}
                           {marker.details
                             ? translateEventType(marker.details.eventType)
@@ -490,52 +496,178 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
                             : "Date inconnue"}
                         </strong>
                       )}
-                      <br />
+
                       {marker.details && (
                         <div
                           style={{
+                            backgroundColor: "rgba(248, 249, 250, 0.8)",
                             color: "var(--secondary-color)",
-                            backgroundColor: "var(--light)",
-                            padding: "6px",
-                            borderRadius: "3px",
-                            marginTop: "5px",
+                            padding: "15px",
+                            borderRadius: "10px",
+                            fontSize: "15px",
+                            backdropFilter: "blur(8px)",
+                            border: "1px solid rgba(0, 0, 0, 0.03)",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "8px",
                           }}
                         >
-                          <p>
-                            <strong>Type d'événement :</strong>{" "}
+                          <p
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                            }}
+                          >
+                            <strong
+                              style={{
+                                backgroundColor: "var(--primary-color)",
+                                color: "white",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "14px",
+                              }}
+                            >
+                              Type
+                            </strong>
                             {translateEventType(marker.details.eventType)}
                           </p>
-                          <p>
-                            <strong>Date :</strong>{" "}
+
+                          <p
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                            }}
+                          >
+                            <strong
+                              style={{
+                                backgroundColor: "var(--primary-color)",
+                                color: "white",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "14px",
+                              }}
+                            >
+                              Date
+                            </strong>
                             {getFormattedDate(
                               marker.details.date,
                               marker.details.isSingleDay,
                             )}
                           </p>
+
                           {marker.details.brand && (
-                            <p>
-                              <strong>Marque :</strong> {marker.details.brand}
+                            <p
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Marque
+                              </strong>
+                              {marker.details.brand}
                             </p>
                           )}
+
                           {marker.details.model && (
-                            <p>
-                              <strong>Modèle :</strong> {marker.details.model}
+                            <p
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Modèle
+                              </strong>
+                              {marker.details.model}
                             </p>
                           )}
+
                           {marker.details.year && (
-                            <p>
-                              <strong>Année :</strong> {marker.details.year}
+                            <p
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Année
+                              </strong>
+                              {marker.details.year}
                             </p>
                           )}
+
                           {marker.details.eventCategory && (
-                            <p>
-                              <strong>Catégorie :</strong>{" "}
+                            <p
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Catégorie
+                              </strong>
                               {marker.details.eventCategory}
                             </p>
                           )}
+
                           {marker.details.duration && (
-                            <p>
-                              <strong>Durée :</strong>{" "}
+                            <p
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                              }}
+                            >
+                              <strong
+                                style={{
+                                  backgroundColor: "var(--primary-color)",
+                                  color: "white",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Durée
+                              </strong>
                               {getFormattedDate(
                                 marker.details.duration,
                                 marker.details.isSingleDay,
