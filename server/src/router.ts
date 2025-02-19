@@ -199,7 +199,43 @@ router.get(
   favorisActions.getUserFavoris,
 ); // Récupérer les favoris de l'utilisateur connecté
 
+import Create_Crypto_Middleware from "./middlewares/Create_Crypto_Middleware";
+import HashPassword from "./middlewares/HashPassword";
+import SendMailer_Middleware from "./middlewares/SendMailer_Middleware";
+import VerifyEmailTrue from "./middlewares/VerifyEmailTrue";
 /* ************************************************************************* */
 /**email */
+import VerifyKeys from "./middlewares/VerifyKeys";
+import Verify_Crypto_Middleware from "./middlewares/Verify_Crypto_Middleware";
+import InsertNewPassword from "./middlewares/insertNewPassword";
+import authEmail from "./modules/email/authEmail";
+import authConfirmResetPassword from "./modules/reset_password/authConfirmResetPassword";
+import authResetPassword from "./modules/reset_password/authResetPassword";
+
+router.post(
+  "/api/email",
+  VerifyKeys(["to", "subject", "text"]),
+  SendMailer_Middleware,
+  authEmail,
+);
+
+router.post(
+  "/api/reset-password",
+  VerifyKeys(["email"]),
+  VerifyEmailTrue,
+  Create_Crypto_Middleware,
+  SendMailer_Middleware,
+  authResetPassword,
+);
+
+router.post(
+  "/api/reset-password/confirm",
+  VerifyKeys(["token", "newPassword"]),
+  Verify_Crypto_Middleware,
+  HashPassword,
+  InsertNewPassword,
+  SendMailer_Middleware,
+  authConfirmResetPassword,
+);
 
 export default router;
