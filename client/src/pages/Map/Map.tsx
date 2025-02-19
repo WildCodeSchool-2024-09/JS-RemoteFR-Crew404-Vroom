@@ -124,14 +124,7 @@ function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
     [number, number] | null
   >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // function Maps({ center = [48.85837, 2.294481], zoom = 13 }: MapsProps) {
-  //   const { user } = useAuth();
-  //   const [isAddingMarker, setIsAddingMarker] = useState(false);
-  //   const [markers, setMarkers] = useState<MarkerType[]>([]);
-  //   const [newMarkerPosition, setNewMarkerPosition] = useState<
-  //     [number, number] | null
-  //   >(null);
-  //   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const [eventType, setEventType] = useState<
     "car" | "motorcycle" | "event" | null
