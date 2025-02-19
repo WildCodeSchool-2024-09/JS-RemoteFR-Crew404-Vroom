@@ -1,10 +1,16 @@
+.ConnexionConnexion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .Connexion {
   display: flex;
   gap: 2em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 85.8px);
 }
 
 .WelcomeMessage .ErrorMessage {
