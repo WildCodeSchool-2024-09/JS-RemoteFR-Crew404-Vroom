@@ -69,6 +69,8 @@ import HashPassword from "./middlewares/HashPassword";
 /**reset-password */
 import VerifyEmailTrue from "./middlewares/VerifyEmailTrue";
 import Verify_Crypto_Middleware from "./middlewares/Verify_Crypto_Middleware";
+import InsertNewPassword from "./middlewares/insertNewPassword";
+import authConfirmResetPassword from "./modules/reset_password/authConfirmResetPassword";
 import authResetPassword from "./modules/reset_password/authResetPassword";
 
 router.post(
@@ -81,10 +83,13 @@ router.post(
 );
 
 router.post(
-  "api/reset-password",
+  "/api/reset-password/confirm",
   VerifyKeys(["token", "newPassword"]),
   Verify_Crypto_Middleware,
   HashPassword,
+  InsertNewPassword,
+  SendMailer_Middleware,
+  authConfirmResetPassword,
 );
 /* ************************************************************************* */
 
