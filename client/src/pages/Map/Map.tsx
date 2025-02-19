@@ -34,41 +34,7 @@ interface MapsProps {
   center?: [number, number];
   zoom?: number;
 }
-// import type { LeafletMouseEvent } from "leaflet";
-// import {
-//   MapContainer,
-//   Marker,
-//   Popup,
-//   TileLayer,
-//   useMap,
-//   useMapEvent,
-// } from "react-leaflet";
-// import "leaflet/dist/leaflet.css";
-// import "./leaflet.css";
-// import DatePicker from "react-datepicker";
-// import styles from "./Map.module.css";
-// import "react-datepicker/dist/react-datepicker.css";
-// import L from "leaflet";
-// import { useEffect, useState } from "react";
-// import React from "react";
-// import MarkerClusterGroup from "react-leaflet-cluster"; // Import MarkerClusterGroup
-// import pinMapIcon from "../../assets/images/svg/pinMap.svg";
-// import { useAuth } from "../../contexts/AuthContext";
-// import api from "../../helpers/api";
-// import { errorToast, infoToast, successToast } from "../../services/toast";
-// import type { Marker as MarkerType } from "../../types/marker";
 
-// const customIcon = new L.Icon({
-//   iconUrl: pinMapIcon,
-//   iconSize: [32, 32],
-//   iconAnchor: [16, 32],
-//   popupAnchor: [0, -32],
-// });
-
-// interface MapsProps {
-//   center?: [number, number];
-//   zoom?: number;
-// }
 
 const formatPopupHeaderDate = (dateString: string, isSingleDay = false) => {
   if (dateString.includes(" to ")) {
