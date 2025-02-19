@@ -63,10 +63,16 @@ router.post(
   authEmail,
 );
 
+import Create_Crypto_Middleware from "./middlewares/Create_Crypto_Middleware";
 /* ************************************************************************* */
 /**reset-password */
+import VerifyEmailTrue from "./middlewares/VerifyEmailTrue";
 
-router.post("/api/reset-password", VerifyKeys(["to", "subject", "text"]));
+router.post(
+  "/api/reset-password",
+  VerifyKeys(["to", "subject", "text"]),
+  VerifyEmailTrue,
+);
 /* ************************************************************************* */
 
 /** events */
