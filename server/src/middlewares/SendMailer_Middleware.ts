@@ -53,7 +53,7 @@ async function SendMailer_Middleware(
     }
 
     const info = await transporter.sendMail({
-      from: `"Montpellier Visuel" <${process.env.EMAIL_USER}>`, // email de l'expéditeur
+      from: `"RoadAddict" <${process.env.EMAIL_USER}>`, // email de l'expéditeur
       to: req.body.to, // liste email des destinataires
       subject: req.body.subject, // objet du mail
       text: req.body.text, // Contenu du mail
