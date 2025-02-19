@@ -1,9 +1,3 @@
-.ConnexionConnexion {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .Connexion {
   display: flex;
   gap: 2em;
@@ -130,4 +124,18 @@
 
 .eyes:hover {
   background-color: whitesmoke;
+}
+
+.forgotPassword {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.forgotPassword > a {
+  color: var(--tertiary-color);
+  text-decoration: none;
+  text-align: center;
+  padding: 0px;
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import eyeClosed from "../../assets/Icons/eye-slash.svg";
 import eye from "../../assets/Icons/eye.svg";
 import NavRoot from "../../components/NavRoot/NavRoot";
@@ -128,7 +129,7 @@ function Connexion() {
 
   return (
     <>
-      <NavRoot namePage="Connection" />
+      <NavRoot namePage="Connexion" />
       <div className={styles.Connexion}>
         {welcomeMessage && (
           <div className={styles.WelcomeMessage}>{welcomeMessage}</div>
@@ -189,6 +190,9 @@ function Connexion() {
                 S'inscrire
               </button>
             </p>
+            <section className={styles.forgotPassword}>
+              <Link to="/reset-password">Mot de passe oublier ?</Link>
+            </section>
           </div>
         ) : (
           <div>
