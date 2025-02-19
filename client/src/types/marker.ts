@@ -14,6 +14,7 @@ export interface Marker {
   id: number;
   lat: number; // ✅ Use separate lat and lng properties
   lng: number;
+  coord: Array<number>;
   label?: string;
   details?: MarkerDetails;
   user_id: number;
