@@ -50,7 +50,7 @@ async function Create_Crypto_Middleware(
     }
 
     // Lien de réinitialisation
-    const resetLink = `${process.env.DOMAIN}/reset-password?token=${token}`;
+    const resetLink = `${process.env.DOMAIN}/reset-password/confirm?token=${token}`;
 
     // Préparation des données pour l'envoi par email
     // Stocker la réponse de la DB pour l'envoyer par email

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./ResetPassword.css";
+import NavRoot from "../../components/NavRoot/NavRoot";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -34,25 +35,28 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="reset-password-container">
-      <h2>Réinitialisation du mot de passe</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Adresse e-mail :</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="Entrez votre email"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Envoi..." : "Envoyer"}
-        </button>
-      </form>
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
-    </div>
+    <>
+      <NavRoot namePage="Réinitialiser" />
+      <div className="reset-password-container">
+        <h2>Réinitialisation du mot de passe</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">Adresse e-mail :</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder="Entrez votre email"
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Envoi..." : "Envoyer"}
+          </button>
+        </form>
+        {message && <p className="success-message">{message}</p>}
+        {error && <p className="error-message">{error}</p>}
+      </div>
+    </>
   );
 };
 
