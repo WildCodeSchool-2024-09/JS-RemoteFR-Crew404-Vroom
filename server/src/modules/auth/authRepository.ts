@@ -1,114 +1,162 @@
 import databaseClient from "../../../database/client";
-
 import type { Result, Rows } from "../../../database/client";
 
-type User = {
+// 🔹 Définition du type pour un utilisateur (sans mot de passe dans les réponses)
+export type AuthUser = {
   id: number;
   username: string;
   email: string;
-  password: string;
   profile_picture: string;
   firstname: string;
   lastname: string;
-  birthdate: string | Date | undefined;
-  phone_number: number;
+  birthdate: string | Date | null;
+  phone_number: number | null;
   sold: number;
   is_admin: boolean;
+  password?: string;
 };
 
+// 🔹 Type d'entrée pour `create()`, sans `id`
+export type NewUser = Omit<AuthUser, "id"> & { password: string };
+
 class AuthRepository {
-  // The C of CRUD - Create operation
-
-  async create(user: Omit<User, "id">) {
-    // Execute the SQL INSERT query to add a new user to the "user" table
-    const [result] = await databaseClient.query<Result>(
-      "insert into user (profile_picture, username, firstname, lastname, email, password) values (?, ?, ?, ?, ?, ?)",
-      [
-        "person_15439869.png",
-        user.username,
-        user.firstname,
-        user.lastname,
-        user.email,
-        user.password,
-      ],
-    );
-
-    // Return the ID of the newly inserted user
-    return result.insertId;
-  }
-  catch(error: unknown) {
-    if (error instanceof Error) {
-      // Rethrow l'erreur avec un message plus descriptif
-      throw new Error(
-        `Erreur lors de la création de l'utilisateur: ${error.message}`,
+  // 🔹 CREATE - Ajouter un nouvel utilisateur
+  async create(user: NewUser): Promise<number> {
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "INSERT INTO user (profile_picture, username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          "person_15439869.png", // Valeur par défaut
+          user.username,
+          user.firstname,
+          user.lastname,
+          user.email,
+          user.password,
+        ],
       );
+      return result.insertId;
+    } catch (error) {
+      console.error("❌ Erreur lors de la création de l'utilisateur:", error);
+      throw new Error(`Erreur lors de la création de l'utilisateur: ${error}`);
     }
-    throw error;
   }
 
-  // The Rs of CRUD - Read operations
-
-  async read(email: string) {
-    // Execute the SQL SELECT query to retrieve a specific user by its ID
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from user where email = ?",
-      [email],
-    );
-
-    // Return the first row of the result, which represents the user
-    return rows[0] as User;
+  // 🔹 READ - Récupérer un utilisateur par email
+  async read(email: string): Promise<AuthUser | null> {
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "SELECT id, username, email, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin FROM user WHERE email = ?",
+        [email],
+      );
+      return rows.length > 0 ? (rows[0] as AuthUser) : null;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la récupération de l'utilisateur:",
+        error,
+      );
+      throw error;
+    }
   }
 
-  async readById(id: number) {
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from user where id = ?",
-      [id],
-    );
-    return rows[0] as User;
+  // 🔹 READ - Récupérer un utilisateur par ID
+  async readById(id: number): Promise<AuthUser | null> {
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "SELECT id, username, email, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin FROM user WHERE id = ?",
+        [id],
+      );
+      return rows.length > 0 ? (rows[0] as AuthUser) : null;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la récupération de l'utilisateur par ID:",
+        error,
+      );
+      throw error;
+    }
   }
 
-  async readAll() {
-    // Execute the SQL SELECT query to retrieve all users from the "user" table
-    const [rows] = await databaseClient.query<Rows>("select * from user");
-
-    // Return the array of users
-    return rows as User[];
+  // 🔹 READ - Récupérer tous les utilisateurs
+  async readAll(): Promise<AuthUser[]> {
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "SELECT id, username, email, profile_picture, firstname, lastname, birthdate, phone_number, sold, is_admin FROM user",
+      );
+      return rows as AuthUser[];
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la récupération de tous les utilisateurs:",
+        error,
+      );
+      throw error;
+    }
   }
 
-  // The U of CRUD - Update operation
-  async update(id: number, userUpdate: Partial<User>) {
-    // Construit dynamiquement la requête SQL en fonction des champs à mettre à jour
-    const updateFields = Object.entries(userUpdate)
-      .filter(([_, value]) => value !== undefined)
-      .map(([key, _]) => `${key} = ?`)
-      .join(", ");
-    const updateValues = Object.entries(userUpdate)
-      .filter(([_, value]) => value !== undefined)
-      .map(([_, value]) => value);
-    updateValues.push(id);
+  // 🔹 UPDATE - Modifier un utilisateur
+  async update(id: number, userUpdate: Partial<AuthUser>): Promise<boolean> {
+    try {
+      // 🔹 Vérifie si l'objet `userUpdate` contient des données valides
+      const updateEntries = Object.entries(userUpdate).filter(
+        ([_, value]) => value !== undefined,
+      );
 
-    const [result] = await databaseClient.query<Result>(
-      `UPDATE user SET ${updateFields} WHERE id = ?`,
-      updateValues,
-    );
-    return result.affectedRows > 0;
+      if (updateEntries.length === 0) {
+        console.warn("⚠️ Aucun champ à mettre à jour pour l'utilisateur", id);
+        return false;
+      }
+
+      // 🔹 Construction dynamique de la requête SQL
+      const updateFields = updateEntries
+        .map(([key]) => `${key} = ?`)
+        .join(", ");
+      const updateValues = updateEntries.map(([_, value]) => value);
+      updateValues.push(id);
+
+      const [result] = await databaseClient.query<Result>(
+        `UPDATE user SET ${updateFields} WHERE id = ?`,
+        updateValues,
+      );
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la mise à jour de l'utilisateur:",
+        error,
+      );
+      throw error;
+    }
   }
 
-  // The D of CRUD - Delete operation
-  async delete(id: number) {
-    const [result] = await databaseClient.query<Result>(
-      "DELETE FROM user WHERE id = ?",
-      [id],
-    );
-    return result.affectedRows > 0;
+  // 🔹 DELETE - Supprimer un utilisateur
+  async delete(id: number): Promise<boolean> {
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "DELETE FROM user WHERE id = ?",
+        [id],
+      );
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la suppression de l'utilisateur:",
+        error,
+      );
+      throw error;
+    }
   }
 
-  async getMyEvent(id: number) {
-    const [rows] = await databaseClient.query<Rows>(
-      "SELECT * FROM event WHERE user_id = ?",
-      [id],
-    );
-    return rows;
+  // 🔹 READ - Récupérer les événements de l'utilisateur
+  async getMyEvent(id: number): Promise<any[]> {
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "SELECT * FROM event WHERE user_id = ?",
+        [id],
+      );
+      return rows;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la récupération des événements de l'utilisateur:",
+        error,
+      );
+      throw error;
+    }
   }
 }
 
