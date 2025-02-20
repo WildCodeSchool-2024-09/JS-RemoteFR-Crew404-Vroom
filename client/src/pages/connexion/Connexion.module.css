@@ -4,7 +4,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 85.8px);
 }
 
 .WelcomeMessage .ErrorMessage {
@@ -124,4 +124,18 @@
 
 .eyes:hover {
   background-color: whitesmoke;
+}
+
+.forgotPassword {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.forgotPassword > a {
+  color: var(--tertiary-color);
+  text-decoration: none;
+  text-align: center;
+  padding: 0px;
 }
