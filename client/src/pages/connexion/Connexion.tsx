@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import eyeClosed from "../../assets/Icons/eye-slash.svg";
 import eye from "../../assets/Icons/eye.svg";
+import NavRoot from "../../components/NavRoot/NavRoot";
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../helpers/api";
 import { errorToast, successToast } from "../../services/toast";
@@ -126,178 +128,184 @@ function Connexion() {
     register.password === register.confirmPassword && register.password !== "";
 
   return (
-    <div className={styles.Connexion}>
-      {welcomeMessage && (
-        <div className={styles.WelcomeMessage}>{welcomeMessage}</div>
-      )}
-      {errorMessage && (
-        <div className={styles.ErrorMessage}>{errorMessage}</div>
-      )}
-      {isLogin ? (
-        <div>
-          <h2>Connexion</h2>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="login-email">Email :</label>
-              <input
-                type="email"
-                id="login-email"
-                name="email"
-                required
-                onChange={handleChange}
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <label htmlFor="login-password">Mot de passe :</label>
-              <div className={styles.pwdLook}>
+    <>
+      <NavRoot namePage="Connexion" />
+      <div className={styles.Connexion}>
+        {welcomeMessage && (
+          <div className={styles.WelcomeMessage}>{welcomeMessage}</div>
+        )}
+        {errorMessage && (
+          <div className={styles.ErrorMessage}>{errorMessage}</div>
+        )}
+        {isLogin ? (
+          <div>
+            <h2>Connexion</h2>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="login-email">Email :</label>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  id="login-password"
-                  name="password"
-                  onChange={handleChange}
-                  autoComplete="current-password"
+                  type="email"
+                  id="login-email"
+                  name="email"
                   required
-                  className={styles.inputClass}
+                  onChange={handleChange}
+                  autoComplete="email"
                 />
-                <button
-                  type="button"
-                  onClick={toggleShowPassword}
-                  className={styles.eyes}
-                >
-                  <img
-                    src={showPassword ? eyeClosed : eye}
-                    alt={showPassword ? "Cacher" : "Montrer"}
-                  />
-                </button>
               </div>
-            </div>
-            <button type="submit" className={styles.submit}>
-              Se connecter
-            </button>
-          </form>
-          <p>
-            Pas encore de compte ?{" "}
-            <button
-              type="button"
-              onClick={toggleForm}
-              className={styles.toggleForm}
-            >
-              S'inscrire
-            </button>
-          </p>
-        </div>
-      ) : (
-        <div>
-          <h2>Inscription</h2>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="register-lastname">Nom :</label>
-              <input
-                type="text"
-                id="register-lastname"
-                name="lastname"
-                required
-                onChange={handleChange}
-                autoComplete="lastname"
-              />
-            </div>
-            <div>
-              <label htmlFor="register-firtsname">Prenom :</label>
-              <input
-                type="text"
-                id="register-firstname"
-                name="firstname"
-                required
-                onChange={handleChange}
-                autoComplete="firstname"
-              />
-            </div>
-            <div>
-              <label htmlFor="register-username">Pseudo :</label>
-              <input
-                type="text"
-                id="register-username"
-                name="username"
-                required
-                onChange={handleChange}
-                autoComplete="username"
-              />
-            </div>
-            <div>
-              <label htmlFor="register-email">Email :</label>
-              <input
-                type="email"
-                id="register-email"
-                name="email"
-                required
-                onChange={handleChange}
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <label htmlFor="register-password">Mot de passe :</label>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="register-password"
-                name="password"
-                required
-                onChange={handleChange}
-                autoComplete="new-password"
-                className={`${styles.inputClass2} ${
-                  passwordsMatch
-                    ? styles.PasswordMatch
-                    : styles.PasswordMismatch
-                }`}
-              />
-            </div>
-            <div>
-              <label htmlFor="register-confirm-password">
-                Confirmer le mot de passe :
-              </label>
-              <div className={styles.pwdLook}>
+              <div>
+                <label htmlFor="login-password">Mot de passe :</label>
+                <div className={styles.pwdLook}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="login-password"
+                    name="password"
+                    onChange={handleChange}
+                    autoComplete="current-password"
+                    required
+                    className={styles.inputClass}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className={styles.eyes}
+                  >
+                    <img
+                      src={showPassword ? eyeClosed : eye}
+                      alt={showPassword ? "Cacher" : "Montrer"}
+                    />
+                  </button>
+                </div>
+              </div>
+              <button type="submit" className={styles.submit}>
+                Se connecter
+              </button>
+            </form>
+            <p>
+              Pas encore de compte ?{" "}
+              <button
+                type="button"
+                onClick={toggleForm}
+                className={styles.toggleForm}
+              >
+                S'inscrire
+              </button>
+            </p>
+            <section className={styles.forgotPassword}>
+              <Link to="/reset-password">Mot de passe oublier ?</Link>
+            </section>
+          </div>
+        ) : (
+          <div>
+            <h2>Inscription</h2>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="register-lastname">Nom :</label>
+                <input
+                  type="text"
+                  id="register-lastname"
+                  name="lastname"
+                  required
+                  onChange={handleChange}
+                  autoComplete="lastname"
+                />
+              </div>
+              <div>
+                <label htmlFor="register-firtsname">Prenom :</label>
+                <input
+                  type="text"
+                  id="register-firstname"
+                  name="firstname"
+                  required
+                  onChange={handleChange}
+                  autoComplete="firstname"
+                />
+              </div>
+              <div>
+                <label htmlFor="register-username">Pseudo :</label>
+                <input
+                  type="text"
+                  id="register-username"
+                  name="username"
+                  required
+                  onChange={handleChange}
+                  autoComplete="username"
+                />
+              </div>
+              <div>
+                <label htmlFor="register-email">Email :</label>
+                <input
+                  type="email"
+                  id="register-email"
+                  name="email"
+                  required
+                  onChange={handleChange}
+                  autoComplete="email"
+                />
+              </div>
+              <div>
+                <label htmlFor="register-password">Mot de passe :</label>
                 <input
                   type={showPassword ? "text" : "password"}
-                  id="register-confirm-password"
-                  name="confirmPassword"
+                  id="register-password"
+                  name="password"
                   required
                   onChange={handleChange}
                   autoComplete="new-password"
-                  className={`${styles.inputClass} ${
+                  className={`${styles.inputClass2} ${
                     passwordsMatch
                       ? styles.PasswordMatch
                       : styles.PasswordMismatch
                   }`}
                 />
-                <button
-                  type="button"
-                  onClick={toggleShowPassword}
-                  className={styles.eyes}
-                >
-                  <img
-                    src={showPassword ? eyeClosed : eye}
-                    alt={showPassword ? "Cacher" : "Montrer"}
-                  />
-                </button>
               </div>
-            </div>
-            <button type="submit" className={styles.submit}>
-              S'inscrire
-            </button>
-          </form>
-          <p>
-            Déjà un compte ?{" "}
-            <button
-              type="button"
-              onClick={toggleForm}
-              className={styles.toggleForm}
-            >
-              Se connecter
-            </button>
-          </p>
-        </div>
-      )}
-    </div>
+              <div>
+                <label htmlFor="register-confirm-password">
+                  Confirmer le mot de passe :
+                </label>
+                <div className={styles.pwdLook}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="register-confirm-password"
+                    name="confirmPassword"
+                    required
+                    onChange={handleChange}
+                    autoComplete="new-password"
+                    className={`${styles.inputClass} ${
+                      passwordsMatch
+                        ? styles.PasswordMatch
+                        : styles.PasswordMismatch
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className={styles.eyes}
+                  >
+                    <img
+                      src={showPassword ? eyeClosed : eye}
+                      alt={showPassword ? "Cacher" : "Montrer"}
+                    />
+                  </button>
+                </div>
+              </div>
+              <button type="submit" className={styles.submit}>
+                S'inscrire
+              </button>
+            </form>
+            <p>
+              Déjà un compte ?{" "}
+              <button
+                type="button"
+                onClick={toggleForm}
+                className={styles.toggleForm}
+              >
+                Se connecter
+              </button>
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

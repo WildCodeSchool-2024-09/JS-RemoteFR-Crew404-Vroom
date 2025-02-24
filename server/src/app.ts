@@ -20,14 +20,28 @@ const app = express();
 
 import cors from "cors";
 
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_URL || "*", // Update to match your frontend URL
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }),
+// );
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000", // Update to match your frontend URL
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true); // Autoriser les requêtes sans origine (ex: Postman, curl)
+      }
+      return callback(null, true); // Autoriser toutes les origines (donc tous les ports)
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
 // If you need to allow extra origins, you can add something like this:
 
 /*

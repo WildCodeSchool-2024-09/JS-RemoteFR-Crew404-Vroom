@@ -38,7 +38,7 @@ function Footer() {
             />
           </a>
         </div>
-        <p className={styles.creators}>Mentions légales - Vroom @2025</p>
+        <p className={styles.creators}>Mentions légales - RoadAddict @2025</p>
       </section>
     </footer>
   );
